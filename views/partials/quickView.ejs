@@ -1,0 +1,144 @@
+
+ <script type="text/javascript">
+    var max = 0;
+    var link =";"
+    function displayQuickView(title, price, qte, unit, description, id, imagesExt, urlApi, login ){
+        max = Number(qte);
+        var ext = imagesExt.split(';');
+
+        var images = "";
+        if(ext.length>0){
+            document.getElementById("mainImgQuick").innerHTML = '<img id="mainImage" style="height: 300px; max-width: 300px; border:1px solid LightGrey;" id="product-zoom" src="'+urlApi+'/itemPhotos/'+id+'/0.'+ext[0]+'" data-zoom-image="'+urlApi+'/itemPhotos/'+id+'/0.'+ext[0]+'" alt="product-image"/> '
+            for(var i =0; i<ext.length; i++){
+                if(ext[i] !="") {
+                    images+='<div class="more-views-items" style="display:block-inline;"> <a onclick="changeMainImg(this)" data-image="'+urlApi+'/itemPhotos/'+id+'/'+i+'.'+ext[i]+'" data-zoom-image="'+urlApi+'/itemPhotos/'+id+'/'+i+'.'+ext[i]+'"> <img style="height: 100px; max-width: 125px; border:1px solid LightGrey;" id="product-zoom"  src="'+urlApi+'/itemPhotos/'+id+'/'+i+'.'+ext[i]+'" alt="product-image"/> </a></div>';             
+                }
+              }
+            document.getElementById("otherImagesQuick").innerHTML = images
+        }
+       
+       link = "/visualisationAnnonce/"+id;
+
+        document.getElementById("titleQuick").innerHTML = title;
+        document.getElementById("priceQuick").innerHTML =  price+" €";
+        document.getElementById("stockQuick").innerHTML = qte + " " + unit + " en stock";
+        document.getElementById("descriptionQuick").innerHTML = description;
+        document.getElementById("fancybox-wrap").style.visibility= "visible";
+        document.getElementById("fancybox-overlay").style.visibility= "visible";
+        
+        
+        $("#qty").attr({
+            "max" : qte
+        });
+    }
+
+    function hideQuickView(){
+        document.getElementById("fancybox-wrap").style.visibility= "hidden";
+        document.getElementById("fancybox-overlay").style.visibility= "hidden";
+    }
+
+    function addQte(){
+        var result = document.getElementById('qty'); 
+        var qty = result.value;
+       
+        if(!isNaN( qty ) && qty < max) {
+            document.getElementById('qty').value++;
+        } 
+        return false;
+    }
+    function redirectFiche(){
+        console.log(link);
+        window.location.replace(link);
+    }
+
+    function changeMainImg(img){
+
+        $("#qty").attr({
+            "max" : qte
+        });
+        
+    }
+ 
+    
+</script>
+
+
+<div style="background-color: rgb(119, 119, 119); opacity: 0.7; cursor: pointer; height: 1024px; display: block; visibility: hidden;" id="fancybox-overlay"></div>
+<div style="width: 1190px; height: auto; top: 20%; left: 581px; display: block; visibility: hidden;" id="fancybox-wrap">
+  <div id="fancybox-outer">
+    <div style="border-width: 10px; width: 1170px; height: auto;" id="fancybox-content">
+      <div style="width:auto;height:auto;overflow: auto;position:relative;">
+        <div class="product-view">
+              <div class="product-essential">
+                <form action="#" method="post" id="product_addtocart_form">
+                  <input name="form_key" value="6UbXroakyQlbfQzK" type="hidden">
+                  <div class="product-img-box col-lg-5 col-sm-5 col-xs-12">
+                    <!--<div class="new-label new-top-left"> New </div>-->
+                    <div class="product-image">
+                      <div class="product-full" id="mainImgQuick"></div>
+                      <div class="more-views">
+                        <div class="slider-items-products">
+                          <div id="gallery_01" class="product-flexslider hidden-buttons product-img-thumb">
+                            <div class="slider-items slider-width-col4 block-content" id="otherImagesQuick" style="display:block-inline;">
+                        
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- end: more-images --> 
+                  </div>
+                  <div class="product-shop col-lg-7 col-sm-7 col-xs-12">
+                    
+                    <div class="product-name">
+                      <h1 id="titleQuick"></h1>
+                    </div>
+                    <div class="ratings">
+                      <!--<div class="rating-box">
+                        <div style="width:60%" class="rating"></div>
+                      </div>
+                      <p class="rating-links"> <a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Your Review</a> </p>-->
+                    </div>
+                    <div class="price-block">
+                      <div class="price-box">
+                        <p class="special-price"> <span class="price-label">Prix : </span> <span id="priceQuick" class="price"> </span> </p>
+                        <p class="availability in-stock pull-right"><span id="stockQuick"></span></p>
+                      </div>
+                    </div>
+                    <div class="short-description">
+                      <h2>Description</h2>
+                      <p id="descriptionQuick"></p>
+                    </div>
+                    <div class="add-to-box">
+                      <div class="add-to-cart">
+                        <div class="pull-left">
+                          <div class="custom pull-left">
+                            <button onClick="var result = document.getElementById('qty'); var qty = result.value; if((!isNaN( qty ) &amp;&amp; qty &gt; 1)   ) result.value--;return false;" class="reduced items-count" type="button"><i class="fa fa-minus">&nbsp;</i></button>
+                            <input type="number" class="input-text qty" title="Qty" value="1" max="10" min="1" id="qty" name="qty" style="-moz-appearance: textfield">
+                            <button onClick="addQte()" class="increase items-count" type="button"><i class="fa fa-plus">&nbsp;</i></button>
+                          </div>
+                          &nbsp;&nbsp;&nbsp;<button class="button btn-visu" title="Voir produit" type="button" style="background-color: green;" onclick="redirectFiche();">Voir le produit</a></button>
+                        </div>
+                        
+                        <button onClick="productAddToCartForm.submit(this)" class="button btn-cart" title="Add to Cart" type="button" style="width:38px;"></button>
+                      </div>
+                      <div class="email-addto-box">
+                        <!--<ul class="add-to-links">
+                          <li> <a class="link-wishlist" href="wishlist.html"><span>Add to Wishlist</span></a></li>
+                          <li><span class="separator">|</span> <a class="link-compare" href="compare.html"><span>Add to Compare</span></a></li>
+                        </ul>
+                        <p class="email-friend"><a href="#" class=""><span>Email to a Friend</span></a></p>-->
+                      </div>
+                    </div>
+                    
+                  </div>
+                </form>
+              </div>
+            </div>
+        <!--product-view--> 
+        
+      </div>
+    </div>
+    <a style="display: inline;" id="fancybox-close" onclick="hideQuickView();"></a> </div>
+</div>
+

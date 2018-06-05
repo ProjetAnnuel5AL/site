@@ -1,0 +1,74 @@
+<!-- views/signup.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Inscription</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+        </header>
+
+        <section class="main-container top-space col1-layout">
+            <div class="main container">
+                <div class="account-login">
+                <div class="page-title">
+                    <h2>Inscription</h2>
+                </div>
+                <fieldset class="col2-set">
+                    <div class="col-1 registered-users"><strong>Connexion</strong>
+                    <div class="content">
+    
+                        <!-- show any messages that come back with authentication -->
+                        <% if (msgError.length > 0) { %>
+                        <div class="alert alert-danger"><%= msgError %></div>
+                        <% } %>
+                        <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%= msgSuccess %> </div>
+                        <% } %>
+
+                        <form action="/registration" method="post">
+                            <ul class="form-list">
+                                <li>
+                                    <label for="login">Identifiant</label>
+                                    <br>
+                                    <input type="text" title="login" class="input-text required-entry" id="login" value="" name="username" required>
+                                </li>
+                                <li>
+                                    <label for="password">Mot de passe</label>
+                                    <br>
+                                    <input type="password" title="Password" id="password" class="input-text required-entry validate-password" name="password" required>
+                                </li>
+                                <li>
+                                    <label for="passwordConfirm">Confirmer le mot de passe</label>
+                                    <br>
+                                    <input type="password" title="passwordConfirm" id="passwordConfirm" class="input-text required-entry validate-password" name="passwordConfirm" required>
+                                </li>
+                                <li>
+                                    <label for="mail">Email</label>
+                                    <br>
+                                    <input type="email" title="mail" id="mail" class="input-text required-entry" name="mail" required>
+                                </li>
+                            </ul>
+                            <button id="send2" name="send" type="submit" class="button create-account"><span>Inscription</span></button>
+                        </form>
+                    </div>
+                    </div>
+                </fieldset>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </section>
+    </div>
+</body>
+</div>
+<% include ./partials/footer %>
+</body>
+</html>

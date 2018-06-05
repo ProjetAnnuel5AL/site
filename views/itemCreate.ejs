@@ -1,0 +1,241 @@
+<!-- views/connexion.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Creation annonce</title>
+    <% include ./partials/header %>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+                var item;
+                var urlApi;
+                var options = {
+                    componentRestrictions: {country: 'fr'}
+                };
+                var autocomplete = new google.maps.places.Autocomplete($("#adress")[0], options);
+                
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                    selectAdress(place.geometry.location.lat(), place.geometry.location.lng(), 15, true);
+                    $("#city").val(place.vicinity);
+                });
+                selectAdress(47.930565, 2.436864, 5, false);
+                loadProducts(1);
+                $("#category").change(function () {
+                    var id = $(this).children(":selected")[0].attributes.value.nodeValue;
+                    console.log(id);
+                    loadProducts(id);
+                });
+                $("#filePhoto").change(function () {
+                    readURL(this);
+                });
+                "<% if (typeof item !== 'undefined') { %>"
+                    item = JSON.parse('<%- JSON.stringify(item) %>');
+                    urlApi = JSON.parse('<%- JSON.stringify(urlApi) %>');
+                    console.log(item);
+                    loadEdit(item, urlApi);
+                "<% } %>"
+            });
+            
+            function loadProducts(id){
+                $.getJSON("/product/getByCategoryId", { id: id }).done(function( json ) {
+                    console.log(json);
+                    if(json.code == 0){
+                        $('#product').empty();
+                        for(var elem in json.products) {
+                            $('#product').append($('<option>', {
+                                value: json.products[elem].id,
+                                text: json.products[elem].name
+                            }));
+                        }
+                    }
+                });
+            }
+
+            function loadEdit(item, urlApi){
+                $("#category").val(item.categId);
+                $("#name").val(item.itemName);
+                $("#description").val(item.description);
+                $("#price").val(item.price);
+                $('#quantity').val(item.quantity);
+                $('#unit').val(item.unitId);
+                $('#adress').val(item.adress);
+                $('#city').val(item.city);
+                $('#submitbtn').html('Editer');
+                $('#deletebtn').css("visibility", "visible");
+                var latlng = item.location.split(',');
+                selectAdress(latlng[0], latlng[1], 15, true);
+                loadProducts(item.categId);
+                $("#product").val(item.productId);
+                var photoExtensions = item.fileExtensions.split(';');
+                photoExtensions.pop();
+                for(var elem in photoExtensions){
+                    var pic = 'exampleImg'+elem;
+                    $('#'+pic).attr('src', urlApi+"/itemPhotos/"+item.id+"/"+elem+"."+photoExtensions[elem]);
+                }
+                $("#idItem").val(item.id);
+                $("#fileExtensions").val(item.fileExtensions);
+                $("#filePhoto").prop('required',false);
+            }
+
+            function clearImages(visual){
+                $("#filePhoto").prop('required',true);
+                if(!visual){
+                    $("#filePhoto").val('');
+                }
+                $('#exampleImg0').attr('src', "/img/picture.png");
+                $('#exampleImg1').attr('src', "/img/picture.png");
+                $('#exampleImg2').attr('src', "/img/picture.png");
+            }
+
+            function readURL(input) {
+                clearImages(true);
+                if (input.files) {
+                    if(input.files.length < 4){
+                        for(var imageIndex = 0; imageIndex < input.files.length; imageIndex++)
+                        {
+                            (function (imageIndex) {
+                                var reader = new FileReader();
+                                reader.onload = function (e) {
+                                    var name = 'exampleImg'+imageIndex;
+                                    $('#'+name).attr('src', e.target.result);
+                                }
+                                reader.readAsDataURL(input.files[imageIndex]);
+                            })(imageIndex);
+                        }
+                    }else {
+                        alert("Erreur: vous ne pouvez mettre en ligne que 3 images maximum.");
+                        clearImages(false);
+                    }
+                }
+            }
+            function selectAdress(lat, long, zoom, marker){
+                var latlng = new google.maps.LatLng(lat, long)
+                var myOptions = {
+                  center: latlng,
+                  zoom: zoom,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("map"),
+                    myOptions);
+                if(marker){
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        title: 'Adresse'
+                    });
+                    $("#location").val(lat + ','+ long);
+                }
+                
+            }
+    </script>
+</head>
+
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+    <header>
+        <% include ./partials/topBar %>
+    </header>
+    <section class="main-container top-space col1-layout">
+        <div class="main container">
+            <div class="account-login">
+            <div class="page-title">
+                <h2>Créer une annonce : </h2>
+            </div>
+            <fieldset class="col2-set">
+                <div class="col-1 update-users">
+                <div class="content">
+                    <% if (msgError.length > 0) { %>
+                        <div class="alert alert-danger"><%= msgError %></div>
+                    <% } %>
+                    <% if (msgSuccess.length > 0) { %>
+                        <div class="alert alert-success"> <%= msgSuccess %> </div>
+                    <% } %>
+                    <%if (typeof categories !== 'undefined' && typeof units !== 'undefined') { %>
+                        <!-- LOGIN FORM -->
+                        <% if (typeof item == 'undefined') { %>
+                        <form action="/item/new" method="post" enctype="multipart/form-data">
+                        <% } else { %>
+                        <form action="/item/edit" method="post" enctype="multipart/form-data">
+                            <input type="hidden" class="form-control" id="idItem" name="idItem"/>
+                            <input type="hidden" class="form-control" id="fileExtensions" name="fileExtensions"/>
+                        <% } %>
+                        <ul class="form-list">
+                            <li>
+                                <label for="category">Catégorie</label>
+                                <br>
+                                <select class="form-control" id="category" name="category">
+                                    <% categories.forEach(function (item) { %>
+                                      <option value=<%= item.id%>><%= item.name%></option> 
+                                    <% }) %>
+                                </select> 
+                            </li>
+                            <li>
+                                <label for="product">Produit</label>
+                                <br>
+                                <select name="product" id="product" class="form-control" >
+                                </select> 
+                            </li>
+                            <li>
+                                <label for="name">Nom</label>
+                                <br>
+                                <input type="text" title="name" class="input-text required-entry" id="name"  name="name" required>
+                            </li>
+                            <li>
+                                <label for="description">Description</label>
+                                <br>
+                                <textarea rows="5" cols="50" title="description" id="description" class="input-text required-entry" name="description" required></textarea>
+                            </li>
+                            <li>
+                                <label for="address">Adresse</label>
+                                <br>
+                                <input type="text" class="input-text required-entry" id="adress" name="adress" autocomplete="off">
+                                </br>
+                                <div id="map" class="form-control"style="height:500px;"></div>
+                                <input type="hidden" class="form-control" id="location" name="location">
+                                <input type="hidden" class="form-control" id="city" name="city"/>
+                            </li>
+                            <li>
+                                <label for="photo">Photos (Max 3)</label>
+                                <div>
+                                    <img src="/img/picture.png" / id="exampleImg0" style="max-width: 150px;">
+                                    <img src="/img/picture.png" / id="exampleImg1" style="max-width: 150px;">
+                                    <img src="/img/picture.png" / id="exampleImg2" style="max-width: 150px;">
+                                </div></br>
+                                <input type="file" required name="photo" id="filePhoto" multiple accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|images/*" />
+                                <button type="button" onClick="clearImages(false);">Reinitialiser les images</button>
+                            </li>
+                            <li>
+                                <label>Prix (€)</label>
+                                <input type='number'class="input-text required-entry" name="price" step='0.01' placeholder='0.00' />
+                            </li>
+                            <li>
+                                <label>Quantité disponible</label>
+                                <input type='number' class="input-text required-entry" name="quantity" step='1' placeholder='0' />
+                            </li>
+                            <li>
+                                <label>Unité</label>
+                                <select name="unit">
+                                <% units.forEach(function (item) { %>
+                                <option value=<%= item.id%>><%= item.name%></option> 
+                                <% }) %>
+                                </select>
+                            </li>
+                        </ul>
+                        <button type="submit" id="submitbtn" class="btn btn-info">Créer</button>
+                        <button type="submit" id="deletebtn" class="btn btn-danger" style="visibility:hidden;">Supprimer</button>
+                    </form>
+                    <% } %>
+                </div>
+                </div>
+            </fieldset>
+            </div>
+        </div>
+    </section>
+
+
+<% include ./partials/footer %>
+    </div>
+</body>
+</html>

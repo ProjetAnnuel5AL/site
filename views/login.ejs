@@ -1,0 +1,71 @@
+<!-- views/connexion.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Connexion</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+        </header>
+
+        <section class="main-container top-space col1-layout">
+        <div class="main container">
+            <div class="account-login">
+            <div class="page-title">
+                <h2>Connectez vous ou Créez un compte !</h2>
+            </div>
+            <fieldset class="col2-set">
+                <div class="col-1 new-users"><strong>Inscription</strong>
+                <div class="content">
+                    <p>En créeant un compte sur notre site, vous serez capable de commander les différents produits disponible. Si vous êtes producteur, vous serez également capable de vendre vos produit !</p>
+                    <div class="buttons-set">
+                    <button onclick="window.location='/registration'" class="button create-account" type="button"><span>Créer un compte</span></button>
+                    </div>
+                </div>
+                </div>
+                <div class="col-2 registered-users"><strong>Connexion</strong>
+                <div class="content">
+
+                    <!-- show any messages that come back with authentication -->
+                    <% if (msgError.length > 0) { %>
+                    <div class="alert alert-danger"><%= msgError %></div>
+                    <% } %>
+
+                    <p>SI vous possedez un compte, merci de vous connecter.</p>
+                    <form action="/login" method="post">
+                        <ul class="form-list">
+                            <li>
+                                <label for="login">Identifiant</label>
+                                <br>
+                                <input type="text" title="login" class="input-text required-entry" id="login" value="" name="login" required>
+                            </li>
+                            <li>
+                                <label for="password">Mot de passe</label>
+                                <br>
+                                <input type="password" title="Password" id="password" class="input-text required-entry validate-password" name="password" required>
+                            </li>
+                        </ul>
+                        <button id="send2" name="send" type="submit" class="button login"><span>Connexion</span></button>
+                    </form>
+                    
+                    <a class="forgot-word" href="/">Mot de passe oublié ?</a> </div>
+                </div>
+                </div>
+            </fieldset>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+        </section>
+
+        <% include ./partials/footer %>
+    </div>
+</body>
+</html>

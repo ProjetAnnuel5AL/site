@@ -1,0 +1,41 @@
+<!-- views/signup.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Validation Inscription</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+        <div id="page"> 
+            <!-- Header -->
+            <header>
+                <% include ./partials/topBar %>
+            </header>
+
+            
+        <section class="main-container top-space col1-layout">
+                <div class="main container">
+                    <div class="account-login">
+                    <div class="page-title">
+                        <h2>Inscription</h2>
+                    </div>
+                    <fieldset class="col2-set">
+                        <div class="col-1 registered-users"><strong>Connexion</strong>
+                            <div class="content">
+                                <% if (msgError.length > 0) { %>
+                                <div class="alert alert-danger"> <%= msgError %> </div>
+                                <% } %>
+                                <% if (msgSuccess.length > 0) { %>
+                                <div class="alert alert-success"> <%= msgSuccess %> </div>
+                                <% } %>      
+                            </div>
+                        </div>
+                    </fieldset>
+                    </div>
+                </div>
+        </section>
+        <% include ./partials/footer %>
+    </div>
+
+</body>
+</html>

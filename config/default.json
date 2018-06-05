@@ -1,0 +1,15 @@
+{
+  "development": {
+    "urlAvatarProducer" : "http://localhost:8888/producerAvatar",
+    "urlItemPhoto" : "http://localhost:8888/itemPhotos"
+  },
+  "production": {
+  "urlAvatarProducer" : "http://localhost:8888/producerAvatar",
+  "urlItemPhoto" : "http://localhost:8888/itemPhotos"
+  },
+  "test": {
+    "urlAvatarProducer" : "http://localhost:8888/producerAvatar",
+    "urlItemPhoto" : "http://localhost:8888/itemPhotos"
+  }
+
+}

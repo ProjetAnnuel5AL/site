@@ -1,0 +1,83 @@
+<!-- views/becomeProducer.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Fiche producteur</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+        </header>
+        <div class="col-sm-8 col-sm-offset-2 ">
+            <% if (msgError.length > 0) { %>
+                <div class="alert alert-danger"> <%= msgError %> </div>
+            <% } %>
+            <% if (msgSuccess.length > 0) { %>
+                <div class="alert alert-success"> <%= msgSuccess %> </div>
+            <% } %>
+        </div>
+
+
+
+        <% if (msgError != "Ce producteur n'existe pas !") { %>
+
+            <% 
+                var nbComment = producer.comment.length;
+                var totalStar = 0;
+                for(var i =0; i<nbComment; i++){
+                    totalStar+=producer.comment[i].starComment;
+                }
+                if(nbComment>0){
+                    var moyenne = ((totalStar/(nbComment*5))*5);
+                }else{
+                    var moyenne = "Pas encore d'évaluation";
+                }
+                
+            %>
+            
+            <div class="container">
+                <div class="col-sm-8 col-sm-offset-2 ">
+                    <img src="<%= avatar %>" style="max-width: 300px;">
+                    <%= moyenne %> étoiles
+        
+                    <h4><%= producer.lastNameProducer %> <%= producer.firstNameProducer %></h4>
+                </div>
+                <div class="col-sm-8 col-sm-offset-2 ">
+                    <h2>Description</h2>
+                    <%= producer.descriptionProducer %>
+                </div>
+            </div>
+        
+                <table class="table">
+                    <tr>
+                        <th>avis : </th>
+                    </tr>
+                    <% if(nbComment == 0){ %>
+                        <tr><td><h2>Pas d'avis</h2></td></tr>
+                    <% }else{ 
+                        for(var i =0; i<nbComment; i++){ %>
+                            <tr>
+                                <td>
+                                    <h2><%= producer.comment[i].loginUser %></h2>
+                                    <h5>Le : <%= producer.comment[i].dateComment %></h5>
+                                    <%= producer.comment[i].comment %>
+                                </td>
+                            </tr>
+                        <% }
+                    } %>
+                </table>
+        
+        <% } %>
+
+
+
+
+
+
+
+    </div>
+    <% include ./partials/footer %>
+</body>

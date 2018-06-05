@@ -1,0 +1,344 @@
+<!-- views/gestionCompte.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Profil</title>
+    <% include ./partials/header %>
+    <script>
+        $( function() {
+            $( "#tabs" ).tabs();
+        } );
+    </script>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+        </header>
+
+        <ul>
+            <li><a href="#tabs-1">Identifiants</a></li>
+            <li><a href="#tabs-2">Mot de passe</a></li>
+            <li><a href="#tabs-3">Informations livraison</a></li>
+        </ul>
+
+        <section class="main-container top-space col1-layout">
+            <div class="main container">
+                <div class="account-login">
+                <div class="page-title">
+                    <h2>Mes informations : </h2>
+                </div>
+                <fieldset class="col2-set">
+                    <div class="col-1 update-users">
+                    <div class="content">
+
+                        <% if (msgError.length > 0) { %>
+                        <div class="alert alert-danger"><%= msgError %></div>
+                        <% } %>
+                        <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%= msgSuccess %> </div>
+                        <% } %>
+    
+                        <form action="/generalInformation" method="post">
+                            <ul class="form-list">
+                                <li>
+                                    <label for="login">Identifiant</label>
+                                    <br>
+                                    <input type="text" title="login" class="input-text required-entry" id="login" value="<%= profil.loginUser%>" name="username" required  disabled="disabled">
+                                </li>
+                                <li>
+                                    <label for="mail">Mail</label>
+                                    <br>
+                                    <input type="email" title="mail" id="mail" class="input-text required-entry" name="mail" value="<%= profil.emailUser %>" required>
+                                </li>
+                                
+                                <!--on garde en memoire les ancienne valeur pour ne pas devoir recharger a chaque fois le profil-->
+                                <input type="hidden" value="<%= profil.emailUser %>" name="profilMail">
+                                <input type="hidden" value="<%= profil.lastName %>" name="profilLastName">
+                                <input type="hidden" value="<%= profil.firstName %>" name="profilFirstName">
+                                <input type="hidden" value="<%= profil.birth %>" name="profilBirth">
+                                <input type="hidden" value="<%= profil.sex %>" name="profilSex">
+                                <input type="hidden" value="<%= profil.address %>" name="profilAddress">
+                                <input type="hidden" value="<%= profil.city %>" name="profilCity">
+                                <input type="hidden" value="<%= profil.cp %>" name="profilCp">
+                                
+                            </ul>
+                            <button name="send" type="submit" class="button"><span>Modifier mes informations</span></button>
+                        </form>
+                    
+                    </div>
+                    </div>
+                </fieldset>
+                </div>
+            </div>
+        </section>
+
+        <section class="main-container top-space col1-layout">
+            <div class="main container">
+                <div class="account-login">
+                <div class="page-title">
+                    <h2>Modifier mon mot de pass : </h2>
+                </div>
+                <fieldset class="col2-set">
+                    <div class="col-1 update-users">
+                    <div class="content">
+                        <form action="/updatePassword" method="post">
+                            <ul class="form-list">
+                                <li>
+                                    <label for="oldPassword">Ancien mot de passe</label>
+                                    <br>
+                                    <input type="password" title="oldPassword" class="input-text required-entry" id="oldPassword" name="oldPassword" required >
+                                </li>
+                                <li>
+                                    <label for="password">Mot de passe</label>
+                                    <br>
+                                    <input type="password" title="password" id="password" class="input-text required-entry" name="password" required>
+                                </li>
+                                <li>
+                                    <label for="passwordConfirm">Confirmer le mot de passe</label>
+                                    <br>
+                                    <input type="password" title="passwordConfirm" id="passwordConfirm" class="input-text required-entry" name="passwordConfirm" required>
+                                </li>
+
+                                
+                                <input type="hidden" value="<%= profil.emailUser %>" name="profilMail">
+                                <input type="hidden" value="<%= profil.lastName %>" name="profilLastName">
+                                <input type="hidden" value="<%= profil.firstName %>" name="profilFirstName">
+                                <input type="hidden" value="<%= profil.birth %>" name="profilBirth">
+                                <input type="hidden" value="<%= profil.sex %>" name="profilSex">
+                                <input type="hidden" value="<%= profil.address %>" name="profilAddress">
+                                <input type="hidden" value="<%= profil.city %>" name="profilCity">
+                                <input type="hidden" value="<%= profil.cp %>" name="profilCp">
+                                
+                            </ul>
+                            <button name="send" type="submit" class="button"><span>Modifier mon mot de passe</span></button>
+                        </form>
+                    
+                    </div>
+                    </div>
+                </fieldset>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </section>
+
+        <section class="main-container top-space col1-layout">
+            <div class="main container">
+                <div class="account-login">
+                <div class="page-title">
+                    <h2>Enregistrer des informations de livraison : </h2>
+                </div>
+                <fieldset class="col2-set">
+                    <div class="col-1 update-users">
+                    <div class="content">
+                        <form action="/informationsLivraison" method="post">
+                            <ul class="form-list">
+                                <li>
+                                    <label for="lastName">Nom</label>
+                                    <br>
+                                    <input type="text" title="lastName" class="input-text required-entry" id="lastName" value="<%= profil.lastNameUser%>" name="lastName" required >
+                                </li>
+                                <li>
+                                    <label for="mail">Prénom</label>
+                                    <br>
+                                    <input type="text" title="firstName" id="firstName" class="input-text required-entry" name="firstName" value="<%= profil.firstNameUser %>" required>
+                                </li>
+                                <li>
+                                    <label for="birth">Date de naissance</label>
+                                    <br>
+                                    <input type="date" title="birth" id="birth" class="input-text required-entry" name="birth" value="<%= profil.birthUser %>" required>
+                                </li>
+                                <li>
+                                    <label for="birth">Sexe</label>
+                                    <br>
+                                    <select name="sex">
+                                        <option></option>
+                                        <option value="H" name="sex" <% if (profil.sexUser == "H") { %> selected <% } %> >H</option>
+                                        <option value="F" name="sex" <% if (profil.sexUser == "F") { %> selected <% } %> >F</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <label for="address">Adresse</label>
+                                    <br>
+                                    <input type="text" title="address" id="address" class="input-text required-entry" name="address" value="<%= profil.addressUser %>" required>
+                                </li>
+                                <li>
+                                    <label for="city">Ville</label>
+                                    <br>
+                                    <input type="text" title="city" id="city" class="input-text required-entry" name="city" value="<%= profil.cityUser %>" required>
+                                </li>
+                                <li>
+                                    <label for="cp">Code Postal</label>
+                                    <br>
+                                    <input type="text" title="cp" id="cp" class="input-text required-entry" name="cp" value="<%= profil.cpUser %>" required>
+                                </li>
+                                
+                                <input type="hidden" value="<%= profil.emailUser %>" name="profilMail">
+                                <input type="hidden" value="<%= profil.lastName %>" name="profilLastName">
+                                <input type="hidden" value="<%= profil.firstName %>" name="profilFirstName">
+                                <input type="hidden" value="<%= profil.birth %>" name="profilBirth">
+                                <input type="hidden" value="<%= profil.sex %>" name="profilSex">
+                                <input type="hidden" value="<%= profil.address %>" name="profilAddress">
+                                <input type="hidden" value="<%= profil.city %>" name="profilCity">
+                                <input type="hidden" value="<%= profil.cp %>" name="profilCp">
+                                
+                            </ul>
+                            <button name="send" type="submit" class="button"><span>Modifier mes informations de livraison</span></button>
+                        </form>
+                    
+                    </div>
+                    </div>
+                </fieldset>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </section>
+
+
+
+
+       
+
+
+    </div>
+    
+<div class="container">
+  
+    <div id="tabs">
+
+        <ul>
+            <li><a href="#tabs-1">Identifiants</a></li>
+            <li><a href="#tabs-2">Mot de passe</a></li>
+            <li><a href="#tabs-3">Informations livraison</a></li>
+        </ul>
+        <div class="col-sm-8 col-sm-offset-2 " id="tabs-1">
+              <h2>Mes informations : </h2>
+              <form action="/generalInformation" method="post">
+               
+                <div class="form-group">
+                    <label>Login</label>
+                    <input type="text" class="form-control" name="username" value="<%= profil.loginUser%>" required disabled="disabled">
+                </div>
+                <div class="form-group">
+                    <label>Mail</label><%= profil.mailUser %>
+                    <input type="email" class="form-control" name="mail" value="<%= profil.emailUser %>" required>
+                </div>
+
+
+
+
+
+                <!--on garde en memoire les ancienne valeur pour ne pas devoir recharger a chaque fois le profil-->
+                <input type="hidden" value="<%= profil.emailUser %>" name="profilMail">
+                <input type="hidden" value="<%= profil.lastName %>" name="profilLastName">
+                <input type="hidden" value="<%= profil.firstName %>" name="profilFirstName">
+                <input type="hidden" value="<%= profil.birth %>" name="profilBirth">
+                <input type="hidden" value="<%= profil.sex %>" name="profilSex">
+                <input type="hidden" value="<%= profil.address %>" name="profilAddress">
+                <input type="hidden" value="<%= profil.city %>" name="profilCity">
+                <input type="hidden" value="<%= profil.cp %>" name="profilCp">
+                
+                <button type="submit" class="btn btn-lg">Modifier mes informations</button>
+            </form>
+    
+        </div>
+        
+        <div class="col-sm-8 col-sm-offset-2 " id="tabs-2">
+            <h2>Modifier mon mot de passe</h2>
+            <form action="/modifierMdp" method="post">
+                <div class="form-group">
+                        <label>Ancien mot de passe</label>
+                        <input type="password" class="form-control" name="oldPassword" required>
+                    </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmer le mot de passe</label>
+                    <input type="password" class="form-control" name="passwordConfirm" required>
+                </div>
+                <!--on garde en memoire les ancienne valeur pour ne pas devoir recharger a chaque fois le profil-->
+                <input type="hidden" value="<%= profil.emailUser %>" name="profilMail">
+                <input type="hidden" value="<%= profil.lastName %>" name="profilLastName">
+                <input type="hidden" value="<%= profil.firstName %>" name="profilFirstName">
+                <input type="hidden" value="<%= profil.birth %>" name="profilBirth">
+                <input type="hidden" value="<%= profil.sex %>" name="profilSex">
+                <input type="hidden" value="<%= profil.address %>" name="profilAddress">
+                <input type="hidden" value="<%= profil.city %>" name="profilCity">
+                <input type="hidden" value="<%= profil.cp %>" name="profilCp">
+
+                <button type="submit" class="btn btn-l">Modifier mon mot de passe</button>
+                
+            </form>
+        </div>
+
+
+        <div class="col-sm-8 col-sm-offset-2 " id="tabs-3">
+           <h2>Informations livraison</h2>
+           <form action="/informationsLivraison" method="post">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" class="form-control" name="lastName" value="<%= profil.lastNameUser %>" required>
+                </div>
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" class="form-control"  value="<%= profil.firstNameUser %>" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label>Date de naissance</label>
+                    <input type="date" class="form-control"  value="<%= profil.birthUser %>" name="birth" required>
+                </div>
+                <div class="form-group">
+                    <label>Sexe</label>
+                    <select name="sex">
+                        <option></option>
+                        <option value="H" name="sex" <% if (profil.sexUser == "H") { %> selected <% } %> >H</option>
+                        <option value="F" name="sex" <% if (profil.sexUser == "F") { %> selected <% } %> >F</option>
+                    </select>  
+                </div>
+                <div class="form-group">
+                    <label>Adresse</label>
+                    <input type="text" class="form-control"  value="<%= profil.addressUser %>" name="address" required>
+                </div>
+                <div class="form-group">
+                    <label>Ville</label>
+                    <input type="text" class="form-control"  value="<%= profil.cityUser %>" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label>Code Postal</label>
+                    <input type="number" class="form-control"  value="<%= profil.cpUser %>" name="cp" required>
+                </div>
+
+                <!--on garde en memoire les ancienne valeur pour ne pas devoir recharger a chaque fois le profil-->
+                <input type="hidden" value="<%= profil.emailUser %>" name="profilMail">
+                <input type="hidden" value="<%= profil.lastNameUser %>" name="profilLastName">
+                <input type="hidden" value="<%= profil.firstNameUser %>" name="profilFirstName">
+                <input type="hidden" value="<%= profil.birthUser %>" name="profilBirth">
+                <input type="hidden" value="<%= profil.sexUser %>" name="profilSex">
+                <input type="hidden" value="<%= profil.addressUser %>" name="profilAddress">
+                <input type="hidden" value="<%= profil.cityUser %>" name="profilCity">
+                <input type="hidden" value="<%= profil.cpUser %>" name="profilCp">
+
+                <button type="submit" class="btn btn-lg ">Modifier mes informations de livraison</button>
+               
+           </form>
+       </div>
+
+    </div>
+    
+
+
+</div>
+<% include ./partials/footer %>
+</body>
+</html>

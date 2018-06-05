@@ -1,0 +1,222 @@
+<!-- views/connexion.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Liste annonces</title>
+    <% include ./partials/header %>
+    
+    <link rel="stylesheet" href="/css/slider.css">
+    <script src="/js/bootstrap-slider.js"></script>
+    <script type="text/javascript">
+      var products = JSON.parse('<%- JSON.stringify(products) %>');
+
+      $(document).ready(function () {
+        $("#listItems").collapse("show");
+        $("#filter").collapse();
+        $("#price").slider({});
+        $("#quantity").slider({});
+        $('.slider-horizontal').css({'width': '100%', 'height':'30px'});
+        $("#category").change(function () {
+          var id = $(this).children(":selected")[0].attributes.value.nodeValue;
+          loadProducts(id);
+        });
+      });
+      function filter(){
+        var categoryId = $("#category").children(":selected")[0].attributes.value.nodeValue;
+        var productId = $("#product").children(":selected")[0].attributes.value.nodeValue;
+        var city = $( "#cities option:selected" ).text()
+        var producerId = $("#producers").children(":selected")[0].attributes.value.nodeValue;
+        var price = $("#price").data('slider').getValue();
+        var priceMin = price[0];
+        var priceMax = price[1];
+        var remainingQuantity = $("#quantity").data('slider').getValue()-1;
+        $.getJSON("/itemList/filter", { categoryId: categoryId, productId: productId, city: city, producerId: producerId,
+        priceMin: priceMin, priceMax: priceMax, remainingQuantity: remainingQuantity}).done(function( json ) {
+          if(json.msgError == ""){
+            $("#tabdata").find('tbody').empty().append(json.listTab);
+          }else{
+            alert(json.msgError);
+          }
+          console.log(json);
+        });
+      }
+
+      function loadProducts(id){
+        $('#product').empty();
+        $('#product').append($('<option>', {
+          value: 0,
+          text: "Pas de filtrage"
+        }));
+        for(var elem in products) {
+          if(products[elem].idCat == id){
+            $('#product').append($('<option>', {
+              value: products[elem].id,
+              text: products[elem].name
+            }));
+          }
+        }
+      }
+    </script>
+
+
+</head>
+<body class="cms-index-index cms-home-page">
+  <div id="page"> 
+      <!-- Header -->
+      <header>
+          <% include ./partials/topBar %>
+          <% include ./partials/navbar %>
+      </header>
+
+<br>
+      <section class="main-container col2-left-layout bounceInUp animated">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-9 col-sm-push-3">
+           
+              
+      <article class="col-main">
+        <h2 class="page-heading"> <span class="page-heading-title">Les Produits</span> </h2>
+        <div class="display-product-option">
+          <div class="pager hidden-xs">
+            <div class="pages">
+              <ul class="pagination">
+                  <% if(currentPage != 1){ %>
+                  <li><a href="/itemList/<%=(currentPage-1)%>">&laquo;</a></li>
+                  <% } %>
+                <% var pagination = 1; 
+                if(listTab.length>0) {
+                for (var j = 1; j<=nbItems; j = j+20){ %>
+                  <% if(currentPage == pagination) { %>
+                    <li class="active"><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>
+                  <% }else{ %>
+                    <li><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>
+                  <% } %>
+                  
+                <% pagination++; } } 
+                var nextPage =  (currentPage*1+1*1)%>
+                <% if(currentPage != pagination-1){ %>
+                  <li><a href="/itemList/<%=nextPage%>">&raquo;</a></li>
+                <% } %>
+                
+              </ul>
+            </div>
+          </div>
+          <div class="sorter">
+            <div class="view-mode"> <span title="Grid" class="button button-active button-grid">&nbsp;</span><a href="list.html" title="List" class="button-list">&nbsp;</a> </div>
+          </div>
+        </div>
+
+
+        <div class="category-products">
+          <ul class="products-grid">
+            <% if(listTab.length>0) { 
+             
+              for (var i =0; i<listTab.length; i++){ %>
+                  <%var desc = listTab[i].description.replace("\r\n", "<br />") %>
+                   
+              <script type="text/javascript">
+                  
+                 
+                
+              </script>
+
+              <li class="item col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                <div class="item-inner">
+                  <div class="item-img">
+                    <div class="item-img-info"><a href="/visualisationAnnonce/<%=listTab[i].id%>" title="Retis lapen casen" class="product-image"><img style="height: 200px; max-width: 200px;" src="<%=urlApi%>/itemPhotos/<%=listTab[i].id%>/0.<%=listTab[i].fileExtensions.split(';')[0]%>" alt="<%=listTab[i].productName%>"></a>
+                      <!--<div class="new-label new-top-left">New</div>-->
+                      <div class="box-hover">
+                        <ul class="add-to-links">
+                          <li><a class="link-quickview" onclick="displayQuickView('<%=listTab[i].productName%>','<%=listTab[i].price%>','<%=listTab[i].quantity%>','<%=listTab[i].unitName%>', '<%=desc%>', '<%=listTab[i].id%>', '<%=listTab[i].fileExtensions%>', '<%=urlApi%>' );">Voir plus</a> </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item-info">
+                    <div class="info-inner">
+                      <div class="item-title"> <a title="Retis lapen casen" href="/visualisationAnnonce/<%=listTab[i].id%>"><%=listTab[i].productName%> <%=listTab[i].photo%> </a> </div>
+                      <div class="item-content">
+                        <div class="rating">
+                          <div class="ratings">
+                            <!--<div class="rating-box">
+                              <div style="width:80%" class="rating"></div>
+                            </div>
+                            <!--<p class="rating-links"> <a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a> </p>-->
+                          <!--</div>-->
+                        </div>
+                        <div class="item-price">
+                          <div class="price-box">
+                            <!--<p class="old-price"><span class="price-label">Regular Price:</span> <span class="price">$100.00 </span> </p>-->
+                            <p class="special-price"><span class="price-label">Special Price</span> <span class="price"><%= listTab[i].price%> € </span> </p>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            <% } } %>
+          </ul>
+        </div>
+        <div class="toolbar">
+          <div class="row">
+            <div class="col-lg-3 col-md-4">
+              <!--<div id="sort-by">
+                <label class="left">Sort By: </label>
+                <ul>
+                  <li><a href="#">Position<span class="right-arrow"></span></a>
+                    <ul>
+                      <li><a href="#">Name</a></li>
+                      <li><a href="#">Price</a></li>
+                      <li><a href="#">Position</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>-->
+            </div>
+            <div class="col-lg-6 col-sm-7 col-md-5">
+              <div class="pager">
+                <div class="pages">
+                  <label>Page:</label>
+                  <ul class="pagination">
+                      <% if(currentPage != 1){ %>
+                      <li><a href="/itemList/<%=(currentPage-1)%>">&laquo;</a></li>
+                      <% } %>
+                    <% var pagination = 1; 
+                    if(listTab.length>0) {
+                    for (var j = 1; j<=nbItems; j = j+20){ %>
+                      <% if(currentPage == pagination) { %>
+                        <li class="active"><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>
+                      <% }else{ %>
+                        <li><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>
+                      <% } %>
+                      
+                    <% pagination++; } } 
+                    var nextPage =  (currentPage*1+1*1)%>
+                    <% if(currentPage != pagination-1){ %>
+                      <li><a href="/itemList/<%=nextPage%>">&raquo;</a></li>
+                    <% } %>
+                    
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-3">
+              <div id="limiter">
+                
+                <a class="button-asc left" href="#" title="Set Descending Direction"><span class="top_arrow"></span></a> </div>
+            </div>
+          </div>
+        </div>
+      </article>  
+
+            </div>
+          </div></div></section>
+
+  </div>
+<% include ./partials/footer %>
+<% include ./partials/quickView %>
+</body>
+</html>

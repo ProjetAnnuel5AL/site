@@ -1,0 +1,21 @@
+<!-- views/becomeProducer.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Fiche producteur</title>
+    <% include ./partials/header %>
+</head>
+<body >
+<% include ./partials/navbar %>
+<div class="container">
+    <div class="col-sm-8 col-sm-offset-2 ">
+        <% if (msgError.length > 0) { %>
+            <div class="alert alert-danger"> <%= msgError %> </div>
+        <% } %>
+    </div>
+</div>
+
+
+<% include ./partials/footer %>
+</body>
+</html>

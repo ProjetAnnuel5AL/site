@@ -1,0 +1,136 @@
+<!-- views/becomeProducer.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Devient producteur</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+        </header>
+        
+        <section class="main-container top-space col1-layout">
+            <div class="main container">
+                <div class="account-login">
+                <div class="page-title">
+                    <h2>Devenir producteur : </h2>
+                </div>
+                <fieldset class="col2-set">
+                    <div class="col-1 update-users">
+                    <div class="content">
+
+                        <% if (msgError.length > 0) { %>
+                        <div class="alert alert-danger"><%= msgError %></div>
+                        <% } %>
+                        <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%= msgSuccess %> </div>
+                        <% } %>
+    
+                        <form action="/becomeProducer" method="post" enctype="multipart/form-data">
+                            <ul class="form-list">
+                                <li>
+                                    <label for="name">Nom</label>
+                                    <br>
+                                    <input type="text" title="lastName" class="input-text required-entry" id="lastName" value="<%= producer.lastNameProducer%>" name="lastName" required>
+                                </li>
+                                <li>
+                                    <label for="firstName">Prénom</label>
+                                    <br>
+                                    <input type="text" title="firstName" id="firstName" class="input-text required-entry" name="firstName" value="<%= producer.firstNameProducer %>" required>
+                                </li>
+                                <li>
+                                    <label for="birth">Date de naissance</label>
+                                    <br>
+                                    <input type="date" title="birth" id="birth" class="input-text required-entry" name="birth" value="<%= producer.birthProducer %>" required>
+                                </li>
+                                <li>
+                                    <label for="sex">Sexe</label>
+                                    <br>
+                                    <select name="sex">
+                                        <option></option>
+                                        <option value="H" name="sex" <% if (producer.sexProducer == "H") { %> selected <% } %> >H</option>
+                                        <option value="F" name="sex" <% if (producer.sexProducer == "F") { %> selected <% } %> >F</option>
+                                    </select>  
+                                </li>
+                                <li>
+                                    <label for="email">Email</label>
+                                    <br>
+                                    <input type="email" title="email" id="email" class="input-text required-entry" name="email" value="<%= producer.emailProducer %>" required>
+                                </li>
+                                <li>
+                                    <label for="phone">Numéro de téléphone</label>
+                                    <br>
+                                    <input type="text" title="phone" id="phone" class="input-text required-entry" name="phone" value="<%= producer.phoneProducer %>" required>
+                                </li>
+                                <li>
+                                    <label for="address">Adresse</label>
+                                    <br>
+                                    <input type="text" title="address" id="address" class="input-text required-entry" name="address" value="<%= producer.addressProducer %>" required>
+                                </li>
+                                <li>
+                                    <label for="city">Ville</label>
+                                    <br>
+                                    <input type="text" title="city" id="city" class="input-text required-entry" name="city" value="<%= producer.cityProducer %>" required>
+                                </li>
+                                <li>
+                                    <label for="cp">Code Postal</label>
+                                    <br>
+                                    <input type="number" title="cp" id="cp" class="input-text required-entry" name="cp" value="<%= producer.cpProducer %>" required>
+                                </li>
+                                <li>
+                                    <label for="avatar">Photo (facultative) </label>
+                                    <br>
+                                    
+                                </li>
+                                <li>
+                                    <img src="img/avatar.png"  id="avatarImg" style="max-width: 300px;">
+                                    <input type="file" name="avatar" id="fileAvatar" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|images/*">
+                                    <br>       
+                                </li>
+                                <li>
+                                    <label for="description">Description</label>
+                                    <br>
+                                    <textarea rows="5" cols="50" title="description" id="description" class="input-text required-entry" name="description" required><%= producer.descriptionProducer %></textarea>
+                                </li>
+                        
+                            </ul>
+                            <button name="send" type="submit" class="button"><span>Devenir producteur</span></button>
+                        </form>
+                    
+                    </div>
+                    </div>
+                </fieldset>
+                </div>
+            </div>
+        </section>
+
+
+        <script type="text/javascript">
+            $("document").ready(function(){
+                $("#fileAvatar").change(function() {
+                    readURL(this);   
+                });
+            });
+    
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+    
+                    reader.onload = function (e) {
+                        $('#avatarImg').attr('src', e.target.result);
+                    }
+    
+                    reader.readAsDataURL(input.files[0]);
+                }else{
+                    $('#avatarImg').attr('src', "img/avatar.png");
+                }
+            }
+    
+        </script>
+
+    </div>
+    <% include ./partials/footer %>
+</body>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Annonce</title>
+    <% include ./partials/header %>
+</head>
+<body>
+
+<% include ./partials/navbar %>
+<script type="text/javascript">
+   var jsonTranslat = [];
+</script>
+
+
+<div class="container">
+
+
+        <% if(cart.length == 0){ %>
+            <h2>Pas d'article dans votre panier ! </h2>
+        <% }else{
+            var total = 0; 
+            for (var i =0; i<cart.length; i++) { %>
+
+            <script type="text/javascript">
+               
+                //obliger de faire se translate car on ne peux pas intéragir de js a ejs
+                var o = {};
+                o.id = "<%= cart[i].id %>";
+                o.qte = <%= cart[i].qte %>
+                o.qteMax = <%= cart[i].qteMax %>
+                o.unit = "<%= cart[i].unit %>"
+                o.category = "<%= cart[i].category %>"
+                o.product = "<%= cart[i].product %>"
+                o.title = "<%= cart[i].title %>"
+                jsonTranslat.push(o);
+               
+            </script>
+
+            <div class="row">
+                <div class="col-sm-5">
+                    <h3><%= cart[i].title %></h3>
+                    <b>Catégorie :</b> <%= cart[i].category %> &nbsp;&nbsp;&nbsp;
+                    <b>Appellation :</b> <%= cart[i].product %> &nbsp;&nbsp;&nbsp;
+                   
+                </div>
+                <div class="col-sm-1">
+                    <select name="qte" id="<%=i%>" onchange="changeQte(this)">
+                        <% for(var j = 1; j<=cart[i].qteMax; j++) { %> 
+                            <% if(cart[i].qte != j){ %>
+                                <option name="qteCart" value ="<%=j%>"  ><%=j%></option>
+                            <% } else { %>
+                                <option name="qteCart" value ="<%=j%>" selected="selected"><%=j%></option>
+                            <% } %>
+                            
+                        <% } %>  
+                        
+                    </select>
+                </div>
+                <div class="col-sm-1" >
+
+                    <%= (cart[i].prixU*cart[i].qte) %> €
+                    <% total += (cart[i].prixU*cart[i].qte) %>
+                </div>
+                <div class="col-sm-1" >
+                        <button id="<%=cart[i].id%>" onclick="deleteItemCart(this)"> Supp</button>
+                </div>
+            </div>
+           
+            
+
+            <% } %>
+            <div class="row">
+                    <div class="col-sm-1" >
+                            total : <%= total %> €
+                    </div>
+            </div>
+            <script type="text/javascript">
+                function changeQte(s) {
+                
+                    var indice = s.id;
+                    var id = jsonTranslat[indice].id
+                    var oldQte = jsonTranslat[indice].qte
+                    if(confirm("Valider la modification de quantité ?") == true){
+                        var newQte = s.value;
+                        var valToAdd = newQte - oldQte;
+                        $.getJSON("/cart/add", { id: id, qte:valToAdd, qteMax :  jsonTranslat[indice].qteMax , unit : jsonTranslat[indice].unit , category : jsonTranslat[indice].category, product: jsonTranslat[indice].product, title:jsonTranslat[indice].title, prixU:jsonTranslat[indice].prixU  }).done(function( json ) {
+                            if(json.code == 0){
+                                // on mettera un modal plus tard pour faire beau
+                                alert("Modification effectuée")
+                            }else{
+                                alert(json.message)
+                            }
+                        });
+                    }else{
+                        
+                    }
+                };
+
+                function deleteItemCart(c){
+                    if(confirm("Voulez vous vraiment supprimer ?") == true){
+                       
+                        $.getJSON("/cart/delete", { id: c.id }).done(function( json ) {
+                            if(json.code == 0){
+                                location.reload();
+                            }else{
+                                alert(json.message)
+                            }
+                        });
+                    }
+                }
+
+            </script>
+        <% } %>
+    <div class="container">
+        
+        
+    </div>
+</div>
+
+
+<% include ./partials/footer %>
+
+</body>
+</html>
