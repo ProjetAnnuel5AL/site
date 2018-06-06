@@ -1,11 +1,10 @@
+var crypto = require("crypto");
 var ServiceCrypto=function(){
-	this.keyhex = "8489768a48481eeb9c8304ze0a58455eeb9c1104ce0a5e3cb5e3cb58479766h3"; //length 32 
+	this.keyhex = "8479769f48481eeb9c8304de0a58481eeb9c8104ce0a5e3cb5e3cb59479768f1";
 	this.blockSize = 16;
 };
 
 ServiceCrypto.prototype.encryptAES = function(input) {
-	console.log(input);
-	console.log(this);
 	try {
 		var iv = require('crypto').randomBytes(16);
 		//console.info('iv',iv);
@@ -16,6 +15,8 @@ ServiceCrypto.prototype.encryptAES = function(input) {
 		//console.info(key);
 		var cipher = require('crypto').createCipheriv('aes-256-cbc', key, iv);
 		// UPDATE: crypto changed in v0.10
+
+		// https://github.com/joyent/node/wiki/Api-changes-between-v0.8-and-v0.10 
 
 		var nodev = process.version.match(/^v(\d+)\.(\d+)/);
 

@@ -72,80 +72,59 @@ module.exports = function(app, urlApi,urlLocal,  utils){
 
                 var pwdSalty = req.body.password + salt;
 
-                var ServiceCrypto = utils.ServiceCrypto;
-                var crypto = new ServiceCrypto();
-                req.body.mail = crypto.encryptAES(req.body.mail);
-                console.log(req.body.email);
-
-                //On vérifie si doublon login ou mail
                 rp({
-                    url: urlApi + "/user/checkExist",
-                    method: "GET",
+                    url: urlApi + "/user" ,
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     json: {
                         "loginUser": req.body.username,
-                        "emailUser": req.body.mail
+                        "passwordUser" : bcrypt.hashSync(pwdSalty, null, null),
+                        "saltUser" : salt,
+                        "emailUser": req.body.mail,
+                        "validationCodeUser" : validationCodeUser
                     }
-                }).then(function(body) { 
-                    if(body.code == "0"){
-
-                        if(body.emailUser == req.body.mail){
-                            res.render("registration.ejs", {
-                                msgError : "Cet Email est déjà utilisé !",
-                                msgSuccess : "",
-                                session : req.session
-                            });
-                        }else{
-                            res.render("registration.ejs", {
-                                msgError : "Cet identifiant est déjà utilisé !",
-                                msgSuccess : "",
-                                session : req.session
-                            });
-                        }
-                        
-                    } else {
-                        rp({
-                            url: urlApi + "/user" ,
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            json: {
-                                "loginUser": req.body.username,
-                                "passwordUser" : bcrypt.hashSync(pwdSalty, null, null),
-                                "saltUser" : salt,
-                                "emailUser": req.body.mail,
-                                "validationCodeUser" : validationCodeUser
-                            }
-                        }).then(function(body){
-
-                            var ServiceMail = utils.ServiceMail;
-                            var myMail = new ServiceMail();
-                            myMail.sendMail(crypto.decryptAES(req.body.mail),"Validation Inscription", "Votre inscription à bien été prise en compte. Afin de valider votre inscription merci de suivre le lien suivant : " +urlLocal+"/registrationValidation/" +validationCodeUser);
-                            res.render("registration.ejs", {
-                                msgError:"",
-                                msgSuccess: "Inscription validée ! Merci de consulter votre boite mail pour valider votre inscrption. Cela peut prendre plusieurs minutes",
-                                session : req.session
-                            });
-                        }).catch(function (err) {
-                            //console.log(err);
-                            res.render("registration.ejs", {
-                                msgError: "Erreur veuillez lors de l'inscription. Veuillez recommmencer !",
-                                msgSuccess: "",
-                                session : req.session
-                            });
+                }).then(function(body){
+                    if(body.code == 0){
+                        var ServiceMail = utils.ServiceMail;
+                        var myMail = new ServiceMail();
+                        myMail.sendMail(req.body.mail,"Validation Inscription", "Votre inscription à bien été prise en compte. Afin de valider votre inscription merci de suivre le lien suivant : " +urlLocal+"/registrationValidation/" +validationCodeUser);
+                        res.render("registration.ejs", {
+                            msgError:"",
+                            msgSuccess: "Inscription validée ! Merci de consulter votre boite mail pour valider votre inscrption. Cela peut prendre plusieurs minutes",
+                            session : req.session
+                        });
+                    }else if(body.code == 4){
+                        res.render("registration.ejs", {
+                            msgError: "Ce nom d'utilistateur n'est pas disponible.",
+                            msgSuccess: "",
+                            session : req.session
+                        });
+                    }else if(body.code == 5){
+                        res.render("registration.ejs", {
+                            msgError: "Cette adresse email n'est pas disponible.",
+                            msgSuccess: "",
+                            session : req.session
+                        });
+                    }else{
+                        res.render("registration.ejs", {
+                            msgError: "Erreur lors de l'inscription. Veuillez recommmencer !",
+                            msgSuccess: "",
+                            session : req.session
                         });
                     }
+                   
                 }).catch(function (err) {
-                   // console.log(err);
+                    //console.log(err);
                     res.render("registration.ejs", {
-                        msgError: "Erreur veuillez lors de l'inscription. Veuillez recommmencer !",
+                        msgError: "Erreur lors de l'inscription. Veuillez recommmencer !",
                         msgSuccess: "",
                         session : req.session
                     });
                 });
+                    
+               
                 
             }
                 
