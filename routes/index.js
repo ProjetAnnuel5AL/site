@@ -6,7 +6,7 @@ module.exports = function(app, urlApi, urlLocal, utils ,config) {
 	require("./item")(app, urlApi, utils);
 	require("./itemList")(app, urlApi, utils);
 	require("./registration")(app, urlApi, urlLocal, utils);
-	require("./login")(app, urlApi, utils);
+	require("./login")(app, urlApi, urlLocal, utils);
 	require("./registrationValidation")(app, urlApi, urlLocal, utils);
 	require("./logout")(app);
 	require("./profil")(app, urlApi, urlLocal, utils);

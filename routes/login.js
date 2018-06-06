@@ -1,4 +1,4 @@
-module.exports = function(app, urlApi, utils){
+module.exports = function(app, urlApi, urlLocal, utils){
 
     var msgError = "";
 	var bcrypt = require("bcrypt-nodejs");
@@ -8,7 +8,7 @@ module.exports = function(app, urlApi, utils){
 	// =====================================
 	// show the login form
 	app.get('/login', function(req, res) {
-		if(req.session.type && req.session.type != "") {
+		if(req.session.type) {
 			res.redirect("/");
 		}else{
 			res.render('login.ejs', { msgError: "", session : req.session });
@@ -17,7 +17,7 @@ module.exports = function(app, urlApi, utils){
 
 	// process the login form
 	app.post('/login', function (req, res, next) {
-		if(req.session.type && req.session.type != "") {
+		if(req.session.type) {
 			res.redirect("/");
 		}else{
 			msgError="";
@@ -86,4 +86,77 @@ module.exports = function(app, urlApi, utils){
 			}
 		}
     });
+
+    app.get('/login/resetPassword', function(req, res) {
+		if(req.session.type) {
+			res.redirect("/");
+		}else{
+			res.render('resetPassword.ejs', { 
+                msgError: "",
+                msgSuccess: "",
+                session : req.session
+            });
+		}
+    });
+    
+    app.post('/login/resetPassword', function(req, res) {
+		if(req.session.type) {
+			res.redirect("/");
+		}else{
+            if(!req.body.mail) {
+                res.render("resetPassword.ejs",{ 
+                    msgError: "Veuillez saisir un email !",
+                    msgSuccess: "",
+                    session : req.session}
+                )
+            }else{
+
+                var ListeCar = new Array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9");
+                var salt = "";
+                var pwd = "";
+                for (var i = 0; i<10 ; i++){
+                    pwd += ListeCar[Math.floor(Math.random()*ListeCar.length)];
+                }
+                for (var i = 0; i<50 ; i++){
+                    salt += ListeCar[Math.floor(Math.random()*ListeCar.length)];
+                }
+                var pwdSalty = pwd + salt;
+
+                rp({
+                    url: urlApi + "/user/resetPassword",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    json: {
+                        "emailUser": req.body.mail,
+                        "passwordUser": pwdSalty,
+                        "saltUser" : salt
+                    }
+                }).then(function(body) { 
+                    if(body.code == 0){
+                        res.render('resetPassword.ejs', { 
+                            msgError: "",
+                            msgSuccess: "Un email contenant un lien pour réinitialiser votre mot de passe vous a été envoyé.",
+                            session : req.session
+                        });
+                    }else if(body.code == 2){
+
+                    }else if(body.code == 1){
+
+                    }
+                   
+                }).catch(function (err) {
+                    console.log(err)
+                    res.render('resetPassword.ejs', { 
+                        msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement !",
+                        msgSuccess: "",
+                        session : req.session
+                    });
+                });
+
+                
+            }
+		}
+	});
 };

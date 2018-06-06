@@ -71,11 +71,13 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                 }
 
                 var pwdSalty = req.body.password + salt;
-                
+
+                var ServiceCrypto = utils.ServiceCrypto;
+                var crypto = new ServiceCrypto();
+                req.body.mail = crypto.encryptAES(req.body.mail);
+                console.log(req.body.email);
 
                 //On vérifie si doublon login ou mail
-
-
                 rp({
                     url: urlApi + "/user/checkExist",
                     method: "GET",
@@ -121,7 +123,7 @@ module.exports = function(app, urlApi,urlLocal,  utils){
 
                             var ServiceMail = utils.ServiceMail;
                             var myMail = new ServiceMail();
-                            myMail.sendMail(req.body.mail,"Validation Inscription", "Votre inscription à bien été prise en compte. Afin de valider votre inscription merci de suivre le lien suivant : " +urlLocal+"/registrationValidation/" +validationCodeUser);
+                            myMail.sendMail(crypto.decryptAES(req.body.mail),"Validation Inscription", "Votre inscription à bien été prise en compte. Afin de valider votre inscription merci de suivre le lien suivant : " +urlLocal+"/registrationValidation/" +validationCodeUser);
                             res.render("registration.ejs", {
                                 msgError:"",
                                 msgSuccess: "Inscription validée ! Merci de consulter votre boite mail pour valider votre inscrption. Cela peut prendre plusieurs minutes",
