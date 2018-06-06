@@ -34,6 +34,9 @@
                     <% if (msgError.length > 0) { %>
                     <div class="alert alert-danger"><%- msgError %></div>
                     <% } %>
+                    <% if (msgSuccess.length > 0) { %>
+                        <div class="alert alert-success"> <%= msgSuccess %> </div>
+                    <% } %>
 
                     <p>Si vous possedez un compte, merci de vous connecter.</p>
                     <form action="/login" method="post">

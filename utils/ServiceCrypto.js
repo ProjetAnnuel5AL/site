@@ -1,4 +1,5 @@
 var crypto = require("crypto");
+
 var ServiceCrypto=function(){
 	this.keyhex = "8479769f48481eeb9c8304de0a58481eeb9c8104ce0a5e3cb5e3cb59479768f1";
 	this.blockSize = 16;

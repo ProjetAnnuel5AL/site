@@ -11,7 +11,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
 		if(req.session.type) {
 			res.redirect("/");
 		}else{
-			res.render('login.ejs', { msgError: "", session : req.session });
+			res.render('login.ejs', { msgError: "", session : req.session,  msgSuccess: "" });
 		}
 	});
 
@@ -23,10 +23,10 @@ module.exports = function(app, urlApi, urlLocal, utils){
 			msgError="";
 			if(!req.body.login){
 				msgError = "Veuillez saisir votre identifiant ! ";
-				res.render('login.ejs', {msgError:msgError, session : req.session});
+				res.render('login.ejs', {msgError:msgError, session : req.session, msgSuccess: ""});
 			} else if(!req.body.password) {
 				msgError = "Veuillez saisir votre mot de passe ! ";
-				res.render('login.ejs', {msgError:msgError, session : req.session});
+				res.render('login.ejs', {msgError:msgError, session : req.session, msgSuccess: ""});
 			} else {
 
                 //Vérification de l'existance du compte + récupèration du Salt 
@@ -43,9 +43,9 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }).then(function (body) {
                 
                     if(body.code == 3){
-                        res.render("login.ejs", { msgError: "Erreur : identifiant inconnu", session: req.session });
+                        res.render("login.ejs", { msgError: "Erreur : identifiant inconnu", session: req.session, msgSuccess: "" });
                     }else if(body.code == 5 ){
-                        res.render("login.ejs", { msgError: "Erreur : Votre compte n'a pas encore été validé. Merci de l'activer en suivant le lien que nous vous avons envoyé par mail. Si vous n'avez pas recu ce mail cliquez <b><u><a href='/resend'>ici</a></u></b>.", session: req.session });
+                        res.render("login.ejs", { msgError: "Erreur : Votre compte n'a pas encore été validé. Merci de l'activer en suivant le lien que nous vous avons envoyé par mail. Si vous n'avez pas recu ce mail cliquez <b><u><a href='/resend'>ici</a></u></b>.", session: req.session, msgSuccess: "" });
                     }else{
                         rp({
                             url: urlApi + "/user/auth",
@@ -67,20 +67,20 @@ module.exports = function(app, urlApi, urlLocal, utils){
                                     req.session.cart = [];
                                     res.redirect("/");
                                 } else {
-                                    res.render("login.ejs", { msgError: "Erreur combinaison login/mot de passe", session: req.session });
+                                    res.render("login.ejs", { msgError: "Erreur combinaison login/mot de passe", session: req.session, msgSuccess: "" });
                                 }
                             } else {
-                                res.render("login.ejs", { msgError: "Erreur combinaison login/mot de passe", session: req.session });
+                                res.render("login.ejs", { msgError: "Erreur combinaison login/mot de passe", session: req.session, msgSuccess: "" });
                             }
                         }).catch(function (err) {
                             //console.log(err);
-                            res.render("login.ejs", { msgError: "Erreur inconnu. Merci de réessayer.", session: req.session });
+                            res.render("login.ejs", { msgError: "Erreur inconnu. Merci de réessayer.", session: req.session, msgSuccess: "" });
                         });
 
                     }
                 }).catch(function (err) {
                     //console.log(err);
-                    res.render("login.ejs", { msgError: "Erreur inconnu. Merci de réessayer.", session: req.session });
+                    res.render("login.ejs", { msgError: "Erreur inconnu. Merci de réessayer.", session: req.session, msgSuccess: "" });
                 });
                 
 			}
@@ -107,20 +107,10 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 res.render("resetPassword.ejs",{ 
                     msgError: "Veuillez saisir un email !",
                     msgSuccess: "",
-                    session : req.session}
-                )
+                    session : req.session
+                })
             }else{
-
-                var ListeCar = new Array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9");
-                var salt = "";
-                var pwd = "";
-                for (var i = 0; i<10 ; i++){
-                    pwd += ListeCar[Math.floor(Math.random()*ListeCar.length)];
-                }
-                for (var i = 0; i<50 ; i++){
-                    salt += ListeCar[Math.floor(Math.random()*ListeCar.length)];
-                }
-                var pwdSalty = pwd + salt;
+              
 
                 rp({
                     url: urlApi + "/user/resetPassword",
@@ -129,23 +119,48 @@ module.exports = function(app, urlApi, urlLocal, utils){
                         "Content-Type": "application/json"
                     },
                     json: {
-                        "emailUser": req.body.mail,
-                        "passwordUser": pwdSalty,
-                        "saltUser" : salt
+                        "emailUser": req.body.mail
                     }
                 }).then(function(body) { 
                     if(body.code == 0){
+                        
+                        var ServiceMail = utils.ServiceMail;
+                        var myMail = new ServiceMail();
+                        myMail.sendMail(req.body.mail,"Réinitialisation de mot de passe", "Pour réinitialiser votre mot de passe, cliquez ici : " +urlLocal+"/login/resetPassword/" +body.link);
+
                         res.render('resetPassword.ejs', { 
                             msgError: "",
                             msgSuccess: "Un email contenant un lien pour réinitialiser votre mot de passe vous a été envoyé.",
                             session : req.session
                         });
+                    }else if(body.code == 5){
+                        res.render('resetPassword.ejs', { 
+                            msgError: "Cet email n'existe pas.",
+                            msgSuccess: "",
+                            session : req.session
+                        });
                     }else if(body.code == 2){
-
+                        console.log(body)
+                        res.render('resetPassword.ejs', {   
+                            msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement !",
+                            msgSuccess: "",
+                            session : req.session
+                        });
                     }else if(body.code == 1){
-
+                        console.log("2")
+                        res.render('resetPassword.ejs', { 
+                            msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement !",
+                            msgSuccess: "",
+                            session : req.session
+                        });
+                    }else{
+                        console.log("1")
+                        res.render('resetPassword.ejs', { 
+                            msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement !",
+                            msgSuccess: "",
+                            session : req.session
+                        });
                     }
-                   
                 }).catch(function (err) {
                     console.log(err)
                     res.render('resetPassword.ejs', { 
@@ -158,5 +173,117 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 
             }
 		}
-	});
+    });
+    
+    app.get("/login/resetPassword/:code", function(req, res) {
+        if(req.session.type) {
+			res.redirect("/");
+		}else{
+            var code = req.params.code;
+            rp({
+                url: urlApi + "/user/findForResetPassword",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "codeResetPasswordUser": code
+                }
+            }).then(function(body) {
+                if(body.code == 0){
+                    res.render("resetPasswordForm.ejs", {
+                        msgError: "",
+                        msgSuccess: "",
+                        code: code,
+                        session : req.session
+                    });
+                }else{
+                    console.log(body)
+                    res.redirect("/");
+                }
+            }).catch(function (err) {
+                res.redirect("/");
+            });
+        }
+    });
+
+
+    app.post("/login/resetPassword/:code", function(req, res) {
+        if(req.session.type) {
+			res.redirect("/");
+		}else{
+            var code = req.params.code;
+            if(!req.body.password) {
+                res.render("resetPasswordForm.ejs", {
+                    session: req.session,
+                    code: code,
+                    msgError:"Veuillez saisir un mot de passe !", 
+                    msgSuccess: "",
+                });
+            }else if(!req.body.passwordConfirm) {
+                res.render("resetPasswordForm.ejs", {
+                    session: req.session,
+                    code: code,
+                    msgError:"Veuillez retaper votre mot de passe",
+                    msgSuccess: ""
+                });
+            } else if(req.body.password != req.body.passwordConfirm){
+                res.render("resetPasswordForm.ejs", {
+                    session: req.session,
+                    code: code,
+                    msgError:"Les mots de passe saisient ne sont pas identiques !",
+                    msgSuccess: ""
+                });
+            } else if(req.body.password.length<8 || req.body.password.search("[A-Z]+")== -1 || req.body.password.search("[a-z]+")== -1 || req.body.password.search("[0-9]+")== -1 || req.body.password.search(/[-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\'\"\&]/g)== -1) {
+                res.render("resetPasswordForm.ejs", {
+                    session: req.session,
+                    code: code,
+                    msgError:"Mot de passe invalide : 8 caractères minimum, au moins une majuscule et une minuscule, un chiffre et un caractère spéciale sont requis ! ",
+                    msgSuccess: ""
+                });
+            }else{
+                var ListeCar = new Array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9");
+                var salt = "";
+                for (var i = 0; i<50 ; i++){
+                    salt += ListeCar[Math.floor(Math.random()*ListeCar.length)];
+                }
+
+                var pwdSalty = req.body.password + salt;
+                rp({
+                    url: urlApi + "/user/update",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    json: {
+                        "loginUser" : req.session.login,
+                        "passwordUser" : bcrypt.hashSync(pwdSalty, null, null),
+                        "saltUser" : salt,
+                        "code": code
+                    }
+                }).then(function(body) {    
+                    if(body.code ==0){
+                        res.render('login.ejs', {msgError:msgError, session : req.session, msgSuccess: "Changement du mot de passe effectué !"});
+                    }else{
+                        res.render("resetPasswordForm.ejs", {
+                            session: req.session,
+                            code: code,
+                            msgError:"Erreur lors de la modification du mot de passe, veuillez recommmencer",
+                            msgSuccess: "" 
+                        });                 
+                    }
+                }).catch(function (err) {
+                    //console.log(err);
+                    res.render("resetPasswordForm.ejs", {
+                        session: req.session,
+                        code: code,
+                        msgError:"Erreur lors de la modification, veuillez recommmencer",
+                        msgSuccess: ""
+                    });
+                });
+            }
+        }
+    });
+
+
 };
