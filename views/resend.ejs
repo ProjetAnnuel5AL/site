@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+    <title>Renvoyer un email de confirmation</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+        <div id="page"> 
+            <!-- Header -->
+            <header>
+                <% include ./partials/topBar %>
+            </header>
+
+            
+        <section class="main-container top-space col1-layout">
+                <div class="main container">
+                    <div class="account-login">
+                    <div class="page-title">
+                        <h2>Renvoyer un email de confirmation</h2>
+                    </div>
+                    <fieldset class="col2-set">
+                        <div class="col-1 registered-users"><strong></strong>
+                            <div class="content">
+                                <% if (msgError.length > 0) { %>
+                                <div class="alert alert-danger"> <%= msgError %> </div>
+                                <% } %>
+                                <% if (msgSuccess.length > 0) { %>
+                                <div class="alert alert-success"> <%= msgSuccess %> </div>
+                                <% } %>      
+                            </div>
+                            
+                            <form action="/resend" method="post">
+                                <ul class="form-list">
+                                    <li>
+                                        <label for="login">Utilisateur</label>
+                                        <br>
+                                        <input type="text" title="login" class="input-text required-entry" id="login" value="" name="login" required>
+                                        <label for="login">Email<br/><i>Attention : Si le mail rentré est différent de celui de l'inscription, il sera enregistré comme votre adresse email.</i></label>
+                                        
+                                        <br>
+                                        <input type="text" title="mail" class="input-text required-entry" id="mail" value="" name="mail" required>
+                                    </li>
+                                </ul>
+                                <button id="send2" name="send" type="submit" class="button login"><span>Renvoyer</span></button>
+                            </form>
+                        </div>
+                    </fieldset>
+                    </div>
+                </div>
+        </section>
+        <% include ./partials/footer %>
+    </div>
+
+</body>
+</html>

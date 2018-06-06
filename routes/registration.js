@@ -124,7 +124,7 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                             myMail.sendMail(req.body.mail,"Validation Inscription", "Votre inscription à bien été prise en compte. Afin de valider votre inscription merci de suivre le lien suivant : " +urlLocal+"/registrationValidation/" +validationCodeUser);
                             res.render("registration.ejs", {
                                 msgError:"",
-                                msgSuccess: "Inscription validée ! Merci de consulter votre boite mail pour valider votre inscrption. ",
+                                msgSuccess: "Inscription validée ! Merci de consulter votre boite mail pour valider votre inscrption. Cela peut prendre plusieurs minutes",
                                 session : req.session
                             });
                         }).catch(function (err) {

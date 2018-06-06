@@ -7,7 +7,7 @@ module.exports = function(app, urlApi, utils){
     app.get("/becomeProducer", function(req, res, next) {
         if(!req.session.type) {
 			res.redirect("/");
-		}else if(req.session.type =="producer"){
+		}else if(req.session.type =="1"){
             res.redirect("/updateProducer")
         }else{
             res.render("becomeProducer.ejs", {
@@ -22,7 +22,7 @@ module.exports = function(app, urlApi, utils){
     app.post("/becomeProducer", function(req, res, next) {
         if(!req.session.type) {
 			res.redirect("/");
-		}else if(req.session.type =="producer"){
+		}else if(req.session.type =="1"){
             res.redirect("/updateProducer")
         }else{
             var form = new formidable.IncomingForm();
@@ -32,7 +32,7 @@ module.exports = function(app, urlApi, utils){
                 var localProducer = getLocalProducer(fields);
                 var extensionT = files.avatar.name.split('.');
                 var extension = extensionT[extensionT.length-1];
-
+                console.log(files)
                 if(files.avatar.name !="" && ( files.avatar.size> 5242880  ||  (extension != "jpg" && extension != "png" && extension != "jpeg" && extension != "gif" && extension != "bmp" && extension != "tif" && extension != "tiff"))){
                     res.render("becomeProducer.ejs", {
                         session: req.session,

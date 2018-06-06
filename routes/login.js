@@ -45,11 +45,11 @@ module.exports = function(app, urlApi, utils){
                     if(body.code == 3){
                         res.render("login.ejs", { msgError: "Erreur : identifiant inconnu", session: req.session });
                     }else if(body.code == 5 ){
-                        res.render("login.ejs", { msgError: "Erreur : Votre compte n'a pas encore été validé. Merci de l'activer en suivant le lien que nous vous avons envoyé par mail.", session: req.session });
+                        res.render("login.ejs", { msgError: "Erreur : Votre compte n'a pas encore été validé. Merci de l'activer en suivant le lien que nous vous avons envoyé par mail. Si vous n'avez pas recu ce mail cliquez <b><u><a href='/resend'>ici</a></u></b>.", session: req.session });
                     }else{
                         rp({
                             url: urlApi + "/user/auth",
-                            method: "GET",
+                            method: "POST",
                             headers: {
                                 "Content-Type": "application/json"
                             },

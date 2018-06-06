@@ -32,10 +32,10 @@
 
                     <!-- show any messages that come back with authentication -->
                     <% if (msgError.length > 0) { %>
-                    <div class="alert alert-danger"><%= msgError %></div>
+                    <div class="alert alert-danger"><%- msgError %></div>
                     <% } %>
 
-                    <p>SI vous possedez un compte, merci de vous connecter.</p>
+                    <p>Si vous possedez un compte, merci de vous connecter.</p>
                     <form action="/login" method="post">
                         <ul class="form-list">
                             <li>
