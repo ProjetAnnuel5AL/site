@@ -69,7 +69,7 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                     },
                     json: {
                         "loginUser": req.body.username,
-                        "passwordUser" : req.body.password, // bcrypt.hashSync(pwdSalty, null, null),
+                        "passwordUser" : req.body.password, 
                         "emailUser": req.body.mail
                     }
                 }).then(function(body){
