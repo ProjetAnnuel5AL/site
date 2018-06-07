@@ -123,11 +123,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     }
                 }).then(function(body) { 
                     if(body.code == 0){
-                        
-                        var ServiceMail = utils.ServiceMail;
-                        var myMail = new ServiceMail();
-                        myMail.sendMail(req.body.mail,"Réinitialisation de mot de passe", "Pour réinitialiser votre mot de passe, cliquez ici : " +urlLocal+"/login/resetPassword/" +body.link);
-
                         res.render('resetPassword.ejs', { 
                             msgError: "",
                             msgSuccess: "Un email contenant un lien pour réinitialiser votre mot de passe vous a été envoyé.",

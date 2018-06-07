@@ -84,10 +84,6 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                 }).then(function(body) {
                     if(body.code == 0){
 
-                        var ServiceMail = utils.ServiceMail;
-                        var myMail = new ServiceMail();
-                        myMail.sendMail(req.body.mail,"Validation Inscription", "Votre inscription à bien été prise en compte. Afin de valider votre inscription merci de suivre le lien suivant : " +urlLocal+"/registrationValidation/" +body.validationCodeUser);
-
                         res.render("resend.ejs",{ 
                             msgError: "",
                             msgSuccess: "Un email a été renvoyé avec succès",

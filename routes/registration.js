@@ -61,18 +61,6 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                     session : req.session
                 });
             }else {
-               
-                //On génere le Salt
-                var ListeCar = new Array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9");
-                var salt = "";
-                var validationCodeUser ="";
-                for (var i = 0; i<50 ; i++){
-                    salt += ListeCar[Math.floor(Math.random()*ListeCar.length)];
-                    validationCodeUser += ListeCar[Math.floor(Math.random()*ListeCar.length)];
-                }
-
-                var pwdSalty = req.body.password + salt;
-
                 rp({
                     url: urlApi + "/user" ,
                     method: "POST",
@@ -81,16 +69,11 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                     },
                     json: {
                         "loginUser": req.body.username,
-                        "passwordUser" : bcrypt.hashSync(pwdSalty, null, null),
-                        "saltUser" : salt,
-                        "emailUser": req.body.mail,
-                        "validationCodeUser" : validationCodeUser
+                        "passwordUser" : req.body.password, // bcrypt.hashSync(pwdSalty, null, null),
+                        "emailUser": req.body.mail
                     }
                 }).then(function(body){
                     if(body.code == 0){
-                        var ServiceMail = utils.ServiceMail;
-                        var myMail = new ServiceMail();
-                        myMail.sendMail(req.body.mail,"Validation Inscription", "Votre inscription à bien été prise en compte. Afin de valider votre inscription merci de suivre le lien suivant : " +urlLocal+"/registrationValidation/" +validationCodeUser);
                         res.render("registration.ejs", {
                             msgError:"",
                             msgSuccess: "Inscription validée ! Merci de consulter votre boite mail pour valider votre inscrption. Cela peut prendre plusieurs minutes",
