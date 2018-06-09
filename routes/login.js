@@ -237,13 +237,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     msgSuccess: ""
                 });
             }else{
-                var ListeCar = new Array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9");
-                var salt = "";
-                for (var i = 0; i<50 ; i++){
-                    salt += ListeCar[Math.floor(Math.random()*ListeCar.length)];
-                }
-
-                var pwdSalty = req.body.password + salt;
                 rp({
                     url: urlApi + "/user/update",
                     method: "POST",
@@ -252,8 +245,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     },
                     json: {
                         "loginUser" : req.session.login,
-                        "passwordUser" : bcrypt.hashSync(pwdSalty, null, null),
-                        "saltUser" : salt,
+                        "passwordUser" : req.body.password,
                         "code": code
                     }
                 }).then(function(body) {    
