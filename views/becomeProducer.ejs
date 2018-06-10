@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Devient producteur</title>
+    <title>Devenir producteur</title>
     <% include ./partials/header %>
 </head>
 <body class="cms-index-index cms-home-page">
@@ -17,6 +17,7 @@
                 <div class="account-login">
                 <div class="page-title">
                     <h2>Devenir producteur : </h2>
+                    <p><i>Pour vous enregistrer en tant que producteur, merci de remplir les quelques champs ci dessous</i></p>
                 </div>
                 <fieldset class="col2-set">
                     <div class="col-1 update-users">
@@ -29,7 +30,7 @@
                             <div class="alert alert-success"> <%= msgSuccess %> </div>
                         <% } %>
     
-                        <form action="/becomeProducer" method="post" enctype="multipart/form-data">
+                        <form action="/becomeProducer" id="myForm" method="post" enctype="multipart/form-data">
                             <ul class="form-list">
                                 <li>
                                     <label for="name">Nom</label>
@@ -95,11 +96,18 @@
                                     <br>
                                     <textarea style="width:100%; height:200px;" maxlength="500" title="description" id="description" class="input-text required-entry" name="description" required><%= producer.descriptionProducer %></textarea>
                                 </li>
-                        
+                                <li>
+                                    <label>Compte paypal <br /><i>Afin d'effectuer les transactions financières de vos ventes, merci de vous connecter avec votre compte paypal professionnel. Si vous n'en avez pas, vous pouvez en créer un <a href="https://www.paypal.com/fr/home">ici</a></i></label>
+                                    <br />
+                                    
+                                    <p id="displayPaypalEmail"></p>
+                                    <input type="hidden" name="emailPaypal" id="emailPaypal" value = "" required>
+                                </li>
                             </ul>
-                            <button name="send" type="submit" class="button"><span>Devenir producteur</span></button>
+                            <button name="send" type="submit" class="button" style="margin-top:60px;"><span>Devenir producteur</span></button>
                         </form>
-                    
+                        <!--on sort la section paypal du form sinon sa submit le form-->
+                        <span id='lippButton' style="margin-top:-75px; position:absolute"></span>
                     </div>
                     </div>
                 </fieldset>
@@ -107,14 +115,31 @@
             </div>
         </section>
 
+        <script src='https://www.paypalobjects.com/js/external/api.js'></script>
+        <script>
+        paypal.use( ['login'], function (login) {
+          login.render ({
+            "appid":"<%=paypalClientId%>",
+            "authend":"<%=paypalMode%>>",
+            "scopes":"openid email https://uri.paypal.com/services/paypalattributes ",
+            "containerid":"lippButton",
+            "locale":"fr-fr",
+            "returnurl":"http://localhost:8082/becomeProducer/loginpaypal"
+          });
+        });
+        </script>
 
         <script type="text/javascript">
+           
             $("document").ready(function(){
                 $("#fileAvatar").change(function() {
                     readURL(this);   
                 });
+
+                var interv = setInterval(function(){validatePaypal()}, 5000);
             });
-    
+
+
             function readURL(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
@@ -128,6 +153,27 @@
                     $('#avatarImg').attr('src', "img/avatar.png");
                 }
             }
+            var emailPaypal = "";
+            function validatePaypal(){
+                $.ajax({
+                    url: "/becomeProducer/verifyPaypalAccount",
+                    success: function(data) {
+                        console.log("succes")
+                        if(data.code == 0){
+                            if(data.email != emailPaypal){
+                                document.getElementById("displayPaypalEmail").innerHTML = "<b style=\"font-size:14px\">Compte " + data.email + " valide.<b>"
+                                document.getElementById("emailPaypal").value =  data.email
+                            }
+                        }
+                    },
+                    error: function(error){
+                        console.log("error")
+                    }
+                    
+                });
+            }
+            
+            
     
         </script>
 

@@ -65,6 +65,8 @@ module.exports = function(app, urlApi, urlLocal, utils){
                                     req.session.type = body.typeUser;
                                     req.session.token = body.token;
                                     req.session.cart = [];
+                                    //Pour verifier le compte paypal des agriculteurs 
+                                    req.session.verifPaypalValidity = {};
                                     res.redirect("/");
                                 } else {
                                     res.render("login.ejs", { msgError: "Erreur combinaison login/mot de passe", session: req.session, msgSuccess: "" });

@@ -30,6 +30,7 @@
     "googlemaps": "^1.12.0",
     "node-config": "0.0.2",
     "nodemailer": "^4.6.4",
+    "paypal-rest-sdk": "^1.8.1",
     "request": "^2.85.0",
     "request-promise": "^4.2.2"
   }

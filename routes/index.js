@@ -10,7 +10,7 @@ module.exports = function(app, urlApi, urlLocal, utils ,config) {
 	require("./registrationValidation")(app, urlApi, urlLocal, utils);
 	require("./logout")(app);
 	require("./profil")(app, urlApi, urlLocal, utils);
-	require("./becomeProducer")(app, urlApi, utils);
+	require("./becomeProducer")(app, urlApi, utils, config);
 	require("./ficheProducer")(app, urlApi, utils, config);
 	require("./product")(app, urlApi);
 	require("./cart")(app, urlApi, utils, config);
