@@ -11,6 +11,7 @@
         <header>
             <% include ./partials/topBar %>
         </header>
+        <br />
         <div class="col-sm-8 col-sm-offset-2 ">
             <% if (msgError.length > 0) { %>
                 <div class="alert alert-danger"> <%= msgError %> </div>
@@ -32,49 +33,117 @@
                 }
                 if(nbComment>0){
                     var moyenne = ((totalStar/(nbComment*5))*5);
+                    moyenne = (moyenne/5)*100
                 }else{
                     var moyenne = "Pas encore d'évaluation";
                 }
                 
             %>
             
-            <div class="container">
-                <div class="col-sm-8 col-sm-offset-2 ">
-                    <img src="<%= avatar %>" style="max-width: 300px;">
-                    <%= moyenne %> étoiles
-        
-                    <h4><%= producer.lastNameProducer %> <%= producer.firstNameProducer %></h4>
+            
+            <section class="main-container col1-layout">
+                <div class="main">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-main">
+                        <div class="product-view">
+                          <div class="product-essential">
+                            <form action="#" method="post" id="product_addtocart_form">
+                              <input name="form_key" value="6UbXroakyQlbfQzK" type="hidden">
+                              <div class="product-img-box col-lg-4 col-sm-5 col-xs-12">
+
+                                <div class="product-image">
+                                  <div class="product-full"> <img id="product-zoom" src="<%= avatar %>" data-zoom-image="<%= avatar %>" alt="producer-image"/> </div>
+                                </div>
+                                <!-- end: more-images --> 
+                              </div>
+                              <div class="product-shop col-lg-8 col-sm-7 col-xs-12">
+                                <div class="product-name">
+                                  <h1><%= producer.lastNameProducer %> <%= producer.firstNameProducer %></h1>
+                                </div>
+                                <div class="ratings">
+                                  <div class="rating-box">
+                                      <% if(nbComment == 0) {%>
+                                        <div style="width:100%" class="rating"></div>
+                                      <% }else{ %>
+                                        <div style="width:<%=moyenne%>%" class="rating"></div>
+                                      <% } %>
+                                  </div>
+                                  <p class="rating-links"> <a href="#"><%=nbComment%> Commentaire(s)</a></p>
+                                </div>
+                                <div class="short-description">
+                                  <h2>Description</h2>
+                                  <p><%- producer.descriptionProducer %></p>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-sm-8 col-sm-offset-2 ">
-                    <h2>Description</h2>
-                    <%= producer.descriptionProducer %>
+              </section>
+
+              <section class="main-container col1-layout">
+                    <div class="main">
+                            <div class="container">
+                                    <div class="row">
+                                            <div class="col-main">
+                                                    <div class="product-view">
+              <div class="tab-pane " id="reviews_tabs">
+                    <div class="box-collateral box-reviews" id="customer-reviews">
+                      <div class="box-reviews2">
+                        <h3>Avis des consommateurs</h3>
+                        <div class="box visible">
+                          <ul>
+                                <% if(nbComment == 0){ %>
+                                    <li><p>Ce producteur n'a pas encore d'avis</p></li>
+                                <% }else{ 
+                                    for(var i =0; i<nbComment; i++){ %>
+                            <li>
+                              <table class="ratings-table">
+                                <colgroup>
+                                <col width="1">
+                                <col>
+                                </colgroup>
+                                <tbody>
+                                  <tr>
+                                    <th>Evalutation </th>
+                                    <td><div class="rating-box">
+                                        <% var star = (producer.comment[i].starComment/5)*100 %>
+                                        <div style="width:<%=star%>%" class="rating"></div>
+                                      </div></td>
+                                  </tr>
+                                  <tr>
+                                    <th>Par </th>
+                                    <td><%= producer.comment[i].loginUser %></td>
+                                  </tr>
+                                  <tr>
+                                    <th>le </th>
+                                    <td> <%= producer.comment[i].dateComment %>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <div class="review">
+                                <div class="review-txt"><%- producer.comment[i].comment.replace(/\n|\r/g,'<br />') %></div>
+                              </div>
+                            </li>
+                                    <% }
+                            } %>
+                          </ul>
+                        </div>
+                        <!--<div class="actions"> <a class="button view-all" id="revies-button" href="#"><span><span>View all</span></span></a></div>-->
+                      </div>
+                      <div class="clear"></div>
+                    </div>
+                  </div>
+                </div></div>
                 </div>
-            </div>
-        
-                <table class="table">
-                    <tr>
-                        <th>avis : </th>
-                    </tr>
-                    <% if(nbComment == 0){ %>
-                        <tr><td><h2>Pas d'avis</h2></td></tr>
-                    <% }else{ 
-                        for(var i =0; i<nbComment; i++){ %>
-                            <tr>
-                                <td>
-                                    <h2><%= producer.comment[i].loginUser %></h2>
-                                    <h5>Le : <%= producer.comment[i].dateComment %></h5>
-                                    <%= producer.comment[i].comment %>
-                                </td>
-                            </tr>
-                        <% }
-                    } %>
-                </table>
+                </section>
         
         <% } %>
-
-
-
-
 
 
 

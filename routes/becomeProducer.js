@@ -23,7 +23,6 @@ module.exports = function(app, urlApi, utils, config){
     });
 
     app.post("/becomeProducer", function(req, res, next) {
-        console.log("in")
         if(!req.session.type) {
 			res.redirect("/");
 		}else if(req.session.type =="1"){
@@ -175,7 +174,7 @@ module.exports = function(app, urlApi, utils, config){
                             if(files.avatar.name==""){
                                 avatar = "../img/avatar.png";
                             }else{
-                                avatar = config.urlAvatarProducer +"/"+  body.id +"/avatar.png"+ 
+                                avatar = config.urlAvatarProducer +"/"+  body.id +"/avatar."+extension;
                             }
                             res.render("ficheProducer.ejs", {
                                 session: req.session,
@@ -185,7 +184,7 @@ module.exports = function(app, urlApi, utils, config){
                                 msgSuccess: "Vous êtes désormais enregistré en temps que producteur ! Vous trouverez ci-dessous votre fiche personnel. Un nouvel onglet a également été ajouté pour vous permettre de gérer vos ventes."
                             });
                         }else{
-                            console.log(body);
+                            
                             res.render("becomeProducer.ejs", {
                                 session: req.session,
                                 producer: localProducer,

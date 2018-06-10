@@ -24,7 +24,8 @@ module.exports = function(app, urlApi, utils, config){
                 }else{
                     avatar = config.urlAvatarProducer +"/"+  req.params.id +"/"+ body.avatarProducer
                 }
-                
+
+                producer.descriptionProducer = producer.descriptionProducer.replace(/\n|\r/g,'<br />'); 
                 res.render("ficheProducer.ejs", {
                     session: req.session,
                     producer: producer,
