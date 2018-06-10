@@ -167,6 +167,21 @@ module.exports = function(app, urlApi, utils){
         if(!fields.location){
           msgError += "\n Veuillez saisir la localisation de votre produit ! ";
         }
+        if(!fields.quantity || fields.quantity <=0){
+          msgError += "\n Veuillez saisir une quantité ! ";
+        }
+        if(!fields.unit){
+          msgError += "\n Veuillez saisir une unité ! ";
+        }
+        if(!fields.price){
+          msgError += "\n Veuillez saisir un prix ! ";
+        }
+        if(!fields.city){
+          msgError += "\n Veuillez saisir une adresse ! ";
+        }
+        if(!fields.adress){
+          msgError += "\n Veuillez saisir une adresse ! ";
+        }
         
         if(msgError != ""){
           res.render('itemCreate.ejs', {msgError:msgError, msgSuccess:msgSuccess, session : req.session});
@@ -201,10 +216,12 @@ module.exports = function(app, urlApi, utils){
               }); 
             }
             else {
+              console.log(body);
               res.render("itemCreate.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "", session: req.session });
             }
           } else {
+            console.log(body);
             res.render("connexion.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "", session: req.session });
           }

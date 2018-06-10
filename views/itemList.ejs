@@ -113,7 +113,9 @@
             <% if(listTab.length>0) { 
              
               for (var i =0; i<listTab.length; i++){ %>
-                  <%var desc = listTab[i].description.replace(/\n|\r/g,'<br />') %>
+                  <%var desc = listTab[i].description.replace(/\n|\r/g,'<br />') 
+                  desc = desc.replace(/'/g, "\\'");
+                  %>
                    
               <script type="text/javascript">
                   

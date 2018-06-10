@@ -2,11 +2,10 @@ module.exports = function(app, urlApi, utils){
   var rp = require("request-promise");
   var formidable = require("formidable");
  
-	// =====================================
-	// SIGNUP ==============================
-	// =====================================
-	// show the signup form
-	
+  app.get('/itemList', function(req, res, next) {
+      res.redirect("/itemList/1")
+  })
+
 	app.get('/itemList/:page', function(req, res, next) {
     var msgError = "";
     var categories= [];

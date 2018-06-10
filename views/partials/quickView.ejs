@@ -11,7 +11,7 @@
             document.getElementById("mainImgQuick").innerHTML = '<img id="mainImage" style="height: 300px; max-width: 300px; border:1px solid LightGrey;" id="product-zoom" src="'+urlApi+'/itemPhotos/'+id+'/0.'+ext[0]+'" data-zoom-image="'+urlApi+'/itemPhotos/'+id+'/0.'+ext[0]+'" alt="product-image"/> '
             for(var i =0; i<ext.length; i++){
                 if(ext[i] !="") {
-                    images+='<div class="more-views-items" style="display:block-inline;"> <a onclick="changeMainImg(this)" data-image="'+urlApi+'/itemPhotos/'+id+'/'+i+'.'+ext[i]+'" data-zoom-image="'+urlApi+'/itemPhotos/'+id+'/'+i+'.'+ext[i]+'"> <img style="height: 100px; max-width: 125px; border:1px solid LightGrey;" id="product-zoom"  src="'+urlApi+'/itemPhotos/'+id+'/'+i+'.'+ext[i]+'" alt="product-image"/> </a></div>';             
+                    images+='<div class="more-views-items" style="display:inline-block;"> <a onclick="changeMainImg(this)" data-image="'+urlApi+'/itemPhotos/'+id+'/'+i+'.'+ext[i]+'" data-zoom-image="'+urlApi+'/itemPhotos/'+id+'/'+i+'.'+ext[i]+'"> <img style="height: 75px; max-width: 75px; border:1px solid LightGrey;" id="product-zoom"  src="'+urlApi+'/itemPhotos/'+id+'/'+i+'.'+ext[i]+'" alt="product-image"/> </a></div>';             
                 }
               }
             document.getElementById("otherImagesQuick").innerHTML = images
@@ -52,11 +52,9 @@
     }
 
     function changeMainImg(img){
-
-        $("#qty").attr({
-            "max" : qte
-        });
-        
+        var mainImg = document.getElementById("mainImage");
+        mainImg.setAttribute("src", img.getAttribute("data-image"));
+        mainImg.setAttribute("src", img.getAttribute("data-zoom-image"));
     }
  
     
@@ -65,7 +63,7 @@
 
 <div style="background-color: rgb(119, 119, 119); opacity: 0.7; cursor: pointer; height: 1024px; display: block; visibility: hidden;" id="fancybox-overlay"></div>
 <div style="width: 1190px; height: auto; top: 20%; left: 581px; display: block; visibility: hidden;" id="fancybox-wrap">
-  <div id="fancybox-outer">
+  <div id="fancybox-outer" >
     <div style="border-width: 10px; width: 1170px; height: auto;" id="fancybox-content">
       <div style="width:auto;height:auto;overflow: auto;position:relative;">
         <div class="product-view">
@@ -78,11 +76,11 @@
                       <div class="product-full" id="mainImgQuick"></div>
                       <div class="more-views">
                         <div class="slider-items-products">
-                          <div id="gallery_01" class="product-flexslider hidden-buttons product-img-thumb">
-                            <div class="slider-items slider-width-col4 block-content" id="otherImagesQuick" style="display:block-inline;">
-                        
+                          <div id="gallery_01" class="product-flexslider hidden-buttons product-img-thumb" style="display: inline-block; width:285px">
+                              <div class="slider-items slider-width-col4 block-content" id="otherImagesQuick" style="display: inline-block; width:285px; text-align: center;">
+                          
+                              </div>
                             </div>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -105,8 +103,9 @@
                         <p class="availability in-stock pull-right"><span id="stockQuick"></span></p>
                       </div>
                     </div>
-                    <div class="short-description">
+                    <div class="short-description" style=" overflow-wrap: break-word;">
                       <h2>Description</h2>
+                      
                       <p id="descriptionQuick"></p>
                     </div>
                     <div class="add-to-box">
@@ -117,7 +116,7 @@
                             <input type="number" class="input-text qty" title="Qty" value="1" max="10" min="1" id="qty" name="qty" style="-moz-appearance: textfield">
                             <button onClick="addQte()" class="increase items-count" type="button"><i class="fa fa-plus">&nbsp;</i></button>
                           </div>
-                          &nbsp;&nbsp;&nbsp;<button class="button btn-visu" title="Voir produit" type="button" style="background-color: green;" onclick="redirectFiche();">Voir le produit</a></button>
+                          &nbsp;&nbsp;&nbsp;<button class="button btn-visu" title="Voir produit" type="button" style="background-color: #6dbe14; color:white" onclick="redirectFiche();">Voir le produit</a></button>
                         </div>
                         
                         <button onClick="productAddToCartForm.submit(this)" class="button btn-cart" title="Add to Cart" type="button" style="width:38px;"></button>
