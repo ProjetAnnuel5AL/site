@@ -139,6 +139,9 @@
                     <div class="info-inner">
                       <div class="item-title"> <a title="Retis lapen casen" href="/visualisationAnnonce/<%=listTab[i].id%>"><%=listTab[i].productName%> <%=listTab[i].photo%> </a> </div>
                       <div class="item-content">
+                        <%if (listTab[i].login == session.login) {%>
+                            <a href="/item/edit/<%=listTab[i].id%>"><h3><button class='btn btn-primary'>Modifier</button></h3></a>
+                        <% } %>
                         <div class="rating">
                           <div class="ratings">
                             <!--<div class="rating-box">

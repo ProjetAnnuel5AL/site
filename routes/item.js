@@ -69,7 +69,6 @@ module.exports = function(app, urlApi, utils){
           "idItem": req.params.id,
         }
       }).then(function (body) {
-        
         if(body.infoItem.login!=req.session.login){
           res.render("erreur.ejs", {
             session: req.session,   
@@ -140,6 +139,7 @@ module.exports = function(app, urlApi, utils){
     var msgError;
     var unitsList;
     var categoriesList;
+    console.log(req.session.type);
     if(req.session.type && req.session.type == 1) {
       msgError="";
       msgSuccess="";
@@ -241,8 +241,6 @@ module.exports = function(app, urlApi, utils){
   });
 
   app.post('/item/edit', function(req, res, next) {
-    console.log(req.body);
-    console.log(req.session.type);
     var msgError;
     var unitsList;
     var categoriesList;
@@ -291,24 +289,73 @@ module.exports = function(app, urlApi, utils){
         if(body){
           console.log("body set");
           if (body.code == "0") {
-            res.render("success.ejs", { msgError: "", msgSuccess:"Annonce modifiée avec succès", session: req.session });
+            res.render("itemCreate.ejs", { msgError: "", msgSuccess:"Annonce modifiée avec succès", session: req.session });
           }
           else {
-                res.render("erreur.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
+                res.render("itemCreate.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                   msgSuccess: "", session: req.session });
           }
         } else {
-          res.render("erreur.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
+          res.render("itemCreate.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "", session: req.session });
         }
         }).catch(function (err) {
               console.log(err);
-              res.render("erreur.ejs", {
+              res.render("itemCreate.ejs", {
                 msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "",
                 session: req.session
               });
         });
+      });
+    }else{
+      console.log("redirect");
+			res.redirect("/");
+		}
+  });
+
+  app.post('/item/delete', function(req, res, next) {
+    var msgError;
+    var unitsList;
+    var categoriesList;
+    var item;
+    console.log(req.body);
+		if(req.session.type && req.session.type == 1) {
+      var form = new formidable.IncomingForm();
+      form.multiples=true;
+      form.parse(req, function (err, fields, files) {
+        rp({
+          url: urlApi + "/item/delete",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          json: {
+            "id": fields.idItem,
+            "token": req.session.token
+          }
+        }).then(function (body) {
+          if(body){
+            console.log("body set");
+            if (body.code == "0") {
+              res.render("itemCreate.ejs", { msgError: "", msgSuccess:"Annonce supprimée avec succès", session: req.session });
+            }
+            else {
+                  res.render("itemCreate.ejs", { msgError: "Erreur lors de la suppression de l'annonce. Veuillez recommmencer !",
+                    msgSuccess: "", session: req.session });
+            }
+          } else {
+            res.render("itemCreate.ejs", { msgError: "Erreur lors de la suppression de l'annonce. Veuillez recommmencer !",
+                  msgSuccess: "", session: req.session });
+          }
+          }).catch(function (err) {
+            console.log(err);
+            res.render("itemCreate.ejs", {
+              msgError: "Erreur lors de la suppression de l'annonce. Veuillez recommmencer !",
+              msgSuccess: "",
+              session: req.session
+            });
+          });
       });
     }else{
       console.log("redirect");

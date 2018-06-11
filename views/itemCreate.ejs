@@ -88,6 +88,10 @@
                 $('#exampleImg2').attr('src', "/img/picture.png");
             }
 
+            function deleteItem(){
+                $('#editform').attr('action', "/item/delete").submit();
+            }
+
             function readURL(input) {
                 clearImages(true);
                 if (input.files) {
@@ -157,7 +161,7 @@
                         <% if (typeof item == 'undefined') { %>
                         <form action="/item/new" method="post" enctype="multipart/form-data">
                         <% } else { %>
-                        <form action="/item/edit" method="post" enctype="multipart/form-data">
+                        <form action="/item/edit" method="post" id="editform" enctype="multipart/form-data">
                             <input type="hidden" class="form-control" id="idItem" name="idItem"/>
                             <input type="hidden" class="form-control" id="fileExtensions" name="fileExtensions"/>
                         <% } %>
@@ -208,15 +212,15 @@
                             </li>
                             <li>
                                 <label>Prix (€)</label>
-                                <input type='number'class="input-text required-entry" name="price" step='0.01' placeholder='0.00' />
+                                <input type='number'class="input-text required-entry" id="price" name="price" step='0.01' placeholder='0.00' />
                             </li>
                             <li>
                                 <label>Quantité disponible</label>
-                                <input type='number' class="input-text required-entry" name="quantity" step='1' placeholder='0' />
+                                <input type='number' class="input-text required-entry" id="quantity" name="quantity" step='1' placeholder='0' />
                             </li>
                             <li>
                                 <label>Unité</label>
-                                <select name="unit">
+                                <select id="unit" name="unit">
                                 <% units.forEach(function (item) { %>
                                 <option value=<%= item.id%>><%= item.name%></option> 
                                 <% }) %>
@@ -224,7 +228,7 @@
                             </li>
                         </ul>
                         <button type="submit" id="submitbtn" class="btn btn-info">Créer</button>
-                        <button type="submit" id="deletebtn" class="btn btn-danger" style="visibility:hidden;">Supprimer</button>
+                        <button onClick="deleteItem();" type="submit" id="deletebtn" class="btn btn-danger" style="visibility:hidden;">Supprimer</button>
                     </form>
                     <% } %>
                 </div>

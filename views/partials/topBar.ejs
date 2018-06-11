@@ -5,7 +5,7 @@
             <!-- Header Language -->
             <div class="col-xs-12 col-sm-6">
                 <%if (session.type) {%>
-                <div class="welcome-msg"> Bienvenu <%=session.login%> ! </div>   
+                <div class="welcome-msg"> Bienvenue <%=session.login%> ! </div>   
                 <% } %>             
             </div>
             <div class="col-xs-6 hidden-xs"> 
@@ -13,6 +13,7 @@
             <div class="toplinks">
               <div class="links">
                 <div class="home"><a title="Accueil" href="/" ><span class="hidden-xs">Accueil</span></a> </div>
+                <div class="items"><a title="Annonces" href="/itemList/1" ><span class="hidden-xs">Annonces</span></a> </div>
                 <%if (session.type) { %>
                 <div class="myaccount"><a title="Mon compte" href="/profil"><span class="hidden-xs">Mon compte</span></a> </div>
                 
