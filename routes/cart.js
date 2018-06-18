@@ -38,6 +38,7 @@ module.exports = function(app, urlApi, utils, config){
                 jsonCart.product = req.query.product;
                 jsonCart.title = req.query.title;
                 jsonCart.prixU = req.query.prixU;
+                jsonCart.img = urlApi+'/itemPhotos/'+req.query.id+'/0.'+req.query.ext
                 req.session.cart.push(jsonCart)
                 res.json({
                     code : 0,

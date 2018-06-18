@@ -30,6 +30,7 @@ module.exports = function(app, urlApi, utils){
       }).then(function (body) {
         
         if (body.code == 0) {
+          //console.log(body)
           for (var item in body.list) {
             if(prixMax < body.list[item].price){
               prixMax = body.list[item].price;

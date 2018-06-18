@@ -31,7 +31,13 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                     msgSuccess: "",
                     session : req.session
                 });
-            } else if(!req.body.password) {
+            } else if (req.body.username.search(/[\'\"]/g) != -1){
+                res.render("registration.ejs", {
+                    msgError:"Veuillez saisir un login ne comprenant pas les caractères suivant : ' ou \" ",
+                    msgSuccess: "",
+                    session : req.session
+                });
+            }else if(!req.body.password) {
                 res.render("registration.ejs", {
                     msgError:"Veuillez saisir un mot de passe !", msgSuccess: "",
                     session : req.session
