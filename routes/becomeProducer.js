@@ -139,7 +139,7 @@ module.exports = function(app, urlApi, utils, config){
                     res.render("becomeProducer.ejs", {
                         session: req.session,
                         producer: localProducer,
-                        msgError:"Veuillez saisir une description ayant entre 20 et 500 caractères  !",
+                        msgError:"Veuillez saisir une description ayant entre 20 et 500 caractères !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
                         paypalMode : config.paypalMode

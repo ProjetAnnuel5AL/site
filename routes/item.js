@@ -158,11 +158,11 @@ module.exports = function(app, urlApi, utils){
             msgError += "L'un des fichiers utilisés pour les photos n'est pas conforme : \nExtensions acceptées :  \n\rPoid maximum : 5242880  ";
           }
         }
-        if(!fields.name){
-          msgError += "\n Veuillez saisir le nom de votre produit ! ";
+        if(!fields.name || fields.description.length>50){
+          msgError += "\n Veuillez saisir le nom de votre produit ayant au maximum 50 caractères !";
         }
-        if(!fields.description){
-          msgError += "\n Veuillez saisir la description de votre produit ! ";
+        if(!fields.description || fields.description.length<20 || fields.description.length>500){
+          msgError += "\n Veuillez saisir une description de votre produit ayant entre 20 et 500 caractères !";
         }
         if(!fields.location){
           msgError += "\n Veuillez saisir la localisation de votre produit ! ";

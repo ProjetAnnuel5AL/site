@@ -265,7 +265,7 @@
                             <% if(!session.type) { %>
                               <a href ="/connexion" >Pour ajouter au panier merci de vous connecter en cliquant ici.</a>
                             <% }else{ %>
-                              <% if(session.login != item.infoItem.loginUser) { %>
+                              <% if(session.login != item.infoItem.loginUser && item.infoItem.quantity >0) { %>
                           <div class="add-to-cart">
                             <div class="pull-left">
                                 <div class="custom pull-left">
