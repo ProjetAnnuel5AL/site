@@ -15,6 +15,7 @@ module.exports = function(app, urlApi, urlLocal, utils ,config) {
 	require("./product")(app, urlApi);
 	require("./cart")(app, urlApi, utils, config);
 	require("./pay")(app, urlApi, utils, config);
+	require("./proceedCheckout")(app, urlApi, utils, config);
 
    
 };

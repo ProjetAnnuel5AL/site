@@ -2,8 +2,8 @@
   "development": {
     "urlAvatarProducer" : "http://localhost:8888/producerAvatar",
     "urlItemPhoto" : "http://localhost:8888/itemPhotos",
-    "paypalClientId" : "AVPlSYPxy3hdf1T-ca6cCQEGu5iDFKntBvs13Y65kKhY1x07yIRJEHOw1YWzi0lNekZ1AYBozwi8JIq3",
-    "paypalSecret" : "ECmtfLkk8ATKf5tDbNGcNe3ILMbHcXmQPxX83_qOwmGBg8NshwGcKqwZe4t33feATt-_ewPVWOIg4d9Q",
+    "paypalClientId" : "AabAT8gUN4V6XU9PkYH2YuAvx9rp29KOZV29lZoCbFzJBD-987JgMyKWTUEwd4dkpx94_wPgKsL1SNMv",
+    "paypalSecret" : "ELukJJD1z1O3d2NH0V00IfxzxR9696y7bF8DuJNsrj2E24po8r-BT7Q4ANmSx2TgxizR4Ej1hYppXwrU",
     "paypalMode" : "sandbox"
   }
 }

@@ -35,7 +35,6 @@ module.exports = function(app, urlApi, utils, config){
                 var localProducer = getLocalProducer(fields);
                 var extensionT = files.avatar.name.split('.');
                 var extension = extensionT[extensionT.length-1];
-                console.log(files)
                 if(files.avatar.name !="" && ( files.avatar.size> 5242880  ||  (extension != "jpg" && extension != "png" && extension != "jpeg" && extension != "gif" && extension != "bmp" && extension != "tif" && extension != "tiff"))){
                     res.render("becomeProducer.ejs", {
                         session: req.session,
@@ -126,15 +125,6 @@ module.exports = function(app, urlApi, utils, config){
                         paypalClientId :config.paypalClientId,
                         paypalMode : config.paypalMode
                     });
-                }else if(!fields.cp) {
-                    res.render("becomeProducer.ejs", {
-                        session: req.session,
-                        producer: localProducer,
-                        msgError:"Veuillez saisir un code postal !",
-                        msgSuccess: "",
-                        paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
-                    });
                 }else if(!fields.description || fields.description.length<20 || fields.description.length>500) {
                     res.render("becomeProducer.ejs", {
                         session: req.session,
@@ -163,7 +153,7 @@ module.exports = function(app, urlApi, utils, config){
                             "sexProducer": fields.sex,
                             "addressProducer": fields.address,
                             "cityProducer": fields.city,
-                            "cpProducer": fields.cp,
+                            "locationProducer": fields.location,
                             "descriptionProducer": fields.description,
                             "paypalProducer": fields.emailPaypal
                         }
@@ -196,7 +186,7 @@ module.exports = function(app, urlApi, utils, config){
                             });
                         }
                     }).catch(function (err) {
-                        console.log(err);
+                        //console.log(err);
                         res.render("becomeProducer.ejs", {
                             session: req.session,
                             producer: localProducer,
@@ -292,7 +282,7 @@ module.exports = function(app, urlApi, utils, config){
             phoneProducer : fields.phone,
             addressProducer : fields.address,
             cityProducer : fields.city,
-            cpProducer : fields.cp,
+            locationProducer : fields.location,
             avatarProducer : "",
             descriptionProducer : fields.description,
             comment : []
