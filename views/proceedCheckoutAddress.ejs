@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Etape 1 : Adresse de livraison</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+    
+
+    <section class="main-container col1-layout">
+        <div class="main container">
+            <div class="col-main">
+            <div class="cart wow bounceInUp animated">
+                <div class="page-title">
+                <h2>Etape 1 : Adresse de livraison</h2>
+                <hr>
+                </div>
+                <fieldset class="col2-set">
+                    <div class="col-1 new-users"><strong>Utiliser une adresse enregistré :</strong></div><br /><br />
+                    <% if(address.lastNameUser == null || address.lastNameUser =="") { %>
+                        <p>Pas d'adresse enregistrée</p>
+                        <p>Vous pouvez enregistré une adresse à utiliser dans l'espace Mon compte rubrique adresse de livraison.</p>
+                    <% }else{ %>
+                        
+                    <% } %>
+                </fieldset>
+                <hr>
+                <fieldset class="col2-set">
+                    <div class="col-1 new-users"><strong>Saisir un adresse de livraison :</strong></div><br /><br />
+                    <div class="content">
+                        <form action="/proceedCheckout/pay" method="post">
+                            <ul class="form-list">
+                                <li>
+                                    <label for="lastName">Nom</label>
+                                    <br>
+                                    <input type="text" title="lastName" class="input-text required-entry" id="lastName" name="lastName" required >
+                                </li>
+                                <li>
+                                    <label for="mail">Prénom</label>
+                                    <br>
+                                    <input type="text" title="firstName" id="firstName" class="input-text required-entry" name="firstName" required>
+                                </li>
+                                <li>
+                                    <label for="Sex">Civilité</label>
+                                    <br>
+                                    <select name="sex" required>
+                                        <option></option>
+                                        <option value="H" name="sex">H</option>
+                                        <option value="F" name="sex">F</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <label for="address">Adresse</label>
+                                    <br>
+                                    <input type="text" title="address" id="address" class="input-text required-entry" name="address" required>
+                                </li>
+                                <li>
+                                    <label for="city">Ville</label>
+                                    <br>
+                                    <input type="text" title="city" id="city" class="input-text required-entry" name="city" required>
+                                </li>
+                                <li>
+                                    <label for="cp">Code Postal</label>
+                                    <br>
+                                    <input type="text" title="cp" id="cp" class="input-text required-entry" name="cp"  required>
+                                </li>
+                               
+                            </ul>
+                            <button name="send" type="submit" class="button"><span>Utiliser ces informations pour la livraison</span></button>
+                        </form>
+                    </div>
+                </fieldset>
+            </div>
+            </div>
+        </div>
+    </section>
+</div>
+<% include ./partials/footer %>
+</body>

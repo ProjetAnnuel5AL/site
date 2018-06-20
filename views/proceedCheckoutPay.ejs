@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Etape 2 : Récapitulatif de ma commande et payer</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+
+        
+        <section class="main-container col1-layout">
+            <div class="main container">
+                <div class="col-main">
+                <div class="cart wow bounceInUp animated">
+                    <div class="page-title">
+                    <h2>Etape 2 : Récapitulatif de ma commande et payer</h2>
+                    </div>
+                </div>
+                </div>
+                <div class="cart-collaterals row">
+                    <div class="col-sm-4">
+                      <div class="shipping">
+                        <h3>Adresse de livraison</h3>
+                        <div class="shipping-form">
+                            <strong>
+                        <% if(address.sexUser == "H") { %>
+                            <p>M. <%=address.lastNameUser%> <%=address.firstNameUser%></p>    
+                        <% } else { %>
+                            <p>Mme. <%=address.lastNameUser%> <%=address.firstNameUser%></p>
+                        <% } %>
+                            <p><%=address.addressUser%></p>
+                            <p><%=address.cpUser%> <%=address.cityUser%></p>
+                            </strong>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="shipping">
+                            <h3>Mes achats</h3>
+                            <div class="inner">
+                                <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
+                                    <colgroup>
+                                    <col>
+                                    <col width="1">
+                                    </colgroup>
+                                    <tbody>
+                                    <% 
+                                        var total = 0; 
+                                        for(var i =0; i<session.cart.length; i++) {
+                                        total += (session.cart[i].qte*session.cart[i].prixU);
+                                    %>        
+                                    <tr>
+                                        <td colspan="1" class="a-left" style=""><%=session.cart[i].qte%> x <%=session.cart[i].title%><br /><small><%=session.cart[i].category%>, <%=session.cart[i].product%></small></td>
+                                        <td class="a-right" style=""><span class="price"><%= (session.cart[i].qte*session.cart[i].prixU).toFixed(2) %>€</span></td>
+                                    </tr>
+                                    <% } %>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="1" class="a-left" style=""><strong>Total</strong></td>
+                                            <td class="a-right" style=""><strong><span class="price"><%=total.toFixed(2)%>€</span></strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="shipping">
+                            <h3>Paiement</h3>
+                            <div class="inner" style="text-align: center">
+                                <br />
+                                <p><strong>Cliquez sur le bouton PayPal pour payer avec PayPal ou en carte bancaire.</strong></p>
+                                <br/>
+                                <div id="paypal-button-container"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </section>
+
+        <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+        <script>
+                paypal.Button.render({
+        
+                    env: '<%=paypalMode%>', // sandbox | production
+        
+                    // PayPal Client IDs - replace with your own
+                    // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+                    client: {
+                        sandbox:'<%=paypalClientId%>',
+                        production: '<%=paypalClientId%>'           
+                    },
+        
+                    // Show the buyer a 'Pay Now' button in the checkout flow
+                    commit: true,
+                    style: {
+                        layout: 'horizontal',  // horizontal | vertical
+                        size:   'medium',    // medium | large | responsive
+                        shape:  'pill',      // pill | rect
+                        color:  'blue'       // gold | blue | silver | black
+                    },
+
+                    // Options:
+                    // - paypal.FUNDING.CARD
+                    // - paypal.FUNDING.CREDIT
+                    // - paypal.FUNDING.ELV
+                    funding: {
+                        allowed: [ paypal.FUNDING.CARD, paypal.FUNDING.CREDIT ],
+                        disallowed: [ ]
+                    },
+
+                    // payment() is called when the button is clicked
+                    payment: function(data, actions) {
+        
+                        // Make a call to the REST api to create the payment
+                        return actions.payment.create({
+                            payment: {
+                                transactions: [
+                                    {
+                                        amount: { total: '<%=total.toFixed(2)%>', currency: 'EUR' }
+                                    }
+                                ]
+                            }
+                        });
+                    },
+        
+                    // onAuthorize() is called when the buyer approves the payment
+                    onAuthorize: function(data, actions) {
+                        //on vérifie la qte avant de payer.
+                        jQuery.ajaxSetup({async:false});
+                        var isDispo =true;
+                        <% for (var i =0; i<session.cart.length; i++){ %>
+                            //Obliger de passer par un appel via la express pour le 'Access-control-allow-origin'
+                            $.getJSON("/proceedCheckout/verifyQuantity/<%=session.cart[i].id%>").done(function(result) {
+                                var json = JSON.parse(result)
+                                if(json.code == 0){
+                                    if(<%=session.cart[i].qte%>>json.quantity) {
+                                        isDispo = false;
+                                        $.getJSON("/cart/delete", { id: <%=session.cart[i].id%> }).done(function( json ) {});
+                                    }
+                                }else{
+                                    isDispo = false;
+                                    $.getJSON("/cart/delete", { id: <%=session.cart[i].id%> }).done(function( json ) {});
+                                }
+                            })
+                            
+                        <% } %>
+
+                        if(isDispo == false){  
+                            alert("Paiement annulé : un produit commandé n'est plus disponible. Nous allons mettre à jour votre panier.");
+                            window.location.href = "/cart";
+                        }else{
+                            // Make a call to the REST api to execute the payment
+                            return actions.payment.execute().then(function() {
+                                //A sauvegarder pour pouvoir faire un remboursement.
+                                console.log(data.payerID);
+                                
+
+                                window.alert('Paiement effectué !');
+                            });
+                        }
+                        
+                    }
+        
+                }, '#paypal-button-container');
+        
+            </script>
+
+
+    <% include ./partials/footer %>
+    </div>
+</body>

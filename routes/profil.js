@@ -244,13 +244,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     msgError:"Veuillez saisir un prénom !",
                     msgSuccess: ""
                 });
-            }else if(!req.body.birth) {
-                res.render("profil.ejs", {
-                    session: req.session,
-                    profil: profil,
-                    msgError:"Veuillez saisir une date de naissance !",
-                    msgSuccess: ""
-                });
             }else if(!req.body.sex) {
                 res.render("profil.ejs", {
                     session: req.session,
@@ -341,8 +334,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 });
 
             }
-
-
         }
     });
 

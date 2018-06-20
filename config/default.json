@@ -10,7 +10,7 @@
   "urlAvatarProducer" : "http://localhost:8888/producerAvatar",
   "urlItemPhoto" : "http://localhost:8888/itemPhotos",
   "paypalClientId" : "AabAT8gUN4V6XU9PkYH2YuAvx9rp29KOZV29lZoCbFzJBD-987JgMyKWTUEwd4dkpx94_wPgKsL1SNMv",
-   "paypalSecret" : "ELukJJD1z1O3d2NH0V00IfxzxR9696y7bF8DuJNsrj2E24po8r-BT7Q4ANmSx2TgxizR4Ej1hYppXwrU",
+  "paypalSecret" : "ELukJJD1z1O3d2NH0V00IfxzxR9696y7bF8DuJNsrj2E24po8r-BT7Q4ANmSx2TgxizR4Ej1hYppXwrU",
   "paypalMode" : "sandbox"
   },
   "test": {
