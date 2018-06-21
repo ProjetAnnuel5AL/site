@@ -27,7 +27,25 @@
                         <p>Pas d'adresse enregistrée</p>
                         <p>Vous pouvez enregistré une adresse à utiliser dans l'espace Mon compte rubrique adresse de livraison.</p>
                     <% }else{ %>
-                        
+                        <strong>
+                        <% if(address.sexUser == "H") { %>
+                            <p>M. <%=address.lastNameUser%> <%=address.firstNameUser%></p>    
+                        <% } else { %>
+                            <p>Mme. <%=address.lastNameUser%> <%=address.firstNameUser%></p>
+                        <% } %>
+                            <p><%=address.addressUser%></p>
+                            <p><%=address.cpUser%> <%=address.cityUser%></p>
+                        </strong>
+                        <form action="/proceedCheckout/pay" method="post">
+
+                            <input type="hidden" title="lastName" id="lastName" name="lastName" value="<%=address.lastNameUser%>" required >
+                            <input type="hidden" title="firstName" id="firstName" name="firstName" value="<%=address.firstNameUser%>" required>
+                            <input type="hidden" title="sex" id="sex"  name="sex" value="<%=address.sexUser%>" required>
+                            <input type="hidden" title="address" id="address" name="address" value="<%=address.addressUser%>" required>
+                            <input type="hidden" title="city" id="city" name="city" value="<%=address.cityUser%>" required>
+                            <input type="hidden" title="cp" id="cp" name="cp" value="<%=address.cpUser%>"  required>
+                            <button name="send" type="submit" class="button"><span>Utiliser cette adresse</span></button>
+                        </form>
                     <% } %>
                 </fieldset>
                 <hr>
@@ -51,8 +69,8 @@
                                     <br>
                                     <select name="sex" required>
                                         <option></option>
-                                        <option value="H" name="sex">H</option>
-                                        <option value="F" name="sex">F</option>
+                                        <option value="H" name="sex">Monsieur</option>
+                                        <option value="F" name="sex">Madame</option>
                                     </select>
                                 </li>
                                 <li>
@@ -70,7 +88,7 @@
                                     <br>
                                     <input type="text" title="cp" id="cp" class="input-text required-entry" name="cp"  required>
                                 </li>
-                               
+                              
                             </ul>
                             <button name="send" type="submit" class="button"><span>Utiliser ces informations pour la livraison</span></button>
                         </form>

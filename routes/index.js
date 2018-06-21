@@ -9,7 +9,7 @@ module.exports = function(app, urlApi, urlLocal, utils ,config) {
 	require("./login")(app, urlApi, urlLocal, utils);
 	require("./registrationValidation")(app, urlApi, urlLocal, utils);
 	require("./logout")(app);
-	require("./profil")(app, urlApi, urlLocal, utils);
+	require("./userDashboard")(app, urlApi, urlLocal, utils);
 	require("./becomeProducer")(app, urlApi, utils, config);
 	require("./ficheProducer")(app, urlApi, utils, config);
 	require("./product")(app, urlApi);
