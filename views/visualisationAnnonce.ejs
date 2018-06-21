@@ -243,7 +243,7 @@
                         </div>
                         <div class="price-block">
                           <div class="price-box">
-                            <p class="special-price"> <span class="price-label">Regular Price:</span> <span class="price"> <%= item.infoItem.price %>€</span> </p>
+                            <p class="special-price"> <span class="price-label">Regular Price:</span> <span class="price"> <%= item.infoItem.price.toFixed(2) %>€</span> </p>
                             <%if(item.infoItem.quantity<=0){%>
                               <p class="availability in-stock pull-right" ><span style="background-color : red"><%=item.infoItem.quantity%> <%=item.infoItem.unitName%> en stock</span></p>
                             <%}else{%>

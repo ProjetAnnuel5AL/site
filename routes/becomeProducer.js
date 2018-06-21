@@ -8,7 +8,7 @@ module.exports = function(app, urlApi, utils, config){
         if(!req.session.type) {
 			res.redirect("/");
 		}else if(req.session.type =="1"){
-            res.redirect("/updateProducer")
+            res.redirect("/userDashboard/profil")
         }else{
             req.session.verifPaypalValidity = {}
             res.render("becomeProducer.ejs", {
@@ -26,7 +26,7 @@ module.exports = function(app, urlApi, utils, config){
         if(!req.session.type) {
 			res.redirect("/");
 		}else if(req.session.type =="1"){
-            res.redirect("/updateProducer")
+            res.redirect("/userDashboard/profil")
         }else{
             var form = new formidable.IncomingForm();
             
@@ -166,9 +166,14 @@ module.exports = function(app, urlApi, utils, config){
                             }else{
                                 avatar = config.urlAvatarProducer +"/"+  body.id +"/avatar."+extension;
                             }
+                            var LatLong = fields.location.split(',');
+                            lat = LatLong[0];
+                            long = LatLong[1]; 
                             res.render("ficheProducer.ejs", {
                                 session: req.session,
                                 producer: localProducer,
+                                lat : lat,
+                                long : long,
                                 avatar: avatar,
                                 msgError:"",
                                 msgSuccess: "Vous êtes désormais enregistré en temps que producteur ! Vous trouverez ci-dessous votre fiche personnel. Un nouvel onglet a également été ajouté pour vous permettre de gérer vos ventes."

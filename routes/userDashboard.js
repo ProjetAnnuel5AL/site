@@ -372,32 +372,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
         }
     });
 
-    app.get("/userDashBoard/order", function(req, res, next) {
-        if(!req.session.type) {
-			res.redirect("/");
-		}else{
-            rp({
-                url: urlApi + "/user/findByLogin",
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                json: {
-                    "loginUser": req.session.login,
-                }
-            }).then(function (body) {
-                var profil = body;  
-                res.render("profil.ejs", {
-                    session: req.session,
-                    profil: profil,
-                    msgError:"",
-                    msgSuccess: ""
-                });
-            
-            });
-        }
-    });
-    
     //permet de stocker l'adresse saisie en cas d'erreur pour pas avoir a tout retaper.
     function getTmpAddress(req){
         var address = {
@@ -410,5 +384,37 @@ module.exports = function(app, urlApi, urlLocal, utils){
         };
         return address;
     }
+
+    //TOUTES LA PARTIE ORDER A PARTIR D ICI
+
+    app.get("/userDashBoard/orders", function(req, res, next) {
+        if(!req.session.type) {
+			res.redirect("/");
+		}else{
+            rp({
+                url: urlApi + "/order/user",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token
+
+                }
+            }).then(function (body) {
+                res.render("userDashboardOrders.ejs", {
+                    session: req.session,
+                    orders: body.orders,
+                    status:  body.status,
+                    msgError:"",
+                    msgSuccess: ""
+                });
+            
+            });
+        }
+    });
+    
+    
     
 };
