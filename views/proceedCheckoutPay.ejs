@@ -145,7 +145,7 @@
                         var isDispo =true;
                         <% for (var i =0; i<session.cart.length; i++){ %>
                             //Obliger de passer par un appel via la express pour le 'Access-control-allow-origin'
-                            $.getJSON("/proceedCheckout/verifyQuantity/<%=session.cart[i].id%>").done(function(result) {
+                            $.getJSON("/proceedCheckout/verifyQuantity/<%=session.cart[i].id%>/<%=session.cart[i].qte%>").done(function(result) {
                                 var json = JSON.parse(result)
                                 if(json.code == 0){
                                     if(<%=session.cart[i].qte%>>json.quantity) {
@@ -159,7 +159,6 @@
                             })
                             
                         <% } %>
-
                         if(isDispo == false){  
                             alert("Paiement annulé : un produit commandé n'est plus disponible. Nous allons mettre à jour votre panier.");
                             window.location.href = "/cart";
@@ -167,9 +166,20 @@
                             // Make a call to the REST api to execute the payment
                             return actions.payment.execute().then(function() {
                                 //A sauvegarder pour pouvoir faire un remboursement.
-                                console.log(data.payerID);
                                 
-
+                                $.redirect("/proceedCheckout/validate",
+                                {
+                                   "payementDetail" : data,
+                                   "address" : {
+                                        "lastNameUser" : "<%=address.lastNameUser%>",
+                                        "firstNameUser" : "<%=address.lastNameUser%>",
+                                        "sexUser" : "<%=address.lastNameUser%>",
+                                        "addressUser" : "<%=address.lastNameUser%>",
+                                        "cityUser" :"<%=address.lastNameUser%>",
+                                        "cpUser" : "<%=address.lastNameUser%>",
+                                    }
+                                },
+                                "POST",null,null,true);
                                 window.alert('Paiement effectué !');
                             });
                         }

@@ -24,7 +24,6 @@ module.exports = function(app, urlApi, utils, config){
                     msgError:"",
                     msgSuccess: ""
                 });
-            
             });
         }
     });
@@ -130,8 +129,8 @@ module.exports = function(app, urlApi, utils, config){
     });
 
     //Obliger de passer par un appel via la express pour le 'Access-control-allow-origin'
-    app.get("/proceedCheckout/verifyQuantity/:id", function (req, res, next) {
-        console.log(req.params);
+    app.get("/proceedCheckout/verifyQuantity/:id/:quantity", function (req, res, next) {
+        var jsonResult = {};
         if(req.params.id){
             rp({
                 url: urlApi + "/item/verifyQuantity/"+req.params.id,
@@ -140,6 +139,25 @@ module.exports = function(app, urlApi, utils, config){
                     "Content-Type": "application/json"
                 },
             }).then(function (body) {
+               
+                if(JSON.parse(body).code == 0){
+                    //mise a jour du stock instantanément
+                    rp({
+                        url: urlApi + "/item/updateQuantity",
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        json:{
+                            "quantity" : req.params.quantity,
+                            "id" : req.params.id,
+                            "loginUser": req.session.login,
+                            "token" : req.session.token,
+                        }
+                    }).then(function(result){
+                        //console.log(result);
+                    })
+                }
                 res.json(body);
             }).catch(function(err){
                 res.json({
@@ -154,4 +172,39 @@ module.exports = function(app, urlApi, utils, config){
             })
         }
     });
+
+
+    app.post("/proceedCheckout/validate", function(req,res,next){
+        if(req.session.type && req.session.cart && req.session.cart.length>0 && req.body.payementDetail && req.body.address){
+            rp({
+                url: urlApi + "/order",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token,
+                    "cart" : req.session.cart,
+                    "payementDetail" : req.body.payementDetail,
+                    "address" :req.body.address
+                }
+            }).then(function (result) {
+                if(result.code == 0){
+                    req.session.cart = []
+                    res.render("proceedCheckoutValidate.ejs", {
+                        session: req.session,
+                        msgError:"",
+                        msgSuccess: ""
+                    });
+                }else{
+                    //si code pas = 0 c qu'on a un petit malin donc on bloque
+                    res.redirect("/")
+                }
+               
+            });
+        }else{
+            res.redirect("/");
+        }
+    })
 }
