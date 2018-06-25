@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Mes commandes</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <% 
+                            function pad(n) {return n < 10 ? "0"+n : n;}
+                            var dateTmp =  new Date(order[0].dateOrder);
+                            var dateOrder = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
+                        %>   
+                        <h2 class="page-heading" style="font-size: 20px;"> <span class="page-heading-title">Détail de la commande N°<%=order[0].idOrder%> du <%=dateOrder%></span> </h2>
+                        <div class="table-responsive">
+                            <fieldset>
+                            <table class="data-table cart-table" id="shopping-cart-table" style="width:100%;">
+                                <thead>
+                                <tr class="first last">
+                                    <th rowspan="1"><span class="nobr">Produit</span></th>
+                                    <th rowspan="1"></th>
+                                    <th colspan="1" class="a-center"><span class="nobr">Prix unitaire</span></th>
+                                    <th class="a-center" rowspan="1">Quantité</th>
+                                    <th colspan="1" class="a-center">Total</th>
+                                    <th class="a-center" rowspan="1">&nbsp;Statut</th>
+                                </tr>
+                                </thead>
+                               
+                                <tbody>
+                                <% 
+                                    var producer =[];
+                                    var idProducer = [];
+                                    for(var i =0; i<order.length; i++) { 
+                                    if(idProducer.indexOf(order[i].idProducer) == -1 ){
+                                        idProducer.push(order[i].idProducer);
+                                        producer.push({
+                                            "idProducer" : order[i].idProducer,
+                                            "loginUser" : order[i].loginUser,
+                                            "idOrder" : order[i].idOrder,
+                                            
+                                        });
+                                    }
+                                %>
+                                <tr class="first odd" style="height : 100px; max-height: 100px;">
+                                    <td style="width:40%;"><h2 class="product-name"><%=order[i].titleLigneOrder%> </h2><%=order[i].categoryLigneOrder%>, <%=order[i].productLigneOrder%><br/>Vendeur : <%=order[i].lastNameProducer %> <%=order[i].firstNameProducer %> <a href="/ficheProducer/<%=order[i].idProducer%>">(<%=order[i].loginUser %>)</a></td>
+                                    <td class="a-center"></td>
+                                    <td class="a-right"><span class="cart-price"> <span class="price"><%=(order[i].prixUnitaireLigneOrder*1).toFixed(2)%> €</span> </span></td>
+                                    <td class="a-center movewishlist"><%=order[i].quantiteLigneOrder%> </td>
+                                    <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=(order[i].quantiteLigneOrder * order[i].prixUnitaireLigneOrder).toFixed(2)%>€</span> </span></td>
+                                    <td class="a-center last">
+                                        <% if(order[i].statusPaypalTransact == "PENDING"){ %>
+                                            En attente de reception<br />
+                                            <a href="/userDashboard/orderDetails/validateReception/<%=order[i].idOrder%>/<%=order[i].idLigneOrder%>"><button name="send" class="button"><span>Valider la reception</span></button></a>
+                                        <% }else{ %>
+                                            Receptioné
+                                        <% } %>  
+                                    </td>
+                                </tr>
+                                    <% } %>
+                                <tr>
+                                    <th class="image">Total</th>
+                                    <td></td>
+                                    <td class="a-center"></td>
+                                    <td class="a-right"></td>
+                                    <td class="a-center movewishlist"></td>
+                                    <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=order[0].totalOrder.toFixed(2)%>€</span> </span></td>
+                                    <td class="a-center last"></td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="first last">
+                                        <td class="a-right last" colspan="50">
+                                            Télécharger mes factures : 
+                                            <% for(var i = 0; i<producer.length; i++){ %>
+                                                <br />
+                                                <a href ="/userDashboard/billExport/<%=producer[i].idProducer%>/<%=producer[i].idOrder%>" target="_blank"><img src ="/img/pdf.png" style="width: 5%"/></a>&nbsp;&nbsp;&nbsp;
+                                                Facture producteur pour <%= producer[i].loginUser%>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            </fieldset>
+                        </div>
+                    <fieldset class="col2-set">
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ./partials/dashboard %>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>

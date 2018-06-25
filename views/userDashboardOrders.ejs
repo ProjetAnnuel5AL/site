@@ -34,6 +34,7 @@
                             </tr>
                             <% 
                                 function pad(n) {return n < 10 ? "0"+n : n;}
+                                if(orders){
                                 for(var i =0; i<orders.length; i++) {
                                 var dateTmp =  new Date(orders[i].dateOrder);
                                 var dateOrder = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
@@ -43,9 +44,9 @@
                                 <td style=""><%=orders[i].idOrder%></td>
                                 <td style=""><span class="price"><%= orders[i].totalOrder.toFixed(2) %>€</span></td>
                                 <td><%=status[i]%></td>
-                                <td><button name="send" class="button"><span>Details</span></button></td>
+                                <td><a href="/userDashboard/orderDetails/<%=orders[i].idOrder%>"><button name="send" class="button"><span>Details</span></button></a></td>
                             </tr>
-                            <% } %>
+                            <% }} %>
                             </tbody>
                         </table>
                     <fieldset class="col2-set">

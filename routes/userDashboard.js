@@ -2,6 +2,8 @@ module.exports = function(app, urlApi, urlLocal, utils){
 
     var rp = require("request-promise");
     var bcrypt = require("bcrypt-nodejs");
+    var fs = require("fs");
+    var http = require('http');
 
     app.get("/userDashboard/profil", function(req, res, next) {
         if(!req.session.type) {
@@ -392,7 +394,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
 			res.redirect("/");
 		}else{
             rp({
-                url: urlApi + "/order/user",
+                url: urlApi + "/order/getOdrersFromUser",
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -415,6 +417,98 @@ module.exports = function(app, urlApi, urlLocal, utils){
         }
     });
     
+    app.get("/userDashboard/orderDetails/:id", function(req, res, next) {
+        if(!req.session.type) {
+			res.redirect("/");
+		}else{
+            rp({
+                url: urlApi + "/order/getOrderDetailsFromuser",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token,
+                    "idOrder" : req.params.id
+
+                }
+            }).then(function (body) {
+                if(body.code == 0){
+                    res.render("userDashboardOrderDetail.ejs", {
+                        session: req.session,
+                        order: body.order,
+                        msgError:"",
+                        msgSuccess: ""
+                    });
+                }else{
+                    res.render("userDashboardOrderDetail.ejs", {
+                        session: req.session,
+                        order: null,
+                        msgError:"Erreur lors de la récupération de la commande. Merci de réessayer ultérieurement.",
+                        msgSuccess: ""
+                    });
+                }
+            });
+        }
+    });
+
+
+    app.get("/userDashboard/orderDetails/validateReception/:idOrder/:idLigneOrder", function(req, res, next) {
+        if(!req.session.type) {
+			res.redirect("/");
+		}else{
+            rp({
+                url: urlApi + "/order/validateReceptionFromUser",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token,
+                    "idOrder" : req.params.idOrder,
+                    "idLigneOrder" : req.params.idLigneOrder
+                }
+            }).then(function (body) {
+               res.redirect("/userDashboard/orderDetails/"+req.params.idOrder);
+            });
+        }
+    });
+
+    app.get("/userDashboard/billExport/:idProducer/:idOrder", function(req, res, next) {
+        //if(!req.session.type) {
+			//res.redirect("/");
+		//}else{
+            rp({
+                url: urlApi + "/order/getBillFromUser",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token,
+                    "idOrder" : req.params.idOrder,
+                    "idProducer" : req.params.idProducer
+
+                }
+            }).then(function (body) {
+                var file = fs.createWriteStream("ressources/pdf/file.jpg");
+                var request = http.get("http://localhost:8888/producerAvatar/4/avatar.jpg", function(response) {
+                  response.pipe(file);
+                  response.on('end', function () {
+                        var fullpath = process.cwd() + "/ressources/pdf/Job-Research.pdf";
+                        res.sendFile(fullpath)
+                  })
+                })
+               
+               
+            });
+            
+        //}
+    });
+
     
     
 };
