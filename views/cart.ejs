@@ -1,124 +1,204 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Annonce</title>
+    <title>Mon pannier</title>
     <% include ./partials/header %>
 </head>
-<body>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
 
-<% include ./partials/navbar %>
 <script type="text/javascript">
-   var jsonTranslat = [];
-</script>
-
-
-<div class="container">
-
-
-        <% if(cart.length == 0){ %>
-            <h2>Pas d'article dans votre panier ! </h2>
-        <% }else{
-            var total = 0; 
-            for (var i =0; i<cart.length; i++) { %>
-
-            <script type="text/javascript">
-               
-                //obliger de faire se translate car on ne peux pas intéragir de js a ejs
-                var o = {};
-                o.id = "<%= cart[i].id %>";
-                o.qte = <%= cart[i].qte %>
-                o.qteMax = <%= cart[i].qteMax %>
-                o.unit = "<%= cart[i].unit %>"
-                o.category = "<%= cart[i].category %>"
-                o.product = "<%= cart[i].product %>"
-                o.title = "<%= cart[i].title %>"
-                jsonTranslat.push(o);
-               
-            </script>
-
-            <div class="row">
-                <div class="col-sm-5">
-                    <h3><%= cart[i].title %></h3>
-                    <b>Catégorie :</b> <%= cart[i].category %> &nbsp;&nbsp;&nbsp;
-                    <b>Appellation :</b> <%= cart[i].product %> &nbsp;&nbsp;&nbsp;
-                   
-                </div>
-                <div class="col-sm-1">
-                    <select name="qte" id="<%=i%>" onchange="changeQte(this)">
-                        <% for(var j = 1; j<=cart[i].qteMax; j++) { %> 
-                            <% if(cart[i].qte != j){ %>
-                                <option name="qteCart" value ="<%=j%>"  ><%=j%></option>
-                            <% } else { %>
-                                <option name="qteCart" value ="<%=j%>" selected="selected"><%=j%></option>
-                            <% } %>
-                            
-                        <% } %>  
-                        
-                    </select>
-                </div>
-                <div class="col-sm-1" >
-
-                    <%= (cart[i].prixU*cart[i].qte) %> €
-                    <% total += (cart[i].prixU*cart[i].qte) %>
-                </div>
-                <div class="col-sm-1" >
-                        <button id="<%=cart[i].id%>" onclick="deleteItemCart(this)"> Supp</button>
-                </div>
-            </div>
-           
+    var jsonTranslat = [];
+    function deleteItemCart(c){
+        if(confirm("Voulez vous vraiment supprimer ?") == true){
             
-
-            <% } %>
-            <div class="row">
-                    <div class="col-sm-1" >
-                            total : <%= total %> €
-                    </div>
-            </div>
-            <script type="text/javascript">
-                function changeQte(s) {
-                
-                    var indice = s.id;
-                    var id = jsonTranslat[indice].id
-                    var oldQte = jsonTranslat[indice].qte
-                    if(confirm("Valider la modification de quantité ?") == true){
-                        var newQte = s.value;
-                        var valToAdd = newQte - oldQte;
-                        $.getJSON("/cart/add", { id: id, qte:valToAdd, qteMax :  jsonTranslat[indice].qteMax , unit : jsonTranslat[indice].unit , category : jsonTranslat[indice].category, product: jsonTranslat[indice].product, title:jsonTranslat[indice].title, prixU:jsonTranslat[indice].prixU  }).done(function( json ) {
-                            if(json.code == 0){
-                                // on mettera un modal plus tard pour faire beau
-                                alert("Modification effectuée")
-                            }else{
-                                alert(json.message)
-                            }
-                        });
+            $.getJSON("/cart/delete", { id: c.id }).done(function( json ) {
+                if(json.code == 0){
+                    location.reload();
+                }else{
+                    alert(json.message)
+                }
+            });
+        }
+    }
+    
+    function changeQte(s) {
+        var indice = s.id;
+        var id = jsonTranslat[indice].id
+        
+        var oldQte = jsonTranslat[indice].qte
+        var newQte = s.value;
+        var valToAdd = newQte - oldQte;
+        var canModify = false;
+        var alertDone = false;
+        jQuery.ajaxSetup({async:false});
+        //on profite de la modification pour vérifier que le produit est tourjours disponible.
+        $.getJSON("/cart/verifyDispo/"+id).done(function( json ) {
+            console.log(json.code)
+            if(json.code == 0){
+                canModify = true;
+                // on met a jour la quantité max au cas ou.
+                jsonTranslat[indice].qteMax = json.max;
+                //si la quantité disponible a changé et quelle est inférieur a celle demandé 
+                if(json.max<newQte){
+                    if(json.max<oldQte){
+                        jsonTranslat[indice].qte = json.max
+                        oldQte = json.max
+                        alertDone=true;
+                        alert("Oups ! La quantité que vous souhaité commander pour l'article : "+ json.itemName +", n'est plus disponible ! Quantité disponible : " + json.max+". Nous avons modifier la quantité en conséquence.")
+                        location.reload();
                     }else{
-                        
-                    }
-                };
-
-                function deleteItemCart(c){
-                    if(confirm("Voulez vous vraiment supprimer ?") == true){
-                       
-                        $.getJSON("/cart/delete", { id: c.id }).done(function( json ) {
-                            if(json.code == 0){
-                                location.reload();
-                            }else{
-                                alert(json.message)
-                            }
-                        });
+                        alertDone=true;
+                        alert("Oups ! La quantité que vous souhaité commander pour l'article : "+ json.itemName +", n'est plus disponible ! Quantité disponible : " + json.max)
+                        location.reload();
                     }
                 }
+            }else{
+                if(json.code == 1){
+                    alertDone=true;
+                    alert(json.message);
+                    location.reload();
+                }else{
+                    //si le code différent de 1 c'est que l'annonce n'existe plus. on l'enleve du pannier.
+                    alert(json.message);
+                    $.getJSON("/cart/delete", { id: id }).done(function( json ) {
+                        location.reload();
+                    });
+                }
+            }
+        });
+        
+        if(canModify == true){
+            $.getJSON("/cart/add", { id: id, qte:valToAdd, qteMax : jsonTranslat[indice].qteMax , unit : jsonTranslat[indice].unit , category : jsonTranslat[indice].category, product: jsonTranslat[indice].product, title:jsonTranslat[indice].title, prixU:jsonTranslat[indice].prixU  }).done(function( json ) {
+                if(json.code == 0){
+                    // on mettera un modal plus tard pour faire beau
+                    location.reload();
+                }else{
+                    if(alertDone == false){
+                        alert(json.message)
+                    }
+                    //on remet le select sur l ancienne qte.
+                }
+            });
+        }
+        
+    };
 
-            </script>
-        <% } %>
-    <div class="container">
+</script>
+
+<section class="main-container col1-layout">
+    <div class="main container">
+        <div class="col-main">
+        <div class="cart wow bounceInUp animated">
+            <div class="page-title">
+            <% if(session.cart && session.cart.length>0) { %>
+            <h2>Mon Pannier</h2>
+            </div>
+            <div class="table-responsive">
+                <fieldset>
+                <table class="data-table cart-table" id="shopping-cart-table">
+                    <colgroup>
+                    <col width="1">
+                    <col>
+                    <col width="1">
+                    <col width="1">
+                    <col width="1">
+                    <col width="1">
+                    <col width="1">
+                    </colgroup>
+                    <thead>
+                    <tr class="first last">
+                        <th rowspan="1">&nbsp;</th>
+                        <th rowspan="1"><span class="nobr">Produit</span></th>
+                        <th rowspan="1"></th>
+                        <th colspan="1" class="a-center"><span class="nobr">Prix unitaire</span></th>
+                        <th class="a-center" rowspan="1">Quantité</th>
+                        <th colspan="1" class="a-center">Total</th>
+                        <th class="a-center" rowspan="1">&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr class="first last">
+                        <td class="a-right last" colspan="50">
+                            <a href ="/proceedCheckout/address"><button  class="button btn-continue" title="Valider pannier" type="button"><span>Valider mon pannier</span></button></a>
+                        </td>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    <%   
+                        var prixGlobal =0;
+                    %>
+                    <% for(var i =0; i<session.cart.length; i++) { %>
+                    
+                    <script type="text/javascript">
         
-        
+                        //obliger de faire se translate car on ne peux pas intéragir de js a ejs
+                        var o = {};
+                        o.id = "<%= session.cart[i].id %>";
+                        o.qte = <%= session.cart[i].qte %>
+                        o.qteMax = <%= session.cart[i].qteMax %>
+                        o.unit = "<%= session.cart[i].unit %>"
+                        o.category = "<%= session.cart[i].category %>"
+                        o.product = "<%= session.cart[i].product %>"
+                        o.title = "<%= session.cart[i].title %>"
+                        jsonTranslat.push(o);
+                       
+                        
+                    </script>
+
+                    <tr class="first odd" style="height : 100px; max-height: 100px;">
+                        <td class="image"><a class="product-image" title="" href="/visualisationAnnonce/<%=session.cart[i].id%>"><img width="75" alt="Sample Product" src="<%=session.cart[i].img%>"></a></td>
+                        <td><h2 class="product-name"> <a href="/visualisationAnnonce/<%=session.cart[i].id%>"><%=session.cart[i].title%></a> </h2><%=session.cart[i].category%>, <%=session.cart[i].product%></td>
+                        <td class="a-center"></td>
+                        <td class="a-right"><span class="cart-price"> <span class="price"><%=(session.cart[i].prixU*1).toFixed(2)%> €</span> </span></td>
+                        <td class="a-center movewishlist"> <select name="qte" id="<%=i%>" onchange="changeQte(this)">
+                                <% for(var j = 1; j<=cart[i].qteMax; j++) { %> 
+                                    <% if(cart[i].qte != j){ %>
+                                        <option name="qteCart" value ="<%=j%>"  ><%=j%></option>
+                                    <% } else { %>
+                                        <option name="qteCart" value ="<%=j%>" selected="selected"><%=j%></option>
+                                    <% } %>
+                                    
+                                <% } %>  
+                                
+                            </select></td>
+                        <% 
+                            var prixT = (session.cart[i].qte * session.cart[i].prixU)
+                            prixGlobal += prixT;
+                        %>
+                        <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=prixT.toFixed(2)%>€</span> </span></td>
+                        <td class="a-center last"><a class="button remove-item" title="Remove item" id="<%=cart[i].id%>" onclick="deleteItemCart(this)"><span><span>Remove item</span></span></a></td>
+                    </tr>
+                        <% } %>
+                    <tr>
+                        <th class="image">Total</th>
+                        <td></td>
+                        <td class="a-center"></td>
+                        <td class="a-right"></td>
+                        <td class="a-center movewishlist"></td>
+                        <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=prixGlobal.toFixed(2)%>€</span> </span></td>
+                        <td class="a-center last"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                </fieldset>
+            </div>
+            <% } else{ %>
+                <h2>Votre pannier est vide.</h2>
+            <% } %>
+        </div>
+        </div>
     </div>
-</div>
+</section>
+
 
 
 <% include ./partials/footer %>
-
+</div>
 </body>
 </html>

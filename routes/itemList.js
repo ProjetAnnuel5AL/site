@@ -2,11 +2,10 @@ module.exports = function(app, urlApi, utils){
   var rp = require("request-promise");
   var formidable = require("formidable");
  
-	// =====================================
-	// SIGNUP ==============================
-	// =====================================
-	// show the signup form
-	
+  app.get('/itemList', function(req, res, next) {
+      res.redirect("/itemList/1")
+  })
+
 	app.get('/itemList/:page', function(req, res, next) {
     var msgError = "";
     var categories= [];
@@ -31,6 +30,7 @@ module.exports = function(app, urlApi, utils){
       }).then(function (body) {
         
         if (body.code == 0) {
+          //console.log(body)
           for (var item in body.list) {
             if(prixMax < body.list[item].price){
               prixMax = body.list[item].price;

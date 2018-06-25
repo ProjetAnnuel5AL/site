@@ -103,7 +103,7 @@
             </div>
           </div>
           <div class="sorter">
-            <div class="view-mode"> <span title="Grid" class="button button-active button-grid">&nbsp;</span><a href="list.html" title="List" class="button-list">&nbsp;</a> </div>
+            
           </div>
         </div>
 
@@ -113,7 +113,9 @@
             <% if(listTab.length>0) { 
              
               for (var i =0; i<listTab.length; i++){ %>
-                  <%var desc = listTab[i].description.replace("\r\n", "<br />") %>
+                  <%var desc = listTab[i].description.replace(/\n|\r/g,'<br />') 
+                  desc = desc.replace(/'/g, "\\'");
+                  %>
                    
               <script type="text/javascript">
                   
@@ -124,19 +126,28 @@
               <li class="item col-lg-4 col-md-4 col-sm-4 col-xs-6">
                 <div class="item-inner">
                   <div class="item-img">
-                    <div class="item-img-info"><a href="/visualisationAnnonce/<%=listTab[i].id%>" title="Retis lapen casen" class="product-image"><img style="height: 200px; max-width: 200px;" src="<%=urlApi%>/itemPhotos/<%=listTab[i].id%>/0.<%=listTab[i].fileExtensions.split(';')[0]%>" alt="<%=listTab[i].productName%>"></a>
+                    <div class="item-img-info"><a href="/visualisationAnnonce/<%=listTab[i].id%>" title="" class="product-image"><img style="height: 200px; max-width: 200px;" src="<%=urlApi%>/itemPhotos/<%=listTab[i].id%>/0.<%=listTab[i].fileExtensions.split(';')[0]%>" alt="<%=listTab[i].productName%>"></a>
                       <!--<div class="new-label new-top-left">New</div>-->
                       <div class="box-hover">
                         <ul class="add-to-links">
-                          <li><a class="link-quickview" onclick="displayQuickView('<%=listTab[i].productName%>','<%=listTab[i].price%>','<%=listTab[i].quantity%>','<%=listTab[i].unitName%>', '<%=desc%>', '<%=listTab[i].id%>', '<%=listTab[i].fileExtensions%>', '<%=urlApi%>' );">Voir plus</a> </li>
+                          <li><a class="link-quickview" onclick="displayQuickView('<%=listTab[i].itemName%>','<%=listTab[i].price%>','<%=listTab[i].quantity%>','<%=listTab[i].unitName%>', '<%=desc%>', '<%=listTab[i].id%>', '<%=listTab[i].fileExtensions%>', '<%=urlApi%>','<%=listTab[i].login%>','<%=listTab[i].productName%>','<%=listTab[i].categoryName%>' );">Voir plus</a> </li>
                         </ul>
                       </div>
                     </div>
                   </div>
                   <div class="item-info">
                     <div class="info-inner">
-                      <div class="item-title"> <a title="Retis lapen casen" href="/visualisationAnnonce/<%=listTab[i].id%>"><%=listTab[i].productName%> <%=listTab[i].photo%> </a> </div>
+                      <div class="item-title"> <a title="" href="/visualisationAnnonce/<%=listTab[i].id%>"><%=listTab[i].itemName%> <%=listTab[i].photo%> </a><br /><small><%=listTab[i].categoryName%>, <%=listTab[i].productName%></small> </div>
+                      <div class="item-price">
+                        <div class="price-box">
+                          <!--<p class="old-price"><span class="price-label">Regular Price:</span> <span class="price">$100.00 </span> </p>-->
+                          <p class="special-price"><span class="price-label">Special Price</span> <span class="price"><%= listTab[i].price.toFixed(2)%> € </span> </p>
+                        </div>
+                      </div>
                       <div class="item-content">
+                        <!--<%if (listTab[i].login == session.login) {%>
+                            <a href="/item/edit/<%=listTab[i].id%>"><h3><button class='btn btn-primary'>Modifier</button></h3></a>
+                        <% } %>-->
                         <div class="rating">
                           <div class="ratings">
                             <!--<div class="rating-box">
@@ -145,13 +156,6 @@
                             <!--<p class="rating-links"> <a href="#">1 Review(s)</a> <span class="separator">|</span> <a href="#">Add Review</a> </p>-->
                           <!--</div>-->
                         </div>
-                        <div class="item-price">
-                          <div class="price-box">
-                            <!--<p class="old-price"><span class="price-label">Regular Price:</span> <span class="price">$100.00 </span> </p>-->
-                            <p class="special-price"><span class="price-label">Special Price</span> <span class="price"><%= listTab[i].price%> € </span> </p>
-                          </div>
-                        </div>
-                        
                       </div>
                     </div>
                   </div>

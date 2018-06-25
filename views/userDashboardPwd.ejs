@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Mon mot de passe</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <h2 class="page-heading"> <span class="page-heading-title">Mon mot de passe</span> </h2>
+                   
+                    <fieldset class="col2-set">
+                            <% if (msgError.length > 0) { %>
+                                <div class="alert alert-danger"><%= msgError %></div>
+                            <% } %>
+                            <% if (msgSuccess.length > 0) { %>
+                                <div class="alert alert-success"> <%= msgSuccess %> </div>
+                            <% } %>
+                        <form action="/userDashboard/pwd" method="post">
+                            <ul class="form-list">  
+                                <li>
+                                    <label for="oldPassword">Ancien mot de passe</label>
+                                    <br>
+                                    <input type="password" title="oldPassword" class="input-text required-entry" id="oldPassword" name="oldPassword" required >
+                                </li>
+                                <li>
+                                    <label for="password">Mot de passe</label>
+                                    <br>
+                                    <input type="password" title="password" id="password" class="input-text required-entry" name="password" required>
+                                </li>
+                                <li>
+                                    <label for="passwordConfirm">Confirmer le mot de passe</label>
+                                    <br>
+                                    <input type="password" title="passwordConfirm" id="passwordConfirm" class="input-text required-entry" name="passwordConfirm" required>
+                                </li>      
+                                <button name="send" type="submit" class="button"><span>Modifier mon mot de passe</span></button>
+                            </ul>
+                        </form>
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ./partials/dashboard %>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>

@@ -2,7 +2,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Devient producteur</title>
+    <title>Devenir producteur</title>
     <% include ./partials/header %>
 </head>
 <body class="cms-index-index cms-home-page">
@@ -11,12 +11,57 @@
         <header>
             <% include ./partials/topBar %>
         </header>
-        
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var item;
+                var urlApi;
+                var options = {
+                    componentRestrictions: {country: 'fr'}
+                };
+                var autocomplete = new google.maps.places.Autocomplete($("#address")[0], options);
+                var latlong = '<%=producer.locationProducer%>'
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                    selectAdress(place.geometry.location.lat(), place.geometry.location.lng(), 15, true);
+                    $("#city").val(place.vicinity);
+                });
+                console.log(latlong)
+                if(latlong == null || latlong ==""){
+                    selectAdress(47.930565, 2.436864, 5, false);
+                }else{
+                    latlongTab = latlong.split(',')
+                    selectAdress(latlongTab[0], latlongTab[1], 15, true);
+                }
+                
+                function selectAdress(lat, long, zoom, marker){
+                    var latlng = new google.maps.LatLng(lat, long)
+                    var myOptions = {
+                    center: latlng,
+                    zoom: zoom,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+                    var map = new google.maps.Map(document.getElementById("map"),
+                        myOptions);
+                    if(marker){
+                        var marker = new google.maps.Marker({
+                            position: latlng,
+                            map: map,
+                            title: 'Adresse'
+                        });
+                        $("#location").val(lat + ','+ long);
+                    }
+                }
+               
+            });
+        </script>
+
         <section class="main-container top-space col1-layout">
             <div class="main container">
                 <div class="account-login">
                 <div class="page-title">
                     <h2>Devenir producteur : </h2>
+                    <p><i>Pour vous enregistrer en tant que producteur, merci de remplir les quelques champs ci dessous</i></p>
                 </div>
                 <fieldset class="col2-set">
                     <div class="col-1 update-users">
@@ -29,7 +74,7 @@
                             <div class="alert alert-success"> <%= msgSuccess %> </div>
                         <% } %>
     
-                        <form action="/becomeProducer" method="post" enctype="multipart/form-data">
+                        <form action="/becomeProducer" id="myForm" method="post" enctype="multipart/form-data">
                             <ul class="form-list">
                                 <li>
                                     <label for="name">Nom</label>
@@ -66,19 +111,13 @@
                                     <input type="text" title="phone" id="phone" class="input-text required-entry" name="phone" value="<%= producer.phoneProducer %>" required>
                                 </li>
                                 <li>
-                                    <label for="address">Adresse</label>
+                                    <label for="address">Localisation de votre production</label>
                                     <br>
-                                    <input type="text" title="address" id="address" class="input-text required-entry" name="address" value="<%= producer.addressProducer %>" required>
-                                </li>
-                                <li>
-                                    <label for="city">Ville</label>
-                                    <br>
-                                    <input type="text" title="city" id="city" class="input-text required-entry" name="city" value="<%= producer.cityProducer %>" required>
-                                </li>
-                                <li>
-                                    <label for="cp">Code Postal</label>
-                                    <br>
-                                    <input type="number" title="cp" id="cp" class="input-text required-entry" name="cp" value="<%= producer.cpProducer %>" required>
+                                    <input type="text" class="input-text required-entry" id="address" name="address" value="<%= producer.addressProducer %>" autocomplete="off">
+                                    </br>
+                                    <div id="map" class="form-control"style="height:500px;"></div>
+                                    <input type="hidden" class="form-control" id="location" name="location">
+                                    <input type="hidden" class="form-control" id="city" name="city"/>
                                 </li>
                                 <li>
                                     <label for="avatar">Photo (facultative) </label>
@@ -91,15 +130,22 @@
                                     <br>       
                                 </li>
                                 <li>
-                                    <label for="description">Description</label>
+                                    <label for="description">Description (entre 20 et 500 caractères)</label>
                                     <br>
-                                    <textarea rows="5" cols="50" title="description" id="description" class="input-text required-entry" name="description" required><%= producer.descriptionProducer %></textarea>
+                                    <textarea style="width:100%; height:200px;" maxlength="500" title="description" id="description" class="input-text required-entry" name="description" required><%= producer.descriptionProducer %></textarea>
                                 </li>
-                        
+                                <li>
+                                    <label>Compte paypal <br /><i>Afin d'effectuer les transactions financières de vos ventes, merci de vous connecter avec votre compte paypal professionnel. Si vous n'en avez pas, vous pouvez en créer un <a href="https://www.paypal.com/fr/home">ici</a></i></label>
+                                    <br />
+                                    
+                                    <p id="displayPaypalEmail"></p>
+                                    <input type="hidden" name="emailPaypal" id="emailPaypal" value = "" required>
+                                </li>
                             </ul>
-                            <button name="send" type="submit" class="button"><span>Devenir producteur</span></button>
+                            <button name="send" type="submit" class="button" style="margin-top:60px;"><span>Devenir producteur</span></button>
                         </form>
-                    
+                        <!--on sort la section paypal du form sinon sa submit le form-->
+                        <span id='lippButton' style="margin-top:-75px; position:absolute"></span>
                     </div>
                     </div>
                 </fieldset>
@@ -107,14 +153,31 @@
             </div>
         </section>
 
+        <script src='https://www.paypalobjects.com/js/external/api.js'></script>
+        <script>
+        paypal.use( ['login'], function (login) {
+          login.render ({
+            "appid":"<%=paypalClientId%>",
+            "authend":"<%=paypalMode%>>",
+            "scopes":"openid email https://uri.paypal.com/services/paypalattributes ",
+            "containerid":"lippButton",
+            "locale":"fr-fr",
+            "returnurl":"http://localhost:8082/becomeProducer/loginpaypal"
+          });
+        });
+        </script>
 
         <script type="text/javascript">
+           
             $("document").ready(function(){
                 $("#fileAvatar").change(function() {
                     readURL(this);   
                 });
+
+                var interv = setInterval(function(){validatePaypal()}, 2500);
             });
-    
+
+
             function readURL(input) {
                 if (input.files && input.files[0]) {
                     var reader = new FileReader();
@@ -128,6 +191,27 @@
                     $('#avatarImg').attr('src', "img/avatar.png");
                 }
             }
+            var emailPaypal = "";
+            function validatePaypal(){
+                $.ajax({
+                    url: "/becomeProducer/verifyPaypalAccount",
+                    success: function(data) {
+                        console.log("succes")
+                        if(data.code == 0){
+                            if(data.email != emailPaypal){
+                                document.getElementById("displayPaypalEmail").innerHTML = "<b style=\"font-size:14px\">Compte " + data.email + " valide.<b>"
+                                document.getElementById("emailPaypal").value =  data.email
+                            }
+                        }
+                    },
+                    error: function(error){
+                        console.log("error")
+                    }
+                    
+                });
+            }
+            
+            
     
         </script>
 

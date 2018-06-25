@@ -69,7 +69,6 @@ module.exports = function(app, urlApi, utils){
           "idItem": req.params.id,
         }
       }).then(function (body) {
-        
         if(body.infoItem.login!=req.session.login){
           res.render("erreur.ejs", {
             session: req.session,   
@@ -140,6 +139,7 @@ module.exports = function(app, urlApi, utils){
     var msgError;
     var unitsList;
     var categoriesList;
+    console.log(req.session.type);
     if(req.session.type && req.session.type == 1) {
       msgError="";
       msgSuccess="";
@@ -158,14 +158,29 @@ module.exports = function(app, urlApi, utils){
             msgError += "L'un des fichiers utilisés pour les photos n'est pas conforme : \nExtensions acceptées :  \n\rPoid maximum : 5242880  ";
           }
         }
-        if(!fields.name){
-          msgError += "\n Veuillez saisir le nom de votre produit ! ";
+        if(!fields.name || fields.description.length>50){
+          msgError += "\n Veuillez saisir le nom de votre produit ayant au maximum 50 caractères !";
         }
-        if(!fields.description){
-          msgError += "\n Veuillez saisir la description de votre produit ! ";
+        if(!fields.description || fields.description.length<20 || fields.description.length>500){
+          msgError += "\n Veuillez saisir une description de votre produit ayant entre 20 et 500 caractères !";
         }
         if(!fields.location){
           msgError += "\n Veuillez saisir la localisation de votre produit ! ";
+        }
+        if(!fields.quantity || fields.quantity <=0){
+          msgError += "\n Veuillez saisir une quantité ! ";
+        }
+        if(!fields.unit){
+          msgError += "\n Veuillez saisir une unité ! ";
+        }
+        if(!fields.price){
+          msgError += "\n Veuillez saisir un prix ! ";
+        }
+        if(!fields.city){
+          msgError += "\n Veuillez saisir une adresse ! ";
+        }
+        if(!fields.adress){
+          msgError += "\n Veuillez saisir une adresse ! ";
         }
         
         if(msgError != ""){
@@ -201,10 +216,12 @@ module.exports = function(app, urlApi, utils){
               }); 
             }
             else {
+              console.log(body);
               res.render("itemCreate.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "", session: req.session });
             }
           } else {
+            console.log(body);
             res.render("connexion.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "", session: req.session });
           }
@@ -224,8 +241,6 @@ module.exports = function(app, urlApi, utils){
   });
 
   app.post('/item/edit', function(req, res, next) {
-    console.log(req.body);
-    console.log(req.session.type);
     var msgError;
     var unitsList;
     var categoriesList;
@@ -274,24 +289,73 @@ module.exports = function(app, urlApi, utils){
         if(body){
           console.log("body set");
           if (body.code == "0") {
-            res.render("success.ejs", { msgError: "", msgSuccess:"Annonce modifiée avec succès", session: req.session });
+            res.render("itemCreate.ejs", { msgError: "", msgSuccess:"Annonce modifiée avec succès", session: req.session });
           }
           else {
-                res.render("erreur.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
+                res.render("itemCreate.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                   msgSuccess: "", session: req.session });
           }
         } else {
-          res.render("erreur.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
+          res.render("itemCreate.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "", session: req.session });
         }
         }).catch(function (err) {
               console.log(err);
-              res.render("erreur.ejs", {
+              res.render("itemCreate.ejs", {
                 msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "",
                 session: req.session
               });
         });
+      });
+    }else{
+      console.log("redirect");
+			res.redirect("/");
+		}
+  });
+
+  app.post('/item/delete', function(req, res, next) {
+    var msgError;
+    var unitsList;
+    var categoriesList;
+    var item;
+    console.log(req.body);
+		if(req.session.type && req.session.type == 1) {
+      var form = new formidable.IncomingForm();
+      form.multiples=true;
+      form.parse(req, function (err, fields, files) {
+        rp({
+          url: urlApi + "/item/delete",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          json: {
+            "id": fields.idItem,
+            "token": req.session.token
+          }
+        }).then(function (body) {
+          if(body){
+            console.log("body set");
+            if (body.code == "0") {
+              res.render("itemCreate.ejs", { msgError: "", msgSuccess:"Annonce supprimée avec succès", session: req.session });
+            }
+            else {
+                  res.render("itemCreate.ejs", { msgError: "Erreur lors de la suppression de l'annonce. Veuillez recommmencer !",
+                    msgSuccess: "", session: req.session });
+            }
+          } else {
+            res.render("itemCreate.ejs", { msgError: "Erreur lors de la suppression de l'annonce. Veuillez recommmencer !",
+                  msgSuccess: "", session: req.session });
+          }
+          }).catch(function (err) {
+            console.log(err);
+            res.render("itemCreate.ejs", {
+              msgError: "Erreur lors de la suppression de l'annonce. Veuillez recommmencer !",
+              msgSuccess: "",
+              session: req.session
+            });
+          });
       });
     }else{
       console.log("redirect");

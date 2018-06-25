@@ -1,14 +1,12 @@
 
-module.exports = function(app, urlApi){
+module.exports = function(app, urlApi,urlLocal,  utils){
     // =====================================
     // VALIDATION INSCRIPTION PAGE (with login links) ========
     // =====================================
     var rp = require("request-promise");
 
     app.get("/registrationValidation/:code", function(req, res) {
-        
         var code = req.params.code;
-        
         rp({
             url: urlApi + "/user/findForValidation",
             method: "GET",
@@ -26,21 +24,118 @@ module.exports = function(app, urlApi){
                     session : req.session
                 });
             }else{
-                //console.log(body);
+                //le.log(body);
                 res.render("registrationValidation.ejs", {
-                    msgError: "Erreur veuillez lors de la validation. Veuillez recommmencer !",
+                    msgError: "Erreur : lien de validation non valide.",
                     msgSuccess: "",
                     session : req.session
                 });
             }
         }).catch(function (err) {
-            //console.log(err);
+            //le.log(err);
             res.render("registrationValidation.ejs", {
-                msgError: "Erreur veuillez lors de la validation. Veuillez recommmencer !",
+                msgError: "Erreur lors de la validation. Veuillez recommmencer ultérieurement !",
                 msgSuccess: "",
                 session : req.session
             });
         });
 
     });
+
+    app.get("/resend", function(req, res) {
+        if(req.session.type){
+            res.redirect("/");
+        }else{
+            res.render("resend.ejs",{ 
+                msgError: "",
+                msgSuccess: "",
+                session : req.session}
+            )
+        }
+    });
+
+    app.post("/resend", function(req, res) {
+        if(req.session.type){
+            res.redirect("/");
+        }else{
+            if (!req.body.login){
+                res.render("resend.ejs",{ 
+                    msgError: "Veuillez saisir un identiifant !",
+                    msgSuccess: "",
+                    session : req.session}
+                )
+            } else if(!req.body.mail) {
+                res.render("resend.ejs",{ 
+                    msgError: "Veuillez saisir un email !",
+                    msgSuccess: "",
+                    session : req.session}
+                )
+            }else{
+                rp({
+                    url: urlApi + "/user/resend",
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    json: {
+                        "loginUser": req.body.login,
+                        "emailUser" : req.body.mail
+                    }
+                }).then(function(body) {
+                    if(body.code == 0){
+
+                        res.render("resend.ejs",{ 
+                            msgError: "",
+                            msgSuccess: "Un email a été renvoyé avec succès",
+                            session : req.session}
+                        )
+                    }else if(body.code == 1){
+                        res.render("resend.ejs",{ 
+                            msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement!",
+                            msgSuccess: "",
+                            session : req.session}
+                        )
+                    }else if(body.code == 2){
+                        res.render("resend.ejs",{ 
+                            msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement!",
+                            msgSuccess: "",
+                            session : req.session}
+                        )
+                    }else if(body.code == 3){
+                        res.render("resend.ejs",{ 
+                            msgError: "L'utilisateur saisi n'existe pas !",
+                            msgSuccess: "",
+                            session : req.session}
+                        )
+                    }else if(body.code == 4){
+                        res.render("resend.ejs",{ 
+                            msgError: "Cet email est déjà utilisé !",
+                            msgSuccess: "",
+                            session : req.session}
+                        )
+                    } else if(body.code == 5){
+                        res.render("resend.ejs",{ 
+                            msgError: "Ce compte est déjà validé !",
+                            msgSuccess: "",
+                            session : req.session}
+                        )
+                    }else{
+                        res.render("resend.ejs",{ 
+                            msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement!",
+                            msgSuccess: "",
+                            session : req.session}
+                        )
+                    }
+                }).catch(function (err) {
+                    res.render("resend.ejs",{ 
+                        msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement!",
+                        msgSuccess: "",
+                        session : req.session}
+                    )
+                });
+            }
+            
+        }
+    });
+
 };

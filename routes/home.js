@@ -6,7 +6,7 @@ module.exports = function(app, urlApi){
     var rp = require("request-promise");
 
     app.get("/", function(req, res) {
-        console.log(req.session);
+        //console.log(req.session);
         res.render("home.ejs", {
             session: req.session
         });

@@ -3,7 +3,7 @@ module.exports = function(app, urlApi, utils, config){
     var rp = require("request-promise");
 
     app.get("/visualisationAnnonce/:id", function(req, res) {
-        var photo;
+        var photo =[];
         var item;
         var lat;
         var long;
@@ -25,13 +25,18 @@ module.exports = function(app, urlApi, utils, config){
                 var LatLong = body.infoItem.location.split(',');
                 lat = LatLong[0];
                 long = LatLong[1];
-
-                if(body.infoItem.photoURL == "default"){
-                    photo = "../img/nophoto.png";
+                item.infoItem.description = item.infoItem.description.replace(/\n|\r/g,'<br />'); 
+                if(body.infoItem.fileExtensions == ""){
+                    photo[0] = "../img/nophoto.png";
                 }else{
-                    photo = config.urlItemPhoto +"/"+  req.params.id +"/"+ body.infoItem.photoURL
+                    var ext = body.infoItem.fileExtensions.split(';'); 
+                    for(var i =0; i<ext.length; i++){
+                        if(ext[i] !="") {
+                            photo[i] =urlApi+'/itemPhotos/'+body.infoItem.id+'/'+i+'.'+ext[i]
+                        }
+                    }
                 }
-              
+                //console.log(photo)
                 res.render("visualisationAnnonce.ejs", {
                     session: req.session,
                     item : item,
@@ -55,7 +60,7 @@ module.exports = function(app, urlApi, utils, config){
             
         
         }).catch(function (err) {
-        //console.log(err);
+            //console.log(err);
 
             res.render("erreur.ejs", {
                 session: req.session,   

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Mes commandes</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <h2 class="page-heading"> <span class="page-heading-title">Mes commandes</span> </h2>
+                        <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
+                            <colgroup>
+                            <col>
+                            <col width="1">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th>Date</th>
+                                <th>Numéro de commande</th>
+                                <th>Prix Total</th>
+                                <th>Statut</th>
+                                <th></th>
+                            </tr>
+                            <% 
+                                function pad(n) {return n < 10 ? "0"+n : n;}
+                                if(orders){
+                                for(var i =0; i<orders.length; i++) {
+                                var dateTmp =  new Date(orders[i].dateOrder);
+                                var dateOrder = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
+                            %>        
+                            <tr>
+                                <td style=""><%=dateOrder%></td>
+                                <td style=""><%=orders[i].idOrder%></td>
+                                <td style=""><span class="price"><%= orders[i].totalOrder.toFixed(2) %>€</span></td>
+                                <td><%=status[i]%></td>
+                                <td><a href="/userDashboard/orderDetails/<%=orders[i].idOrder%>"><button name="send" class="button"><span>Details</span></button></a></td>
+                            </tr>
+                            <% }} %>
+                            </tbody>
+                        </table>
+                    <fieldset class="col2-set">
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ./partials/dashboard %>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
