@@ -19,87 +19,7 @@
   var ext = extT[extT.length-1];
 
 %>
-<style>
-    /* Style the Image Used to Trigger the Modal */
-    #myImg {
-        border-radius: 5px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
 
-    #myImg:hover {opacity: 0.7;}
-
-    /* The Modal (background) */
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        padding-top: 100px; /* Location of the box */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
-    }
-
-    /* Modal Content (Image) */
-    .modal-content {
-        margin: auto;
-        display: block;
-        width: 80%;
-        max-width: 700px;
-    }
-
-    /* Caption of Modal Image (Image Text) - Same Width as the Image */
-    #caption {
-        margin: auto;
-        display: block;
-        width: 80%;
-        max-width: 700px;
-        text-align: center;
-        color: #ccc;
-        padding: 10px 0;
-        height: 150px;
-    }
-
-    /* Add Animation - Zoom in the Modal */
-    .modal-content, #caption { 
-        animation-name: zoom;
-        animation-duration: 0.6s;
-    }
-
-    @keyframes zoom {
-        from {transform:scale(0)} 
-        to {transform:scale(1)}
-    }
-
-    /* The Close Button */
-    .close {
-        position: absolute;
-        top: 75px;
-        right: 35px;
-        color: #f1f1f1;
-        font-size: 40px;
-        font-weight: bold;
-        transition: 0.3s;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: #bbb;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    /* 100% Image Width on Smaller Screens */
-    @media only screen and (max-width: 700px){
-        .modal-content {
-            width: 100%;
-        }
-    }
-</style>
 
 <div class="container">
     <div class="col-sm-8 col-sm-offset-2 ">
@@ -139,7 +59,7 @@
                   var marker = new google.maps.Marker({
                       position: latlng,
                       map: map,
-                      title: "<%= item.infoItem.address %>"
+                      title: "<%= item.infoItem.addressItem %>"
                   });
                   $("#location").val(lat + ','+ long);
               }
@@ -147,7 +67,7 @@
           }
       
       })
-      var max = Number(<%= item.infoItem.quantity %>);
+      var max = Number(<%= item.infoItem.quantityItem %>);
 
       function changeMainImg(img){
         var mainImg = document.getElementById("mainImage");
@@ -166,13 +86,13 @@
 
     function addCart(){
       var qte=document.getElementById("qty").value;
-      if(qte<1 || qte > <%= item.infoItem.quantity %>) {
+      if(qte<1 || qte > <%= item.infoItem.quantityItem %>) {
           alert("La quantité voulu doit être suppérieur à 0 et inférieur à <%= item.infoItem.quantity %>");
       }else{
           var url = document.URL.split('/');
           var id = url[url.length-1];
           /*on envoi aussi la qtemax possible à  l'achat dans le cas ou produit déjà dans panier pour vérif*/
-          $.getJSON("/cart/add", { id: id, qte:qte, qteMax : <%= item.infoItem.quantity %>, unit : "<%= item.infoItem.unitName %>", category : "<%=item.infoItem.categoryName%>", product: "<%=item.infoItem.productName%>", title:"<%=item.infoItem.itemName%>", prixU : <%=item.infoItem.price%>,ext: '<%=ext%>' }).done(function( json ) {
+          $.getJSON("/cart/add", { id: id, qte:qte, qteMax : <%= item.infoItem.quantityItem%>, unit : "<%= item.infoItem.nameUnit %>", category : "<%=item.infoItem.nameCategory%>", product: "<%=item.infoItem.nameProduct%>", title:"<%=item.infoItem.nameItem%>", prixU : <%=item.infoItem.priceItem%>,ext: '<%=ext%>' }).done(function( json ) {
               if(json.code == 0){
                   // on mettera un modal plus tard pour faire beau
                   alert("Vous avez ajouté au panier cet article.")
@@ -230,7 +150,7 @@
                       </div>
                       <div class="product-shop col-lg-8 col-sm-7 col-xs-12">
                         <div class="product-name">
-                          <h1><%=item.infoItem.itemName %> <small>(<%= item.infoItem.categoryName %>)</small></h1>
+                          <h1><%=item.infoItem.nameItem %> <small>(<%= item.infoItem.nameCategory %>)</small></h1>
                           
                         </div>
                         <div class="ratings">
@@ -243,11 +163,11 @@
                         </div>
                         <div class="price-block">
                           <div class="price-box">
-                            <p class="special-price"> <span class="price-label">Regular Price:</span> <span class="price"> <%= item.infoItem.price.toFixed(2) %>€</span> </p>
-                            <%if(item.infoItem.quantity<=0){%>
-                              <p class="availability in-stock pull-right" ><span style="background-color : red"><%=item.infoItem.quantity%> <%=item.infoItem.unitName%> en stock</span></p>
+                            <p class="special-price"> <span class="price-label">Regular Price:</span> <span class="price"> <%= item.infoItem.priceItem.toFixed(2) %>€</span> </p>
+                            <%if(item.infoItem.quantityItem<=0){%>
+                              <p class="availability in-stock pull-right" ><span style="background-color : red"><%=item.infoItem.quantityItem%> <%=item.infoItem.nameUnit%> en stock</span></p>
                             <%}else{%>
-                              <p class="availability in-stock pull-right"><span><%=item.infoItem.quantity%> <%=item.infoItem.unitName%> en stock</span></p>
+                              <p class="availability in-stock pull-right"><span><%=item.infoItem.quantityItem%> <%=item.infoItem.nameUnit%> en stock</span></p>
                             <%}%>
                           </div>
                         </div>
@@ -259,13 +179,13 @@
                           -webkit-box-orient: vertical;
                           -webkit-line-clamp: 10; 
                           line-height: 1.8;        
-                          max-height: 1.8; "><%-item.infoItem.description%></p>
+                          max-height: 1.8; "><%-item.infoItem.descriptionItem%></p>
                         </div>
                         <div class="add-to-box">
                             <% if(!session.type) { %>
                               <a href ="/login" >Pour ajouter au panier merci de vous connecter en cliquant ici.</a>
                             <% }else{ %>
-                              <% if(session.login != item.infoItem.loginUser && item.infoItem.quantity >0) { %>
+                              <% if(session.login != item.infoItem.loginUser && item.infoItem.quantityItem >0) { %>
                           <div class="add-to-cart">
                             <div class="pull-left">
                                 <div class="custom pull-left">
@@ -297,7 +217,7 @@
                   <div id="productTabContent" class="tab-content">
                     <div class="tab-pane fade in active" id="product_tabs_description">
                       <div class="std" syle="overflow-wrap: break-word;">
-                        <p><%-item.infoItem.description%></p>
+                        <p><%-item.infoItem.descriptionItem%></p>
                       </div>
                     </div>
                     <div class="tab-pane fade" id="product_tabs_custom">

@@ -2,11 +2,6 @@ module.exports = function(app, urlApi, utils){
   var rp = require("request-promise");
   var formidable = require("formidable");
   var fs = require('fs');
- 
-	// =====================================
-	// SIGNUP ==============================
-	// =====================================
-	// show the signup form
 	
 	app.get('/item/new', function(req, res, next) {
     var msgError;
@@ -20,23 +15,26 @@ module.exports = function(app, urlApi, utils){
         method: "GET",
         headers: {
           "Content-Type": "application/json"
-        }
+        },
       }).then(function (body) {
+        
         if (body.code == 3) {
           res.render("itemCreate.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
         } else {
-          unitsList = JSON.parse(body);
+          var jsonUnit = JSON.parse(body);
+          unitsList = jsonUnit.result
           rp({
             url: urlApi + "/categories",
             method: "GET",
             headers: {
               "Content-Type": "application/json"
-            }
+            },
           }).then(function (body) {
             if (body.code == 3) {
               res.render("itemCreate.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
             } else {
-              categoriesList = JSON.parse(body);
+              var jsonCategory = JSON.parse(body);
+              categoriesList = jsonCategory.result
               res.render('itemCreate.ejs', { msgError: "", msgSuccess:msgSuccess, units: unitsList, categories: categoriesList, session : req.session });
             }
           }).catch(function (err) {
@@ -69,7 +67,7 @@ module.exports = function(app, urlApi, utils){
           "idItem": req.params.id,
         }
       }).then(function (body) {
-        if(body.infoItem.login!=req.session.login){
+        if(body.result.infoItem.loginUser!=req.session.login){
           res.render("erreur.ejs", {
             session: req.session,   
             msgError:"Cette annonce ne vous appartient pas!",
@@ -77,7 +75,7 @@ module.exports = function(app, urlApi, utils){
           });
         }else{
           if(body.code == 0){
-            item = body.infoItem;
+            item = body.result.infoItem;
             console.log(item);
           }else {
             res.render("erreur.ejs", {
@@ -99,7 +97,8 @@ module.exports = function(app, urlApi, utils){
           if (body.code == 3) {
             res.render("itemCreate.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
           } else {
-            unitsList = JSON.parse(body);
+            var jsonUnit = JSON.parse(body);
+            unitsList = jsonUnit.result
             rp({
               url: urlApi + "/categories",
               method: "GET",
@@ -110,7 +109,8 @@ module.exports = function(app, urlApi, utils){
               if (body.code == 3) {
                 res.render("itemCreate.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
               } else {
-                categoriesList = JSON.parse(body);
+                var jsonCategory = JSON.parse(body);
+                categoriesList = jsonCategory.result
                 res.render('itemCreate.ejs', { msgError: "", msgSuccess:msgSuccess, item: item, urlApi: urlApi, units: unitsList, categories: categoriesList, session : req.session });
               }
             }).catch(function (err) {
@@ -158,7 +158,7 @@ module.exports = function(app, urlApi, utils){
             msgError += "L'un des fichiers utilisés pour les photos n'est pas conforme : \nExtensions acceptées :  \n\rPoid maximum : 5242880  ";
           }
         }
-        if(!fields.name || fields.description.length>50){
+        if(!fields.name || fields.name.length>50){
           msgError += "\n Veuillez saisir le nom de votre produit ayant au maximum 50 caractères !";
         }
         if(!fields.description || fields.description.length<20 || fields.description.length>500){
@@ -179,7 +179,7 @@ module.exports = function(app, urlApi, utils){
         if(!fields.city){
           msgError += "\n Veuillez saisir une adresse ! ";
         }
-        if(!fields.adress){
+        if(!fields.address){
           msgError += "\n Veuillez saisir une adresse ! ";
         }
         
@@ -197,7 +197,7 @@ module.exports = function(app, urlApi, utils){
               "productId": fields.product,
               "name": fields.name,
               "description": fields.description,
-              "adress": fields.adress,
+              "address": fields.address,
               "location": fields.location,
               "city": fields.city,
               "photo": files.photo,
@@ -216,12 +216,11 @@ module.exports = function(app, urlApi, utils){
               }); 
             }
             else {
-              console.log(body);
               res.render("itemCreate.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "", session: req.session });
             }
           } else {
-            console.log(body);
+
             res.render("connexion.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                 msgSuccess: "", session: req.session });
           }
@@ -267,7 +266,7 @@ module.exports = function(app, urlApi, utils){
           "productId": fields.product,
           "name": fields.name,
           "description": fields.description,
-          "adress": fields.adress,
+          "address": fields.address,
           "location": fields.location,
           "city": fields.city,
           "price": fields.price,
@@ -300,12 +299,12 @@ module.exports = function(app, urlApi, utils){
                 msgSuccess: "", session: req.session });
         }
         }).catch(function (err) {
-              console.log(err);
-              res.render("itemCreate.ejs", {
-                msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
-                msgSuccess: "",
-                session: req.session
-              });
+            
+            res.render("itemCreate.ejs", {
+              msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
+              msgSuccess: "",
+              session: req.session
+            });
         });
       });
     }else{

@@ -85,7 +85,7 @@
                   <li><a href="/itemList/<%=(currentPage-1)%>">&laquo;</a></li>
                   <% } %>
                 <% var pagination = 1; 
-                
+                console.log(listTab)
                 if(listTab && listTab.length>0) {
                 for (var j = 1; j<=nbItems; j = j+20){ %>
                   <% if(currentPage == pagination) { %>
@@ -114,35 +114,29 @@
             <% if(listTab && listTab.length>0) { 
              
               for (var i =0; i<listTab.length; i++){ %>
-                  <%var desc = listTab[i].description.replace(/\n|\r/g,'<br />') 
+                  <%var desc = listTab[i].descriptionItem.replace(/\n|\r/g,'<br />') 
                   desc = desc.replace(/'/g, "\\'");
                   %>
-                   
-              <script type="text/javascript">
-                  
-                 
-                
-              </script>
 
               <li class="item col-lg-4 col-md-4 col-sm-4 col-xs-6">
                 <div class="item-inner">
                   <div class="item-img">
-                    <div class="item-img-info"><a href="/visualisationAnnonce/<%=listTab[i].id%>" title="" class="product-image"><img style="height: 200px; max-width: 200px;" src="<%=urlApi%>/itemPhotos/<%=listTab[i].id%>/0.<%=listTab[i].fileExtensions.split(';')[0]%>" alt="<%=listTab[i].productName%>"></a>
+                    <div class="item-img-info"><a href="/visualisationAnnonce/<%=listTab[i].idItem%>" title="" class="product-image"><img style="height: 200px; max-width: 200px;" src="<%=urlApi%>/itemPhotos/<%=listTab[i].idItem%>/0.<%=listTab[i].fileExtensionsItem.split(';')[0]%>" alt="<%=listTab[i].nameProduct%>"></a>
                       <!--<div class="new-label new-top-left">New</div>-->
                       <div class="box-hover">
                         <ul class="add-to-links">
-                          <li><a class="link-quickview" onclick="displayQuickView('<%=listTab[i].itemName%>','<%=listTab[i].price%>','<%=listTab[i].quantity%>','<%=listTab[i].unitName%>', '<%=desc%>', '<%=listTab[i].id%>', '<%=listTab[i].fileExtensions%>', '<%=urlApi%>','<%=listTab[i].login%>','<%=listTab[i].productName%>','<%=listTab[i].categoryName%>' );">Voir plus</a> </li>
+                          <li><a class="link-quickview" onclick="displayQuickView('<%=listTab[i].nameItem%>','<%=listTab[i].priceItem%>','<%=listTab[i].quantityItem%>','<%=listTab[i].nameUnit%>', '<%=desc%>', '<%=listTab[i].idItem%>', '<%=listTab[i].fileExtensionsItem%>', '<%=urlApi%>','<%=listTab[i].loginUser%>','<%=listTab[i].nameProduct%>','<%=listTab[i].nameCategory%>' );">Voir plus</a> </li>
                         </ul>
                       </div>
                     </div>
                   </div>
                   <div class="item-info">
                     <div class="info-inner">
-                      <div class="item-title"> <a title="" href="/visualisationAnnonce/<%=listTab[i].id%>"><%=listTab[i].itemName%> <%=listTab[i].photo%> </a><br /><small><%=listTab[i].categoryName%>, <%=listTab[i].productName%></small> </div>
+                      <div class="item-title"> <a title="" href="/visualisationAnnonce/<%=listTab[i].idItem%>"><%=listTab[i].nameItem%> <%=listTab[i].photoItem%> </a><br /><small><%=listTab[i].nameCategory%>, <%=listTab[i].nameProduct%></small> </div>
                       <div class="item-price">
                         <div class="price-box">
                           <!--<p class="old-price"><span class="price-label">Regular Price:</span> <span class="price">$100.00 </span> </p>-->
-                          <p class="special-price"><span class="price-label">Special Price</span> <span class="price"><%= listTab[i].price.toFixed(2)%> € </span> </p>
+                          <p class="special-price"><span class="price-label">Special Price</span> <span class="price"><%= listTab[i].priceItem.toFixed(2)%> € </span> </p>
                         </div>
                       </div>
                       <div class="item-content">

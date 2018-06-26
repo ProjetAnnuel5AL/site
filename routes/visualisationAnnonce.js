@@ -21,18 +21,20 @@ module.exports = function(app, urlApi, utils, config){
             
             
             if(body.code ==0){
-                item=body;
-                var LatLong = body.infoItem.location.split(',');
+                item=body.result;
+                var LatLong = item.infoItem.locationItem.split(',');
                 lat = LatLong[0];
                 long = LatLong[1];
-                item.infoItem.description = item.infoItem.description.replace(/\n|\r/g,'<br />'); 
-                if(body.infoItem.fileExtensions == ""){
+                
+                item.infoItem.descriptionItem = item.infoItem.descriptionItem.replace(/\n|\r/g,'<br />'); 
+               
+                if(item.infoItem.fileExtensionsItem == ""){
                     photo[0] = "../img/nophoto.png";
                 }else{
-                    var ext = body.infoItem.fileExtensions.split(';'); 
+                    var ext = item.infoItem.fileExtensionsItem.split(';'); 
                     for(var i =0; i<ext.length; i++){
                         if(ext[i] !="") {
-                            photo[i] =urlApi+'/itemPhotos/'+body.infoItem.id+'/'+i+'.'+ext[i]
+                            photo[i] =urlApi+'/itemPhotos/'+item.infoItem.idItem+'/'+i+'.'+ext[i]
                         }
                     }
                 }
@@ -60,8 +62,6 @@ module.exports = function(app, urlApi, utils, config){
             
         
         }).catch(function (err) {
-            //console.log(err);
-
             res.render("erreur.ejs", {
                 session: req.session,   
                 msgError:"erreur inconnu",

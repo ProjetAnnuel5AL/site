@@ -148,7 +148,7 @@
                             $.getJSON("/proceedCheckout/verifyQuantity/<%=session.cart[i].id%>/<%=session.cart[i].qte%>").done(function(result) {
                                 var json = JSON.parse(result)
                                 if(json.code == 0){
-                                    if(<%=session.cart[i].qte%>>json.quantity) {
+                                    if(<%=session.cart[i].qte%>>json.result.quantity) {
                                         isDispo = false;
                                         $.getJSON("/cart/delete", { id: <%=session.cart[i].id%> }).done(function( json ) {});
                                     }

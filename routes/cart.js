@@ -136,12 +136,12 @@ module.exports = function(app, urlApi, utils, config){
                     }
                 }).then(function (body) {
                     if(body.code == 0){
-                        if(body.infoItem.quantity >0){
+                        if(body.result.infoItem.quantityItem >0){
                             res.json({
                                 code: 0,
                                 message :"",
-                                max : body.infoItem.quantity,
-                                itemName : body.infoItem.itemName
+                                max : body.result.infoItem.quantityItem,
+                                nameItem : body.result.infoItem.nameItem
                             })
                         }else{
                             res.json({

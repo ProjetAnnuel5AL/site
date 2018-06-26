@@ -17,7 +17,7 @@ module.exports = function(app, urlApi, utils, config){
                     "token" : req.session.token
                 }
             }).then(function (body) {
-                var address = body;  
+                var address = body.result;  
                 res.render("proceedCheckoutAddress.ejs", {
                     session: req.session,
                     address: address,
@@ -45,7 +45,7 @@ module.exports = function(app, urlApi, utils, config){
                     "token" : req.session.token
                 }
             }).then(function (body) {
-                var addressError = body;  
+                addressError = body.result;  
             }).catch(function(err){});
 
             
@@ -138,7 +138,7 @@ module.exports = function(app, urlApi, utils, config){
                 headers: {
                     "Content-Type": "application/json"
                 },
-            }).then(function (body) {
+            }).then(function(body){
                
                 if(JSON.parse(body).code == 0){
                     //mise a jour du stock instantanément
@@ -173,8 +173,7 @@ module.exports = function(app, urlApi, utils, config){
         }
     });
 
-
-    app.post("/proceedCheckout/validate", function(req,res,next){
+    app.post("/proceedCheckout/validate", function(req, res, next){
         if(req.session.type && req.session.cart && req.session.cart.length>0 && req.body.payementDetail && req.body.address){
             rp({
                 url: urlApi + "/order",

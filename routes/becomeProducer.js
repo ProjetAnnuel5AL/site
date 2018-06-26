@@ -176,7 +176,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                             if(files.avatar.name==""){
                                 avatar = "../img/avatar.png";
                             }else{
-                                avatar = config.urlAvatarProducer +"/"+  body.id +"/avatar."+extension;
+                                avatar = config.urlAvatarProducer +"/"+  body.result.id +"/avatar."+extension;
                             }
                             var LatLong = fields.location.split(',');
                             lat = LatLong[0];
@@ -233,7 +233,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
         'mode': config.paypalMode,
         'openid_client_id': config.paypalClientId,
         'openid_client_secret': config.paypalSecret,
-        'openid_redirect_uri': 'http://localhost:8082/becomeProducer/loginpaypal'
+        'openid_redirect_uri': urlLocal+'/becomeProducer/loginpaypal'
     });
 
 
