@@ -6,5 +6,4 @@ git stash
 git pull
 npm config set unsafe-perm true
 npm install --production
-su jenkins
 forever restartall
