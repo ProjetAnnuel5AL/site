@@ -21,7 +21,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }
             }).then(function (body) {
                 if(body.code == 0){
-                    var emailUser = body.emailUser;  
+                    var emailUser = body.result.emailUser;  
                     res.render("userDashboardProfil.ejs", {
                         session: req.session,
                         emailUser: emailUser,
@@ -52,7 +52,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }
             }).then(function (body) {
                 if(body.code == 0){
-                    emailUser = body.emailUser;  
+                    emailUser = body.result.emailUser;  
                     if(emailUser == req.body.mailNew || emailUser == req.body.mailNewConfirm){
                         res.render("userDashboardProfil.ejs", {
                             session: req.session,
@@ -93,7 +93,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                                 "emailUser" : req.body.mailNew,
                                 "token": req.session.token
                             }
-                        }).then(function(body) { 
+                        }).then(function(body) {
                             if(body.code ==0){
                                 res.render("userDashboardProfil.ejs", {
                                     session: req.session,
@@ -202,7 +202,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                             }else{
                                 res.render("userDashboardPwd.ejs", {
                                     session: req.session,
-                                    profil: profil,
                                     msgError:"Erreur lors de la mise a jour du mot de passe. Merci de réessayer ultérieurement.",
                                     msgSuccess: "" 
                                 });
@@ -210,7 +209,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                         }).catch(function (err) {
                             res.render("userDashboardPwd.ejs", {
                                 session: req.session,
-                                profil: profil,
                                 msgError:"Erreur lors de la mise a jour du mot de passe. Merci de réessayer ultérieurement.",
                                 msgSuccess: ""
                             });
@@ -218,7 +216,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     } else {
                         res.render("userDashboardPwd.ejs", {
                             session: req.session,
-                            profil: profil,
                             msgError:"L'ancien mot de passe saisi est incorrect.",
                             msgSuccess: ""
                         });
@@ -249,7 +246,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     "token": req.session.token
                 }
             }).then(function (body) {
-                var address = body;  
+                var address = body.result;  
                 res.render("userDashboardAddress.ejs", {
                     session: req.session,
                     address: address,
@@ -277,7 +274,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     "token": req.session.token
                 }
             }).then(function (body) {
-                address = body;
+                address = body.result;
                 if(address.lastNameUser == null){
                     address = getTmpAddress(req);
                 }
@@ -341,13 +338,11 @@ module.exports = function(app, urlApi, urlLocal, utils){
                             "cpUser": req.body.cp,
                             "token": req.session.token
                         }
-                    }).then(function(body) {    
-                        if(body.code ==0){
-                            address = getTmpAddress(req);
-    
+                    }).then(function(body) {   
+                        if(body.code == 0){
                             res.render("userDashboardAddress.ejs", {
                                 session: req.session,
-                                address: address,
+                                address: getTmpAddress(req),
                                 msgError:"",
                                 msgSuccess: "Adresse de livraison enregistrée."
                             });
@@ -361,7 +356,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                             });
                         }
                     }).catch(function (err) {
-                        //console.log(err);
+                        
                         res.render("userDashboardAddress.ejs", {
                             session: req.session,
                             address: address,
@@ -377,12 +372,12 @@ module.exports = function(app, urlApi, urlLocal, utils){
     //permet de stocker l'adresse saisie en cas d'erreur pour pas avoir a tout retaper.
     function getTmpAddress(req){
         var address = {
-            firstNameUser : req.body.profilFirstName,
-            lastNameUser : req.body.profilLastName,
-            sexUser : req.body.profilSex,
-            addressUser : req.body.profilAddress,
-            cityUser : req.body.profilCity,
-            cpUser : req.body.profilCp
+            firstNameUser : req.body.firstName,
+            lastNameUser : req.body.lastName,
+            sexUser : req.body.sex,
+            addressUser : req.body.address,
+            cityUser : req.body.city,
+            cpUser : req.body.cp
         };
         return address;
     }
@@ -407,8 +402,8 @@ module.exports = function(app, urlApi, urlLocal, utils){
             }).then(function (body) {
                 res.render("userDashboardOrders.ejs", {
                     session: req.session,
-                    orders: body.orders,
-                    status:  body.status,
+                    orders: body.result.orders,
+                    status:  body.result.status,
                     msgError:"",
                     msgSuccess: ""
                 });
@@ -437,7 +432,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 if(body.code == 0){
                     res.render("userDashboardOrderDetail.ejs", {
                         session: req.session,
-                        order: body.order,
+                        order: body.result,
                         msgError:"",
                         msgSuccess: ""
                     });

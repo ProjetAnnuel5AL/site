@@ -19,6 +19,7 @@
                 <div class="col-sm-9 col-sm-push-3">
                     <article class="col-main">
                         <% 
+                        
                             function pad(n) {return n < 10 ? "0"+n : n;}
                             var dateTmp =  new Date(order[0].dateOrder);
                             var dateOrder = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();

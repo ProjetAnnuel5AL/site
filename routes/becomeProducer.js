@@ -1,4 +1,4 @@
-module.exports = function(app, urlApi, utils, config){
+module.exports = function(app, urlApi, utils, config, urlLocal){
 
     var rp = require("request-promise");
     var formidable = require("formidable");
@@ -17,7 +17,8 @@ module.exports = function(app, urlApi, utils, config){
                 msgError:"",
                 msgSuccess: "",
                 paypalClientId :config.paypalClientId,
-                paypalMode : config.paypalMode
+                paypalMode : config.paypalMode,
+                urlLocal: urlLocal
             });
         }
     });
@@ -42,7 +43,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Le fichier utilisé pour la photo n'est pas confomre : \nExtensions acceptées :  \n\rPoid maximum : 5Mo  ",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.lastName) {
                     res.render("becomeProducer.ejs", {
@@ -51,7 +53,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez saisir un nom !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.firstName) {
                     res.render("becomeProducer.ejs", {
@@ -60,7 +63,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez saisir un prénom !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.birth) {
                     res.render("becomeProducer.ejs", {
@@ -69,7 +73,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez saisir une date de naissance !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.sex) {
                     res.render("becomeProducer.ejs", {
@@ -78,7 +83,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez saisir un sexe !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.email) {
                     res.render("becomeProducer.ejs", {
@@ -87,7 +93,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez saisir un email !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.phone) {
                     res.render("becomeProducer.ejs", {
@@ -96,7 +103,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez saisir un numéro de téléphone !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.address) {
                     res.render("becomeProducer.ejs", {
@@ -105,7 +113,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez saisir une adresse !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.city) {
                     res.render("becomeProducer.ejs", {
@@ -114,7 +123,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez saisir une ville !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.emailPaypal) {
                     res.render("becomeProducer.ejs", {
@@ -123,7 +133,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez renseigner un compte paypal valide !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else if(!fields.description || fields.description.length<20 || fields.description.length>500) {
                     res.render("becomeProducer.ejs", {
@@ -132,7 +143,8 @@ module.exports = function(app, urlApi, utils, config){
                         msgError:"Veuillez saisir une description ayant entre 20 et 500 caractères !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
                     });
                 }else{  
                     rp({
@@ -164,7 +176,7 @@ module.exports = function(app, urlApi, utils, config){
                             if(files.avatar.name==""){
                                 avatar = "../img/avatar.png";
                             }else{
-                                avatar = config.urlAvatarProducer +"/"+  body.id +"/avatar."+extension;
+                                avatar = config.urlAvatarProducer +"/"+  body.result.id +"/avatar."+extension;
                             }
                             var LatLong = fields.location.split(',');
                             lat = LatLong[0];
@@ -186,7 +198,8 @@ module.exports = function(app, urlApi, utils, config){
                                 msgError:"Erreur inconnu 2. Merci de réessayer ultérieurement.",
                                 msgSuccess: "",
                                 paypalClientId :config.paypalClientId,
-                                paypalMode : config.paypalMode
+                                paypalMode : config.paypalMode,
+                                urlLocal: urlLocal
                                
                             });
                         }
@@ -198,7 +211,8 @@ module.exports = function(app, urlApi, utils, config){
                             msgError:"Erreur inconnu 1. Merci de réessayer ultérieurement.",
                             msgSuccess: "",
                             paypalClientId :config.paypalClientId,
-                            paypalMode : config.paypalMode
+                            paypalMode : config.paypalMode,
+                            urlLocal: urlLocal
                         });
                     });
 
@@ -219,7 +233,7 @@ module.exports = function(app, urlApi, utils, config){
         'mode': config.paypalMode,
         'openid_client_id': config.paypalClientId,
         'openid_client_secret': config.paypalSecret,
-        'openid_redirect_uri': 'http://localhost:8082/becomeProducer/loginpaypal'
+        'openid_redirect_uri': urlLocal+'/becomeProducer/loginpaypal'
     });
 
 

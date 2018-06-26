@@ -61,9 +61,9 @@ module.exports = function(app, urlApi, urlLocal, utils){
                             if (body) {
                                 if (body.code == "0") {
                                     req.session.cookie.maxAge = 1000 * 60 * 60 * 24;
-                                    req.session.login = body.loginUser;
-                                    req.session.type = body.typeUser;
-                                    req.session.token = body.token;
+                                    req.session.login = body.result.loginUser;
+                                    req.session.type = body.result.typeUser;
+                                    req.session.token = body.result.token;
                                     req.session.cart = [];
                                     //Pour verifier le compte paypal des agriculteurs 
                                     req.session.verifPaypalValidity = {};
@@ -75,13 +75,10 @@ module.exports = function(app, urlApi, urlLocal, utils){
                                 res.render("login.ejs", { msgError: "Erreur combinaison login/mot de passe", session: req.session, msgSuccess: "" });
                             }
                         }).catch(function (err) {
-                            //console.log(err);
                             res.render("login.ejs", { msgError: "Erreur inconnu. Merci de réessayer.", session: req.session, msgSuccess: "" });
                         });
-
                     }
                 }).catch(function (err) {
-                    //console.log(err);
                     res.render("login.ejs", { msgError: "Erreur inconnu. Merci de réessayer.", session: req.session, msgSuccess: "" });
                 });
                 
@@ -112,8 +109,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     session : req.session
                 })
             }else{
-              
-
                 rp({
                     url: urlApi + "/user/resetPassword",
                     method: "POST",
@@ -137,21 +132,18 @@ module.exports = function(app, urlApi, urlLocal, utils){
                             session : req.session
                         });
                     }else if(body.code == 2){
-                        console.log(body)
                         res.render('resetPassword.ejs', {   
                             msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement !",
                             msgSuccess: "",
                             session : req.session
                         });
                     }else if(body.code == 1){
-                        console.log("2")
                         res.render('resetPassword.ejs', { 
                             msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement !",
                             msgSuccess: "",
                             session : req.session
                         });
                     }else{
-                        console.log("1")
                         res.render('resetPassword.ejs', { 
                             msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement !",
                             msgSuccess: "",
@@ -159,7 +151,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                         });
                     }
                 }).catch(function (err) {
-                    console.log(err)
                     res.render('resetPassword.ejs', { 
                         msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement !",
                         msgSuccess: "",
@@ -195,7 +186,6 @@ module.exports = function(app, urlApi, urlLocal, utils){
                         session : req.session
                     });
                 }else{
-                    console.log(body)
                     res.redirect("/");
                 }
             }).catch(function (err) {

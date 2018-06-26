@@ -18,13 +18,13 @@ module.exports = function(app, urlApi, utils, config){
             var lat;
             var long;
             if(body.code ==0){
-                var producer = body;
+                var producer = body.result;
                 var avatar = "";
                
-                if(body.avatarProducer == "default"){
+                if(body.result.avatarProducer == "default"){
                     avatar = "../img/avatar.png";
                 }else{
-                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/"+ body.avatarProducer
+                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/"+ body.result.avatarProducer
                 }
                 var LatLong = producer.locationProducer.split(',');
                 lat = LatLong[0];

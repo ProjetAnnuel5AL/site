@@ -24,7 +24,6 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                     session : req.session
                 });
             }else{
-                //le.log(body);
                 res.render("registrationValidation.ejs", {
                     msgError: "Erreur : lien de validation non valide.",
                     msgSuccess: "",
@@ -32,7 +31,6 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                 });
             }
         }).catch(function (err) {
-            //le.log(err);
             res.render("registrationValidation.ejs", {
                 msgError: "Erreur lors de la validation. Veuillez recommmencer ultérieurement !",
                 msgSuccess: "",
