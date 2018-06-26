@@ -85,7 +85,8 @@
                   <li><a href="/itemList/<%=(currentPage-1)%>">&laquo;</a></li>
                   <% } %>
                 <% var pagination = 1; 
-                if(listTab.length>0) {
+                
+                if(listTab && listTab.length>0) {
                 for (var j = 1; j<=nbItems; j = j+20){ %>
                   <% if(currentPage == pagination) { %>
                     <li class="active"><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>
@@ -110,7 +111,7 @@
 
         <div class="category-products">
           <ul class="products-grid">
-            <% if(listTab.length>0) { 
+            <% if(listTab && listTab.length>0) { 
              
               for (var i =0; i<listTab.length; i++){ %>
                   <%var desc = listTab[i].description.replace(/\n|\r/g,'<br />') 
@@ -189,7 +190,7 @@
                       <li><a href="/itemList/<%=(currentPage-1)%>">&laquo;</a></li>
                       <% } %>
                     <% var pagination = 1; 
-                    if(listTab.length>0) {
+                    if(listTab && listTab.length>0) {
                     for (var j = 1; j<=nbItems; j = j+20){ %>
                       <% if(currentPage == pagination) { %>
                         <li class="active"><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>

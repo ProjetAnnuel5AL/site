@@ -6,7 +6,9 @@ module.exports = function(app, urlApi, utils, config){
 
     app.get("/cart/add", function(req, res, next) {      
         if(req.session.type){ 
-          
+            //On enleve le # si il a toucher au photo
+            req.query.id = req.query.id.replace("#","")
+
             //on vérifie que on a pas déjà l'annonce dans le panier
             var exist = false;
             for(var i =0; i<req.session.cart.length; i++){

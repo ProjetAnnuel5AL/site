@@ -213,7 +213,7 @@
                       <input name="form_key" value="6UbXroakyQlbfQzK" type="hidden">
                       <div class="product-img-box col-lg-4 col-sm-5 col-xs-12">
                         <div class="product-image">
-                          <div class="product-full"> <img style="border:1px solid LightGrey;" id="mainImage" src="<%=photo[0]%>" data-zoom-image="<%=photo[0]%>" alt="product-image"/> </div>
+                          <div class="product-full" style="min-height:400px; max-height: 400px;"> <img style="border:1px solid LightGrey; max-height: 400px;" id="mainImage" src="<%=photo[0]%>" data-zoom-image="<%=photo[0]%>" alt="product-image"/> </div>
                           <div class="more-views">
                             <div class="slider-items-products">
                               <div id="gallery_01" class="product-flexslider hidden-buttons product-img-thumb">
@@ -263,7 +263,7 @@
                         </div>
                         <div class="add-to-box">
                             <% if(!session.type) { %>
-                              <a href ="/connexion" >Pour ajouter au panier merci de vous connecter en cliquant ici.</a>
+                              <a href ="/login" >Pour ajouter au panier merci de vous connecter en cliquant ici.</a>
                             <% }else{ %>
                               <% if(session.login != item.infoItem.loginUser && item.infoItem.quantity >0) { %>
                           <div class="add-to-cart">

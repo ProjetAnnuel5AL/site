@@ -10,7 +10,7 @@
         <!-- Header -->
         <header>
             <% include ./partials/topBar %>
-            <% include ./partials/navBar %>
+            <% include ./partials/navbar %>
         </header>
         <br /> <br />
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
@@ -53,10 +53,10 @@
         <br />
         <div class="col-sm-8 col-sm-offset-2 ">
             <% if (msgError.length > 0) { %>
-                <div class="alert alert-danger"> <%= msgError %> </div>
+                <div class="alert alert-danger"> <%= msgError %> </div><br /><br /><br />
             <% } %>
             <% if (msgSuccess.length > 0) { %>
-                <div class="alert alert-success"> <%= msgSuccess %> </div>
+                <div class="alert alert-success"> <%= msgSuccess %> </div><br /><br /><br />
             <% } %>
         </div>
 

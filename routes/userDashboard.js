@@ -343,11 +343,10 @@ module.exports = function(app, urlApi, urlLocal, utils){
                         }
                     }).then(function(body) {    
                         if(body.code ==0){
-                            address = getTmpAddress(req);
-    
+                            
                             res.render("userDashboardAddress.ejs", {
                                 session: req.session,
-                                address: address,
+                                address: getTmpAddress(req),
                                 msgError:"",
                                 msgSuccess: "Adresse de livraison enregistrée."
                             });
@@ -377,12 +376,12 @@ module.exports = function(app, urlApi, urlLocal, utils){
     //permet de stocker l'adresse saisie en cas d'erreur pour pas avoir a tout retaper.
     function getTmpAddress(req){
         var address = {
-            firstNameUser : req.body.profilFirstName,
-            lastNameUser : req.body.profilLastName,
-            sexUser : req.body.profilSex,
-            addressUser : req.body.profilAddress,
-            cityUser : req.body.profilCity,
-            cpUser : req.body.profilCp
+            firstNameUser : req.body.firstName,
+            lastNameUser : req.body.lastName,
+            sexUser : req.body.sex,
+            addressUser : req.body.address,
+            cityUser : req.body.city,
+            cpUser : req.body.cp
         };
         return address;
     }
