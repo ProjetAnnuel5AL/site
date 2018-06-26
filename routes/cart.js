@@ -6,7 +6,9 @@ module.exports = function(app, urlApi, utils, config){
 
     app.get("/cart/add", function(req, res, next) {      
         if(req.session.type){ 
-          
+            //On enleve le # si il a toucher au photo
+            req.query.id = req.query.id.replace("#","")
+
             //on vérifie que on a pas déjà l'annonce dans le panier
             var exist = false;
             for(var i =0; i<req.session.cart.length; i++){
@@ -134,12 +136,12 @@ module.exports = function(app, urlApi, utils, config){
                     }
                 }).then(function (body) {
                     if(body.code == 0){
-                        if(body.infoItem.quantity >0){
+                        if(body.result.infoItem.quantityItem >0){
                             res.json({
                                 code: 0,
                                 message :"",
-                                max : body.infoItem.quantity,
-                                itemName : body.infoItem.itemName
+                                max : body.result.infoItem.quantityItem,
+                                nameItem : body.result.infoItem.nameItem
                             })
                         }else{
                             res.json({
