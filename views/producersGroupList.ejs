@@ -1,0 +1,132 @@
+<!-- views/becomeProducer.ejs -->
+<!doctype html>
+<link rel="stylesheet" href="/css/slider.css">
+<script src="/js/bootstrap-slider.js"></script>
+<html>
+<head>
+    <title>Mes coopérative</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+        </header>
+        
+        <section class="main-container top-space col1-layout">
+            <div class="main container container-progress">
+                <div class="account-login">
+                <div class="page-title">
+                    <% if (msgError.length > 0) { %>
+                        <div class="alert alert-danger"><%= msgError %></div>
+                    <% } %>
+                    <% if (msgSuccess.length > 0) { %>
+                        <div class="alert alert-success"> <%- msgSuccess %> </div>
+                    <% } %>
+                    <h2>Mes coopératives : </h2>
+                    <hr>
+                    <div>
+                        <img src="/img/general.svg" id="general" class="illustrationImage"/><h3 style="display: inline-block;">Administrateur:</h3>
+                    </div><hr>
+                    <% if(coopAdmin.length == 0){ %>
+                        <div class="alert alert-info">
+                            Vous n'êtes l'administrateur d'aucune coopérative - 
+                            <strong><a href='/producersGroup/new'>Créer une coopérative</a></strong>
+                        </div>
+                    <% } else { %>
+                    <div class="category-adm">
+                    <ul class="adm-grid">
+                        <div class="slider-items slider-width-col4 products-grid block-content owl-carousel owl-theme" style="opacity: 1; display: block;">
+                            <div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 100%; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">
+                                
+                                
+                        <% for(var i=0; i<coopAdmin.length; i++){ %>
+                            <div class="owl-item" style="width: 220px;"><div class="item">
+                            <div class="item-inner">
+                            <div class="item-img">
+                                    <div class="item-img-info"> <a class="product-image" title="Retis lapen casen" href="/producersGroup/<%= coopAdmin[i].id %>"> <img class="previewImage" alt="<%= coopAdmin[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopAdmin[i].id%>/<%=coopAdmin[i].avatar%>"> </a>
+                                    
+                                    </div>
+                                </div>
+                            <div class="item-info">
+                                <div class="info-inner">
+                                <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html"><%= coopAdmin[i].name %></a> </div>
+                                <i class="fas fa-map-marker-alt"><%= coopAdmin[i].city %></i>
+                                <div class="item-content">
+                                    <div class="item-price">
+                                    <div class="price-box"> <span class="regular-price"> <span class="price"><%= coopAdmin[i].countMembers %> Membres</span> </span> </div>
+                                    </div>
+                                    <div class="action">
+                                    <button class="button btn-cart" onclick="redirectToGroup(<%=coopAdmin[i].id%>);" type="button" title="" data-original-title="Consulter"><span>Consulter</span> </button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div></div>
+                        <% } } %>
+                        </div></div></div>
+                    </ul>
+                    </div>
+                    <hr>
+                        
+                        <img src="/img/soldier.svg" id="soldier" class="illustrationImage"/><h3 style="display: inline-block;">Membre:</h3>
+                    <hr>
+                    <% if(coopMember.length == 0){ %>
+                        <div class="alert alert-info">
+                            Vous n'êtes membre d'aucune coopérative - faites vous inviter dans un coopérative près de chez vous!
+                        </div>
+                    <% } else { %>
+                        <div class="category-adm">
+                        <ul class="adm-grid">
+                        <div class="slider-items slider-width-col4 products-grid block-content owl-carousel owl-theme" style="opacity: 1; display: block;">
+                            <div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 100%; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">
+                                
+                        <% for(var i=0; i<coopMember.length; i++){ %>
+                            <div class="owl-item" style="width: 220px;"><div class="item">
+                            <div class="item-inner">
+                            <div class="item-img">
+                                    <div class="item-img-info">     
+                                        <a class="product-image" title="Retis lapen casen" href="/producersGroup/<%= coopMember[i].id %>"> <img class="previewImage" alt="<%= coopMember[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopMember[i].id%>/<%=coopMember[i].avatar%>"> </a>
+                                    </div>
+                                </div>
+                            <div class="item-info">
+                                <div class="info-inner">
+                                <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html"><%= coopMember[i].name %></a> </div>
+                                <i class="fas fa-map-marker-alt"><%= coopMember[i].city %></i>
+                                <div class="item-content">
+                                    <div class="item-price">
+                                    <div class="price-box"> <span class="regular-price"> <span class="price"><%= coopMember[i].countMembers %> Membres</span> </span> </div>
+                                    </div>
+                                    <div class="action">
+                                    <button class="button btn-cart" onclick="redirectToGroup(<%=coopMember[i].id%>);" type="button" title="" data-original-title="Consulter"><span>Consulter</span> </button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div></div>
+                        <% } } %>
+                        </div></div></div>
+                    </ul>
+                    </div>
+                <hr>
+                
+                </div>
+            </div>
+        </section>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+        <script type="text/javascript">
+           
+            $("document").ready(function(){
+            });
+            function redirectToGroup(id){
+                var url = "/producersGroup/"+id;
+                window.location.href=url;
+            }
+        </script>
+
+    </div>
+    <% include ./partials/footer %>
+</body>

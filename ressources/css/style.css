@@ -53,7 +53,200 @@ Text Domain:  Freshia
 
 
 /*----------- 1. Body --------------*/
+.btnValidate{
+	background: none repeat scroll 0 0 #33cc33;
+	color: #fff;
+	display: block;
+	font-size: 8px;
+	font-weight: 500;
+	letter-spacing: 0.5px;
+	line-height: normal;
+	padding:10px 5px 8px 5px;
+	text-transform: uppercase;
+	border: 1px #33cc33 solid;
+	margin:10px 10px 10px 10px;
+	border-radius:3px;
+	border-bottom: 3px #29a329 solid;
+	font-family: 'Rubik', sans-serif;
+	float:left;
+}
+.btnValidate:hover {
+	background: none repeat scroll 0 0 #29a329;
+}
+.btnRefuse{
+	background: none repeat scroll 0 0 #e31837;
+	color: #fff;
+	display: block;
+	font-size: 8px;
+	font-weight: 500;
+	letter-spacing: 0.5px;
+	line-height: normal;
+	padding:10px 5px 8px 5px;
+	text-transform: uppercase;
+	border: 1px #e31837 solid;
+	margin:10px 100px 10px 10px;
+	border-radius:3px;
+	border-bottom: 3px #a21127 solid;
+	font-family: 'Rubik', sans-serif;
+	float:right;
+}
+.btnRefuse:hover {
+	background: none repeat scroll 0 0 #a21127;
+}
+.btnInfo{
+	background: none repeat scroll 0 0 #3399ff;
+	color: #fff;
+	display: block;
+	font-size: 8px;
+	font-weight: 500;
+	letter-spacing: 0.5px;
+	line-height: normal;
+	padding:10px 5px 8px 5px;
+	text-transform: uppercase;
+	border: 1px #3399ff solid;
+	margin:10px 100px 10px 10px;
+	border-radius:3px;
+	border-bottom: 3px #0073e6 solid;
+	font-family: 'Rubik', sans-serif;
+	width:50px;
+	float:left;
+}
+.btnInfo:hover {
+	background: none repeat scroll 0 0 #0073e6;
+}
+.autocomplete-items {
+  position: absolute !important;
+  border: 1px solid #d4d4d4 !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  z-index: 99 !important;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative !important;
+  display: inline-block !important;
+}
+.ui-autocomplete{
+	background-color: #f1f1f1 !important;
+	color: #808080;
+	font-size: 14px;
+	font-weight: 500;
+	width: 150px;
+}
+.ui-autocomplete :hover {
+	background-color: #29a329 !important;
+	color: white;
+}
+.autocomplete-submit{
+	border: 1px solid transparent !important;
+  background-color: #f1f1f1 !important;
+  padding: 10px !important;
+  font-size: 16px !important;
+	background-color: #29a329 !important;
+  color: #fff !important;
+	width:20% !important;
+}
+.autocomplete-field{
+	border: 1px solid transparent !important;
+  background-color: #f1f1f1 !important;
+  padding: 10px !important;
+  font-size: 16px !important;
+	background-color: #f1f1f1 !important;
+  width: 100% !important;
+}
+.autocomplete-items div {
+  padding: 10px !important;
+  cursor: pointer !important;
+  background-color: #fff !important; 
+  border-bottom: 1px solid #d4d4d4 !important; 
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9 !important; 
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important; 
+  color: #ffffff !important; 
+}
+.prettyList ul {
+  list-style-type: none;
+  width: 500px;
+}
+ 
+.prettyList h3 {
+  font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
+}
+ 
+.prettyList li img {
+  float: left;
+  margin: 0 15px 0 0;
+	max-height: 100px;
+}
+ 
+.prettyList li p {
+  font: 200 12px/1.5 Georgia, Times New Roman, serif;
+}
+ 
+.prettyList li {
+  padding: 10px;
+  overflow: auto;
+}
+ 
+.prettyList li:hover {
+  background: #eee;
+  cursor: pointer;
+}
+.aNotif {
+	padding-left: 0px !important;
+	font-size: 8px !important;
+	color: #fff !important;
+	font-weight: 500 !important;
+}
+.itemNotif {
+	width: 290px;
+	margin: 8px 0px 0px;
+	border-bottom: 1px #eee solid;
+	display: inline-block;
+	padding-bottom: 0px;
+	text-align:left;
+}
 
+.illustrationImage{
+	vertical-align: top;
+	margin-right: 1%;
+	max-width:50px;
+}
+.greenVerticalBar {
+    border-left: 6px solid green;
+		border-radius: 50%;
+    height: 1000px;
+		width: 6px;
+}
+.previewImage{
+	height:150px !important;
+	width:150px !important;
+	border-radius: 50%;
+	object-fit: cover;
+}
+.center { 
+	margin-left: -20px;
+  margin-right: auto;
+  margin-top: 3px;
+	margin-bottom: 3px;
+  text-align: center;
+  align-items: center;
+}
+.uploadedImageRound{
+	height:250px;
+	width:250px;
+	border-radius: 50%;
+	object-fit: cover;
+}
 body {
 
 	font-family: 'Open Sans', sans-serif;
@@ -329,7 +522,7 @@ a.button:hover {
 	margin-bottom: 20px;
 }
 .header-top {
-	padding: 2px 0px 10px 0px;
+	padding: 2px 0px 0px 0px;
     background:#111
 }
 header .header-top-links {

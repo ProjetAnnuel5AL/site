@@ -14,6 +14,7 @@ module.exports = function(app, urlApi, urlLocal, utils ,config) {
 	require("./ficheProducer")(app, urlApi, utils, config);
 	require("./product")(app, urlApi);
 	require("./cart")(app, urlApi, utils, config);
-
+	require("./producersGroup")(app, urlApi, utils, config);
+	require("./notification")(app, urlApi, utils, config);
    
 };
