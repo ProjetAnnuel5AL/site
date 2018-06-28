@@ -12,15 +12,28 @@
                 var options = {
                     componentRestrictions: {country: 'fr'}
                 };
-                var autocomplete = new google.maps.places.Autocomplete($("#adress")[0], options);
+                var autocomplete = new google.maps.places.Autocomplete($("#address")[0], options);
                 
                 google.maps.event.addListener(autocomplete, 'place_changed', function () {
                     var place = autocomplete.getPlace();
-                    selectAdress(place.geometry.location.lat(), place.geometry.location.lng(), 15, true);
+                    var cp ="";
+                    for (var i = 0; i < place.address_components.length; i++) {
+                        for (var j = 0; j < place.address_components[i].types.length; j++) {
+                            if (place.address_components[i].types[j] == "postal_code") {
+                                cp = place.address_components[i].long_name;
+                                break;
+                            }
+                        }
+                    }
+                   
+                    selectAddress(place.geometry.location.lat(), place.geometry.location.lng(), 15, true);
                     $("#city").val(place.vicinity);
+                    $("#cp").val(cp);
                 });
-                selectAdress(47.930565, 2.436864, 5, false);
+                selectAddress(47.930565, 2.436864, 5, false);
+
                 loadProducts(1);
+
                 $("#category").change(function () {
                     var id = $(this).children(":selected")[0].attributes.value.nodeValue;
                     console.log(id);
@@ -32,20 +45,20 @@
                 "<% if (typeof item !== 'undefined') { %>"
                     item = JSON.parse('<%- JSON.stringify(item) %>');
                     urlApi = JSON.parse('<%- JSON.stringify(urlApi) %>');
-                    console.log(item);
                     loadEdit(item, urlApi);
                 "<% } %>"
             });
             
             function loadProducts(id){
+               
                 $.getJSON("/product/getByCategoryId", { id: id }).done(function( json ) {
-                    console.log(json);
+
                     if(json.code == 0){
                         $('#product').empty();
-                        for(var elem in json.products) {
+                        for(var elem in json.result) {
                             $('#product').append($('<option>', {
-                                value: json.products[elem].id,
-                                text: json.products[elem].name
+                                value: json.result[elem].idProduct,
+                                text: json.result[elem].nameProduct
                             }));
                         }
                     }
@@ -53,25 +66,25 @@
             }
 
             function loadEdit(item, urlApi){
-                $("#category").val(item.categId);
-                $("#name").val(item.itemName);
-                $("#description").val(item.description);
-                $("#price").val(item.price);
-                $('#quantity').val(item.quantity);
-                $('#unit').val(item.unitId);
-                $('#adress').val(item.adress);
-                $('#city').val(item.city);
+                $("#category").val(item.idCategory);
+                $("#name").val(item.nameItem);
+                $("#description").val(item.descriptionItem);
+                $("#price").val(item.priceItem);
+                $('#quantity').val(item.quantityItem);
+                $('#unit').val(item.idUnitItem);
+                $('#address').val(item.addressItem);
+                $('#city').val(item.cityItem);
                 $('#submitbtn').html('Editer');
                 $('#deletebtn').css("visibility", "visible");
                 var latlng = item.location.split(',');
-                selectAdress(latlng[0], latlng[1], 15, true);
+                selectAddress(latlng[0], latlng[1], 15, true);
                 loadProducts(item.categId);
                 $("#product").val(item.productId);
                 var photoExtensions = item.fileExtensions.split(';');
                 photoExtensions.pop();
                 for(var elem in photoExtensions){
                     var pic = 'exampleImg'+elem;
-                    $('#'+pic).attr('src', urlApi+"/itemPhotos/"+item.id+"/"+elem+"."+photoExtensions[elem]);
+                    $('#'+pic).attr('src', urlApi+"/itemPhotos/"+item.idItem+"/"+elem+"."+photoExtensions[elem]);
                 }
                 $("#idItem").val(item.id);
                 $("#fileExtensions").val(item.fileExtensions);
@@ -113,7 +126,7 @@
                     }
                 }
             }
-            function selectAdress(lat, long, zoom, marker){
+            function selectAddress(lat, long, zoom, marker){
                 var latlng = new google.maps.LatLng(lat, long)
                 var myOptions = {
                   center: latlng,
@@ -155,7 +168,8 @@
                     <% } %>
                     <% if (msgSuccess.length > 0) { %>
                         <div class="alert alert-success"> <%= msgSuccess %> </div>
-                    <% } %>
+                    <% } 
+                    %>
                     <%if (typeof categories !== 'undefined' && typeof units !== 'undefined') { %>
                         <!-- LOGIN FORM -->
                         <% if (typeof item == 'undefined') { %>
@@ -171,7 +185,7 @@
                                 <br>
                                 <select class="form-control" id="category" name="category">
                                     <% categories.forEach(function (item) { %>
-                                      <option value=<%= item.id%>><%= item.name%></option> 
+                                      <option value=<%= item.idCategory%>><%= item.nameCategory%></option> 
                                     <% }) %>
                                 </select> 
                             </li>
@@ -194,11 +208,12 @@
                             <li>
                                 <label for="address">Adresse de production</label>
                                 <br>
-                                <input type="text" class="input-text required-entry" id="adress" name="adress" autocomplete="off">
+                                <input type="text" class="input-text required-entry" id="address" name="address" autocomplete="off">
                                 </br>
                                 <div id="map" class="form-control"style="height:500px;"></div>
                                 <input type="hidden" class="form-control" id="location" name="location">
                                 <input type="hidden" class="form-control" id="city" name="city"/>
+                                <input type="hidden" class="form-control" id="cp" name="cp"/>
                             </li>
                             <li>
                                 <label for="photo">Photos (Max 3)</label>
@@ -222,7 +237,7 @@
                                 <label>Unité</label>
                                 <select id="unit" name="unit">
                                 <% units.forEach(function (item) { %>
-                                <option value=<%= item.id%>><%= item.name%></option> 
+                                <option value=<%= item.idUnit%>><%= item.nameUnit%></option> 
                                 <% }) %>
                                 </select>
                             </li>

@@ -3,7 +3,7 @@ module.exports = function(app, urlApi, utils, config){
     var rp = require("request-promise");
 
     app.get("/visualisationAnnonce/:id", function(req, res) {
-        var photo;
+        var photo =[];
         var item;
         var lat;
         var long;
@@ -21,17 +21,24 @@ module.exports = function(app, urlApi, utils, config){
             
             
             if(body.code ==0){
-                item=body;
-                var LatLong = body.infoItem.location.split(',');
+                item=body.result;
+                var LatLong = item.infoItem.locationItem.split(',');
                 lat = LatLong[0];
                 long = LatLong[1];
-
-                if(body.infoItem.photoURL == "default"){
-                    photo = "../img/nophoto.png";
+                
+                item.infoItem.descriptionItem = item.infoItem.descriptionItem.replace(/\n|\r/g,'<br />'); 
+               
+                if(item.infoItem.fileExtensionsItem == ""){
+                    photo[0] = "../img/nophoto.png";
                 }else{
-                    photo = config.urlItemPhoto +"/"+  req.params.id +"/"+ body.infoItem.photoURL
+                    var ext = item.infoItem.fileExtensionsItem.split(';'); 
+                    for(var i =0; i<ext.length; i++){
+                        if(ext[i] !="") {
+                            photo[i] =urlApi+'/itemPhotos/'+item.infoItem.idItem+'/'+i+'.'+ext[i]
+                        }
+                    }
                 }
-              
+                //console.log(photo)
                 res.render("visualisationAnnonce.ejs", {
                     session: req.session,
                     item : item,
@@ -55,8 +62,6 @@ module.exports = function(app, urlApi, utils, config){
             
         
         }).catch(function (err) {
-        //console.log(err);
-
             res.render("erreur.ejs", {
                 session: req.session,   
                 msgError:"erreur inconnu",

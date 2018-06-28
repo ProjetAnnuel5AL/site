@@ -4,94 +4,22 @@
     <title>Annonce</title>
     <% include ./partials/header %>
 </head>
-<body>
-
-<% include ./partials/navbar %>
+<body class="cms-index-index cms-home-page">
+        <div id="page"> 
+            <!-- Header -->
+            <header>
+                <% include ./partials/topBar %>
+                <% include ./partials/navbar %>
+            </header>
 
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
 
+<% 
+  var extT = photo[0].split('.');
+  var ext = extT[extT.length-1];
 
-<style>
-    /* Style the Image Used to Trigger the Modal */
-    #myImg {
-        border-radius: 5px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
+%>
 
-    #myImg:hover {opacity: 0.7;}
-
-    /* The Modal (background) */
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        padding-top: 100px; /* Location of the box */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
-    }
-
-    /* Modal Content (Image) */
-    .modal-content {
-        margin: auto;
-        display: block;
-        width: 80%;
-        max-width: 700px;
-    }
-
-    /* Caption of Modal Image (Image Text) - Same Width as the Image */
-    #caption {
-        margin: auto;
-        display: block;
-        width: 80%;
-        max-width: 700px;
-        text-align: center;
-        color: #ccc;
-        padding: 10px 0;
-        height: 150px;
-    }
-
-    /* Add Animation - Zoom in the Modal */
-    .modal-content, #caption { 
-        animation-name: zoom;
-        animation-duration: 0.6s;
-    }
-
-    @keyframes zoom {
-        from {transform:scale(0)} 
-        to {transform:scale(1)}
-    }
-
-    /* The Close Button */
-    .close {
-        position: absolute;
-        top: 75px;
-        right: 35px;
-        color: #f1f1f1;
-        font-size: 40px;
-        font-weight: bold;
-        transition: 0.3s;
-    }
-
-    .close:hover,
-    .close:focus {
-        color: #bbb;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    /* 100% Image Width on Smaller Screens */
-    @media only screen and (max-width: 700px){
-        .modal-content {
-            width: 100%;
-        }
-    }
-</style>
 
 <div class="container">
     <div class="col-sm-8 col-sm-offset-2 ">
@@ -131,7 +59,7 @@
                   var marker = new google.maps.Marker({
                       position: latlng,
                       map: map,
-                      title: "<%= item.infoItem.address %>"
+                      title: "<%= item.infoItem.addressItem %>"
                   });
                   $("#location").val(lat + ','+ long);
               }
@@ -139,6 +67,43 @@
           }
       
       })
+      var max = Number(<%= item.infoItem.quantityItem %>);
+
+      function changeMainImg(img){
+        var mainImg = document.getElementById("mainImage");
+        mainImg.setAttribute("src", img.getAttribute("data-image"));
+        mainImg.setAttribute("src", img.getAttribute("data-zoom-image"));
+     }
+     function addQte(){
+        var result = document.getElementById('qty'); 
+        var qty = result.value;
+       
+        if(!isNaN( qty ) && qty < max) {
+            document.getElementById('qty').value++;
+        } 
+        return false;
+    }
+
+    function addCart(){
+      var qte=document.getElementById("qty").value;
+      if(qte<1 || qte > <%= item.infoItem.quantityItem %>) {
+          alert("La quantité voulu doit être suppérieur à 0 et inférieur à <%= item.infoItem.quantity %>");
+      }else{
+          var url = document.URL.split('/');
+          var id = url[url.length-1];
+          /*on envoi aussi la qtemax possible à  l'achat dans le cas ou produit déjà dans panier pour vérif*/
+          $.getJSON("/cart/add", { id: id, qte:qte, qteMax : <%= item.infoItem.quantityItem%>, unit : "<%= item.infoItem.nameUnit %>", category : "<%=item.infoItem.nameCategory%>", product: "<%=item.infoItem.nameProduct%>", title:"<%=item.infoItem.nameItem%>", prixU : <%=item.infoItem.priceItem%>,ext: '<%=ext%>' }).done(function( json ) {
+              if(json.code == 0){
+                  // on mettera un modal plus tard pour faire beau
+                  alert("Vous avez ajouté au panier cet article.")
+                  location.reload();
+              }else{
+                  alert(json.message)
+              }
+          });
+      }
+    }
+
       </script>
 
     <% 
@@ -154,122 +119,126 @@
         }
         
     %>
-    
-    <div class="container">
-        <div class="col-sm-8 col-sm-offset-2 ">
+   
 
-            <h1>Annonce : <%=item.infoItem.itemName %></h1>
-            <h3>Par :<a href="/ficheProducer/<%=item.infoItem.idProducer%>"><%=item.infoItem.loginUser %> (<%= moyenne %>)</a></h3>
 
-            <img id="myImg" src="<%= photo %>" alt="" width="300" height="200">
-        
-            <!-- The Modal -->
-            <div id="myModal" class="modal">
-        
-            <!-- The Close Button -->
-            <span class="close">&times;</span>
-        
-            <!-- Modal Content (The Image) -->
-            <img class="modal-content" id="img01">
-        
-            <!-- Modal Caption (Image Text) -->
-            <div id="caption"></div>
-            </div>
+    <section class="main-container col1-layout">
+        <div class="main">
+          <div class="container">
+            <div class="row">
+              <div class="col-main">
+                <div class="product-view">
+                  <div class="product-essential">
+                    <form action="#" method="post" id="product_addtocart_form">
+                      <input name="form_key" value="6UbXroakyQlbfQzK" type="hidden">
+                      <div class="product-img-box col-lg-4 col-sm-5 col-xs-12">
+                        <div class="product-image">
+                          <div class="product-full" style="min-height:400px; max-height: 400px;"> <img style="border:1px solid LightGrey; max-height: 400px;" id="mainImage" src="<%=photo[0]%>" data-zoom-image="<%=photo[0]%>" alt="product-image"/> </div>
+                          <div class="more-views">
+                            <div class="slider-items-products">
+                              <div id="gallery_01" class="product-flexslider hidden-buttons product-img-thumb">
+                                <div class="slider-items slider-width-col4 block-content" style="text-align: center;">
+                                    <% for(var i=0; i<photo.length; i++){ %>
+                                            <div class="more-views-items" style="display:inline-block;"> <a onclick="changeMainImg(this)" href="#" data-image="<%=photo[i]%>" data-zoom-image="<%=photo[i]%>"> <img style="height: 75px; max-width: 75px; border:1px solid LightGrey;" id="product-zoom"  src="<%=photo[i]%>" alt="product-image"/> </a></div>
+                                    <% } %>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- end: more-images --> 
+                      </div>
+                      <div class="product-shop col-lg-8 col-sm-7 col-xs-12">
+                        <div class="product-name">
+                          <h1><%=item.infoItem.nameItem %> <small>(<%= item.infoItem.nameCategory %>)</small></h1>
+                          
+                        </div>
+                        <div class="ratings">
+                          <div class="rating-box">
+                            <% var star = (moyenne/5)*100 %>
+                            <div style="width:<%=star%>%" class="rating"></div>
+                            
+                          </div>
+                          <p class="rating-links"><a href="/ficheProducer/<%=item.infoItem.idProducer%>"><%=item.infoItem.loginUser %> (<%= nbComment %> évaluation(s))</a></p>
+                        </div>
+                        <div class="price-block">
+                          <div class="price-box">
+                            <p class="special-price"> <span class="price-label">Regular Price:</span> <span class="price"> <%= item.infoItem.priceItem.toFixed(2) %>€</span> </p>
+                            <%if(item.infoItem.quantityItem<=0){%>
+                              <p class="availability in-stock pull-right" ><span style="background-color : red"><%=item.infoItem.quantityItem%> <%=item.infoItem.nameUnit%> en stock</span></p>
+                            <%}else{%>
+                              <p class="availability in-stock pull-right"><span><%=item.infoItem.quantityItem%> <%=item.infoItem.nameUnit%> en stock</span></p>
+                            <%}%>
+                          </div>
+                        </div>
+                        <div class="short-description" style=" overflow-wrap: break-word; ">
+                          <h2>Description courte</h2>
+                          <p style="overflow: hidden;
+                          text-overflow: ellipsis;
+                          display: -webkit-box;
+                          -webkit-box-orient: vertical;
+                          -webkit-line-clamp: 10; 
+                          line-height: 1.8;        
+                          max-height: 1.8; "><%-item.infoItem.descriptionItem%></p>
+                        </div>
+                        <div class="add-to-box">
+                            <% if(!session.type) { %>
+                              <a href ="/login" >Pour ajouter au panier merci de vous connecter en cliquant ici.</a>
+                            <% }else{ %>
+                              <% if(session.login != item.infoItem.loginUser && item.infoItem.quantityItem >0) { %>
+                          <div class="add-to-cart">
+                            <div class="pull-left">
+                                <div class="custom pull-left">
+                                  <button onClick="var result = document.getElementById('qty'); var qty = result.value; if((!isNaN( qty ) &amp;&amp; qty &gt; 1)   ) result.value--;return false;" class="reduced items-count" type="button"><i class="fa fa-minus">&nbsp;</i></button>
+                                  <input type="number" class="input-text qty" title="Qty" value="1" max="10" min="1" id="qty" name="qty" style="-moz-appearance: textfield">
+                                  <button onClick="addQte()" class="increase items-count" type="button"><i class="fa fa-plus">&nbsp;</i></button>
+                                </div>
+                            </div>
+                            &nbsp;
+                            <button onclick="addCart();" class="button btn-cart" title="Add to Cart" type="button">Ajouter au panier</span></button>
+                            <% } else { %> 
+                              <div>C'est votre annonce vous ne pouvez pas l'ajouter à votre panier !</div>   
+                            <% } %>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
 
-            <div style="display: inline-block">
-                <h4>Informations sur le produit : </h4><br>
-                <b>Catégorie :</b> <%= item.infoItem.categoryName %><br>
-                <b>Appellation :</b> <%= item.infoItem.productName %><br>
-                <b>Quantité disponible :</b> <%= item.infoItem.quantity %> <%= item.infoItem.unitName %>(s) <br>
-                <b>Prix unitaire :</b> <%= item.infoItem.price %> €
+              <div class="product-collateral col-lg-12 col-sm-12 col-xs-12">
+                <div class="add_info">
+                  <ul id="product-detail-tab" class="nav nav-tabs product-tabs">
+                    <li class="active"> <a href="#product_tabs_description" data-toggle="tab">Description du produits</a></li>
+                    <li> <a href="#product_tabs_custom" data-toggle="tab">Localisation de la production</a> </li>
+                  </ul>
+                  <div id="productTabContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="product_tabs_description">
+                      <div class="std" syle="overflow-wrap: break-word;">
+                        <p><%-item.infoItem.descriptionItem%></p>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="product_tabs_custom">
+                      <div class="product-tabs-content-inner clearfix">
+                          <div id="map" class="form-control"style="height:500px;"></div>
+                          <input type="hidden" class="form-control" id="location" name="location">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            
-            <div>
-                <h3>Description : </h3>
-                <%= item.infoItem.description %>
-            </div>
-
-            <div>
-                <h3>Localisation de la production : </h3>
-                <div id="map" class="form-control"style="height:500px;"></div>
-                <input type="hidden" class="form-control" id="location" name="location">
-            </div>
-            <div>
-                <h2>Ajouter au panier : </h2>
-                <% if(!session.type) { %>
-                    <a href ="/connexion" >Pour ajouter au panier merci de vous connecter en cliquant ici.</a>
-                <% }else{ %>
-                    <script type="text/javascript">
-                        function addCart(){
-                            var qte=document.getElementById("qteCart").value;
-                            if(qte<1 || qte > <%= item.infoItem.quantity %>) {
-                                alert("La quantité voulu doit être suppérieur à 0 et inférieur à <%= item.infoItem.quantity %>");
-                            }else{
-                                var url = document.URL.split('/');
-                                var id = url[url.length-1];
-                                /*on envoi aussi la qtemax possible à  l'achat dans le cas ou produit déjà dans panier pour vérif*/
-                                $.getJSON("/cart/add", { id: id, qte:qte, qteMax : <%= item.infoItem.quantity %>, unit : "<%= item.infoItem.unitName %>", category : "<%=item.infoItem.categoryName%>", product: "<%=item.infoItem.productName%>", title:"<%=item.infoItem.itemName%>", prixU : <%=item.infoItem.price%> }).done(function( json ) {
-                                    if(json.code == 0){
-                                        // on mettera un modal plus tard pour faire beau
-                                        alert("Vous avez ajouté au panier vos bails")
-                                    }else{
-                                        alert(json.message)
-                                    }
-                                });
-                            }
-                        }
-                    
-                    </script>
-                    <% if(session.login != item.infoItem.loginUser) { %>
-                        <select name="qteCart" id="qteCart">
-                            <% for(var j = 1; j<=item.infoItem.quantity; j++) { %> 
-                                <option  name="qteCart" value ="<%=j%>" id="qteCart"><%=j%></option>
-                            <% } %>                       
-                        </select> <%=item.infoItem.unitName%>(s) <input type="button" value="Ajouter" onclick="addCart();">
-                    <% } else { %> 
-                        <div>C'est votre annonce vous ne pouvez pas l'ajouter à votre panier !</div>   
-                    <% } %>
-                    
-                <% } %>
-            </div>
-           
-
+          </div>
         </div>
-    </div>
-
+      </section>
         <br>
 
 <% } %>
 
 
-
-
-
-
-<script type="text/javascript">
-        // Get the modal
-    var modal = document.getElementById('myModal');
-
-    // Get the image and insert it inside the modal - use its "alt" text as a caption
-    var img = document.getElementById('myImg');
-    var modalImg = document.getElementById("img01");
-    var captionText = document.getElementById("caption");
-    img.onclick = function(){
-        modal.style.display = "block";
-        modalImg.src = this.src;
-        captionText.innerHTML = this.alt;
-    }
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() { 
-    modal.style.display = "none";
-    }
-</script>
-
 <% include ./partials/footer %>
-
+</div>
 </body>
 </html>

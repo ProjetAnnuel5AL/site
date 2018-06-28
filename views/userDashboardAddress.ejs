@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>MON ADRESSE DE LIVRAISON</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <h2 class="page-heading"> <span class="page-heading-title">Mon adresse de livraison</span> </h2>
+                   
+                    <fieldset class="col2-set">
+                            <% if (msgError.length > 0) { %>
+                                <div class="alert alert-danger"><%= msgError %></div>
+                            <% } %>
+                            <% if (msgSuccess.length > 0) { %>
+                                <div class="alert alert-success"> <%= msgSuccess %> </div>
+                            <% } %>
+                        <form action="/userDashboard/address" method="post">
+                            <% if(address.lastNameUser == null) { %>
+                                <h5>Pas encore d'adresse de livraison enregistré. Remplissez le formulaire ci-dessous pour en enregistrer une.</h5><br />
+                            <% } %>
+                            <ul class="form-list">  
+                                <li>
+                                    <label for="lastName">Nom</label>
+                                    <br>
+                                    <input type="text" title="lastName" class="input-text required-entry" id="lastName" value="<%= address.lastNameUser%>" name="lastName" >
+                                </li>
+                                <li>
+                                    <label for="mail">Prénom</label>
+                                    <br>
+                                    <input type="text" title="firstName" id="firstName" class="input-text required-entry" name="firstName" value="<%= address.firstNameUser %>" required>
+                                </li>
+                                <li>
+                                    <label for="birth">Civilité</label>
+                                    <br>
+                                    <select name="sex">
+                                        <option></option>
+                                        <option value="H" name="sex" <% if (address.sexUser == "H") { %> selected <% } %> >Monsieur</option>
+                                        <option value="F" name="sex" <% if (address.sexUser == "F") { %> selected <% } %> >Madame</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <label for="address">Adresse</label>
+                                    <br>
+                                    <input type="text" title="address" id="address" class="input-text required-entry" name="address" value="<%= address.addressUser %>" required>
+                                </li>
+                                <li>
+                                    <label for="city">Ville</label>
+                                    <br>
+                                    <input type="text" title="city" id="city" class="input-text required-entry" name="city" value="<%= address.cityUser %>" required>
+                                </li>
+                                <li>
+                                    <label for="cp">Code Postal</label>
+                                    <br>
+                                    <input type="text" title="cp" id="cp" class="input-text required-entry" name="cp" value="<%= address.cpUser %>" required>
+                                </li>
+                                <button name="send" type="submit" class="button"><span>Enregistrer mon adresse de livraison</span></button>
+                            </ul>
+                        </form>
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ./partials/dashboard %>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>

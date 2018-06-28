@@ -15,20 +15,28 @@ module.exports = function(app, urlApi, utils, config){
                 "idProducer": req.params.id,
             }
         }).then(function (body) {
+            var lat;
+            var long;
             if(body.code ==0){
-                var producer = body;
+                var producer = body.result;
                 var avatar = "";
                
-                if(body.avatarProducer == "default"){
+                if(body.result.avatarProducer == "default"){
                     avatar = "../img/avatar.png";
                 }else{
-                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/"+ body.avatarProducer
+                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/"+ body.result.avatarProducer
                 }
+                var LatLong = producer.locationProducer.split(',');
+                lat = LatLong[0];
+                long = LatLong[1]; 
+                
 
                 producer.descriptionProducer = producer.descriptionProducer.replace(/\n|\r/g,'<br />'); 
                 res.render("ficheProducer.ejs", {
                     session: req.session,
                     producer: producer,
+                    lat : lat,
+                    long : long,
                     avatar: avatar,
                     msgError:"",
                     msgSuccess: ""
@@ -37,6 +45,8 @@ module.exports = function(app, urlApi, utils, config){
                 res.render("ficheProducer.ejs", {
                     session: req.session,
                     producer: "",
+                    lat : lat,
+                    long : long,
                     avatar: "",
                     msgError:"Ce producteur n'existe pas !",
                     msgSuccess: ""
