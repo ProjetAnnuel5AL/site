@@ -99,7 +99,7 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                         });
                     }else{
                         res.render("registration.ejs", {
-                            msgError: "Erreur lors de l'inscription. Veuillez recommmencer !",
+                            msgError: "Erreur lors de l'inscription. Veuillez recommmencer ultérieurement.",
                             msgSuccess: "",
                             session : req.session
                         });

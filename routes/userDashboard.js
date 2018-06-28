@@ -400,13 +400,24 @@ module.exports = function(app, urlApi, urlLocal, utils){
 
                 }
             }).then(function (body) {
-                res.render("userDashboardOrders.ejs", {
-                    session: req.session,
-                    orders: body.result.orders,
-                    status:  body.result.status,
-                    msgError:"",
-                    msgSuccess: ""
-                });
+                if(body.code == 0){
+                    res.render("userDashboardOrders.ejs", {
+                        session: req.session,
+                        orders: body.result.orders,
+                        status:  body.result.status,
+                        msgError:"",
+                        msgSuccess: ""
+                    });
+                }else{
+                    res.render("userDashboardOrders.ejs", {
+                        session: req.session,
+                        orders: null,
+                        status: null,
+                        msgError:"",
+                        msgSuccess: ""
+                    });
+                }
+                
             
             });
         }

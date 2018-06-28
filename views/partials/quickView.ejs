@@ -12,7 +12,7 @@
     var productG="";
     var categoryG="";
     var ext;
-    function displayQuickView(title, price, qte, unit, description, id, imagesExt, urlApi, login, product, category ){
+    function displayQuickView(title, price, qte, unit, description, id, imagesExt, urlApi, login, product, category, cp, city ){
         max = Number(qte);
         ext = imagesExt.split(';');
 
@@ -40,7 +40,7 @@
        
        link = "/visualisationAnnonce/"+id;
 
-        document.getElementById("titleQuick").innerHTML = title +"<br /><small>"+category+", "+product+"</small>";
+        document.getElementById("titleQuick").innerHTML = title +"<br /><small>"+category+", "+product+"</small><br /><small>"+cp+" " + city+"</small>";
         document.getElementById("priceQuick").innerHTML =  price+" €";
         document.getElementById("stockQuick").innerHTML = qte + " " + unit + " en stock";
         document.getElementById("descriptionQuick").innerHTML = description;

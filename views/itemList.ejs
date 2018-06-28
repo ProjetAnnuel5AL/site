@@ -7,56 +7,7 @@
     
     <link rel="stylesheet" href="/css/slider.css">
     <script src="/js/bootstrap-slider.js"></script>
-    <script type="text/javascript">
-      var products = JSON.parse('<%- JSON.stringify(products) %>');
-
-      $(document).ready(function () {
-        $("#listItems").collapse("show");
-        $("#filter").collapse();
-        $("#price").slider({});
-        $("#quantity").slider({});
-        $('.slider-horizontal').css({'width': '100%', 'height':'30px'});
-        $("#category").change(function () {
-          var id = $(this).children(":selected")[0].attributes.value.nodeValue;
-          loadProducts(id);
-        });
-      });
-      function filter(){
-        var categoryId = $("#category").children(":selected")[0].attributes.value.nodeValue;
-        var productId = $("#product").children(":selected")[0].attributes.value.nodeValue;
-        var city = $( "#cities option:selected" ).text()
-        var producerId = $("#producers").children(":selected")[0].attributes.value.nodeValue;
-        var price = $("#price").data('slider').getValue();
-        var priceMin = price[0];
-        var priceMax = price[1];
-        var remainingQuantity = $("#quantity").data('slider').getValue()-1;
-        $.getJSON("/itemList/filter", { categoryId: categoryId, productId: productId, city: city, producerId: producerId,
-        priceMin: priceMin, priceMax: priceMax, remainingQuantity: remainingQuantity}).done(function( json ) {
-          if(json.msgError == ""){
-            $("#tabdata").find('tbody').empty().append(json.listTab);
-          }else{
-            alert(json.msgError);
-          }
-          console.log(json);
-        });
-      }
-
-      function loadProducts(id){
-        $('#product').empty();
-        $('#product').append($('<option>', {
-          value: 0,
-          text: "Pas de filtrage"
-        }));
-        for(var elem in products) {
-          if(products[elem].idCat == id){
-            $('#product').append($('<option>', {
-              value: products[elem].id,
-              text: products[elem].name
-            }));
-          }
-        }
-      }
-    </script>
+    
 
 
 </head>
@@ -69,6 +20,16 @@
       </header>
 
 <br>
+<% if(saveSearch!= null){ %>
+
+
+<script type="text/javascript">
+
+  function changeFilterPage(num){             
+               window.location ="/itemList/filter/"+num+"?manualSearch=<%=saveSearch.manualSearch%>&category=<%=saveSearch.category%>&product=<%=saveSearch.product%>&priceMax=<%=saveSearch.priceMax%>&priceMin=<%=saveSearch.priceMin%>&lat=<%=saveSearch.lat%>&long=<%=saveSearch.long%>&address=<%=saveSearch.address%>";  
+  }
+</script>
+<% } %>
       <section class="main-container col2-left-layout bounceInUp animated">
         <div class="container">
           <div class="row">
@@ -80,27 +41,48 @@
         <div class="display-product-option">
           <div class="pager hidden-xs">
             <div class="pages">
-              <ul class="pagination">
-                  <% if(currentPage != 1){ %>
-                  <li><a href="/itemList/<%=(currentPage-1)%>">&laquo;</a></li>
-                  <% } %>
-                <% var pagination = 1; 
-                console.log(listTab)
-                if(listTab && listTab.length>0) {
-                for (var j = 1; j<=nbItems; j = j+20){ %>
-                  <% if(currentPage == pagination) { %>
-                    <li class="active"><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>
-                  <% }else{ %>
-                    <li><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>
-                  <% } %>
-                  
-                <% pagination++; } } 
-                var nextPage =  (currentPage*1+1*1)%>
-                <% if(currentPage != pagination-1){ %>
-                  <li><a href="/itemList/<%=nextPage%>">&raquo;</a></li>
-                <% } %>
-                
-              </ul>
+                <ul class="pagination">
+                    <% if(currentPage != 1){ %>
+                    <li>
+                        <% if(saveSearch == null){ %>
+                          <a href="/itemList/<%=(currentPage-1)%>">&laquo;</a>
+                        <% }else{ %>
+                          <a onclick="changeFilterPage(<%=(currentPage-1)%>)" >&laquo;</a>
+                        <% } %>
+                    </li>
+                    <% } %>
+                  <% var pagination = 1; 
+                  if(listTab && listTab.length>0) { %>
+                    <% for (var j = 1; j<=nbItems; j = j+20){ %>
+                    <% if(currentPage == pagination) { %>
+                      <li class="active">
+                        <% if(saveSearch == null){ %>
+                          <a href="/itemList/<%=pagination%>"><%=pagination%></a>
+                        <% }else{ %>
+                          <a onclick="changeFilterPage(<%=pagination%>)" ><%=pagination%></a>
+                        <% } %>
+                      </li>
+                    <% }else{ %>
+                      <li>
+                        <% if(saveSearch == null){ %>
+                        <a href="/itemList/<%=pagination%>"><%=pagination%></a>
+                      <% }else{ %>
+                        <a onclick="changeFilterPage(<%=pagination%>)" ><%=pagination%></a>
+                      <% } %>
+                    </li>
+                    <% } %>
+                  <% pagination++; } } 
+                  var nextPage =  (currentPage*1+1*1)%>
+                  <% if(currentPage != pagination-1 && pagination != 1){ %>
+                    <li>
+                        <% if(saveSearch == null){ %>
+                          <a href="/itemList/<%=(currentPage-1)%>">&laquo;</a>
+                        <% }else{ %>
+                          <a onclick="changeFilterPage(<%=(currentPage-1)%>)" >&laquo;</a>
+                        <% } %>
+                    </li>
+                  <% } %>                    
+                </ul>
             </div>
           </div>
           <div class="sorter">
@@ -125,14 +107,18 @@
                       <!--<div class="new-label new-top-left">New</div>-->
                       <div class="box-hover">
                         <ul class="add-to-links">
-                          <li><a class="link-quickview" onclick="displayQuickView('<%=listTab[i].nameItem%>','<%=listTab[i].priceItem%>','<%=listTab[i].quantityItem%>','<%=listTab[i].nameUnit%>', '<%=desc%>', '<%=listTab[i].idItem%>', '<%=listTab[i].fileExtensionsItem%>', '<%=urlApi%>','<%=listTab[i].loginUser%>','<%=listTab[i].nameProduct%>','<%=listTab[i].nameCategory%>' );">Voir plus</a> </li>
+                          <li><a class="link-quickview" onclick="displayQuickView('<%=listTab[i].nameItem%>','<%=listTab[i].priceItem%>','<%=listTab[i].quantityItem%>','<%=listTab[i].nameUnit%>', '<%=desc%>', '<%=listTab[i].idItem%>', '<%=listTab[i].fileExtensionsItem%>', '<%=urlApi%>','<%=listTab[i].loginUser%>','<%=listTab[i].nameProduct%>','<%=listTab[i].nameCategory%>', '<%=listTab[i].cpItem%>', '<%=listTab[i].cityItem%>' );">Voir plus</a> </li>
                         </ul>
                       </div>
                     </div>
                   </div>
                   <div class="item-info">
                     <div class="info-inner">
-                      <div class="item-title"> <a title="" href="/visualisationAnnonce/<%=listTab[i].idItem%>"><%=listTab[i].nameItem%> <%=listTab[i].photoItem%> </a><br /><small><%=listTab[i].nameCategory%>, <%=listTab[i].nameProduct%></small> </div>
+                      <div class="item-title"> 
+                        <a title="" href="/visualisationAnnonce/<%=listTab[i].idItem%>"><%=listTab[i].nameItem%> <%=listTab[i].photoItem%> </a><br />
+                        <small><%=listTab[i].nameCategory%>, <%=listTab[i].nameProduct%></small> <br />
+                        <small><%=listTab[i].cpItem%> <%=listTab[i].cityItem%></small> 
+                      </div>
                       <div class="item-price">
                         <div class="price-box">
                           <!--<p class="old-price"><span class="price-label">Regular Price:</span> <span class="price">$100.00 </span> </p>-->
@@ -156,7 +142,9 @@
                   </div>
                 </div>
               </li>
-            <% } } %>
+            <% } }else{ %>
+              <H3>Aucun produit disponible pour vos critères de recherche.</H3>
+            <% } %>
           </ul>
         </div>
         <div class="toolbar">
@@ -181,30 +169,53 @@
                   <label>Page:</label>
                   <ul class="pagination">
                       <% if(currentPage != 1){ %>
-                      <li><a href="/itemList/<%=(currentPage-1)%>">&laquo;</a></li>
+                      <li>
+                          <% if(saveSearch == null){ %>
+                            <a href="/itemList/<%=(currentPage-1)%>">&laquo;</a>
+                          <% }else{ %>
+                            <a onclick="changeFilterPage(<%=(currentPage-1)%>)" >&laquo;</a>
+                          <% } %>
+                      </li>
                       <% } %>
                     <% var pagination = 1; 
-                    if(listTab && listTab.length>0) {
-                    for (var j = 1; j<=nbItems; j = j+20){ %>
+                    if(listTab && listTab.length>0) { %>
+                      <% for (var j = 1; j<=nbItems; j = j+20){ %>
                       <% if(currentPage == pagination) { %>
-                        <li class="active"><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>
+                        <li class="active">
+                          <% if(saveSearch == null){ %>
+                            <a href="/itemList/<%=pagination%>"><%=pagination%></a>
+                          <% }else{ %>
+                            <a onclick="changeFilterPage(<%=pagination%>)" ><%=pagination%></a>
+                          <% } %>
+                          
+                        </li>
                       <% }else{ %>
-                        <li><a href="/itemList/<%=pagination%>"><%=pagination%></a></li>
+                        <li>
+                          <% if(saveSearch == null){ %>
+                          <a href="/itemList/<%=pagination%>"><%=pagination%></a>
+                        <% }else{ %>
+                          <a onclick="changeFilterPage(<%=pagination%>)" ><%=pagination%></a>
+                        <% } %>
+                      </li>
                       <% } %>
-                      
                     <% pagination++; } } 
                     var nextPage =  (currentPage*1+1*1)%>
-                    <% if(currentPage != pagination-1){ %>
-                      <li><a href="/itemList/<%=nextPage%>">&raquo;</a></li>
-                    <% } %>
-                    
+                    <% if(currentPage != pagination-1 && pagination != 1){ %>
+                      <li>
+                          <% if(saveSearch == null){ %>
+                            <a href="/itemList/<%=(currentPage-1)%>">&laquo;</a>
+                          <% }else{ %>
+                            <a onclick="changeFilterPage(<%=(currentPage-1)%>)" >&laquo;</a>
+                          <% } %>
+                      </li>
+                    <% } %>                    
                   </ul>
                 </div>
               </div>
             </div>
             <div class="col-lg-3 col-sm-12 col-md-3">
               <div id="limiter">
-                
+                  
                 <a class="button-asc left" href="#" title="Set Descending Direction"><span class="top_arrow"></span></a> </div>
             </div>
           </div>
@@ -212,7 +223,216 @@
       </article>  
 
             </div>
-          </div></div></section>
+            <% 
+            var manualSearch = "";
+            var address = "";
+            var category = "";
+            var product ="";
+            var priceMax = null;
+            var priceMin = null;
+            var lat = null;
+            var long = null;
+            if(saveSearch != null){
+              manualSearch = saveSearch.manualSearch;
+              category = saveSearch.category;
+              product = saveSearch.product;
+              priceMax = saveSearch.priceMax;
+              priceMin = saveSearch.priceMin;
+              lat = saveSearch.lat;
+              long = saveSearch.long;
+              address = saveSearch.address;
+            } 
+          %>
+            <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+            <script type="text/javascript">
+           
+             $(document).ready(function () {
+              
+
+                $("#price").slider({});
+                $('.slider-horizontal').css({'width': '100%', 'height':'30px'});
+
+                var options = {
+                    componentRestrictions: {country: 'fr'}
+                };
+                var autocomplete = new google.maps.places.Autocomplete($("#address")[0], options);
+                
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                    var cp ="";
+                    for (var i = 0; i < place.address_components.length; i++) {
+                        for (var j = 0; j < place.address_components[i].types.length; j++) {
+                            if (place.address_components[i].types[j] == "postal_code") {
+                                cp = place.address_components[i].long_name;
+                                console.log(cp);
+                                break;
+                            }
+                        }
+                    }
+                   
+                   
+                    $("#lat").val(place.geometry.location.lat());
+                    $("#long").val(place.geometry.location.lng());
+                   
+                });
+
+                $("#category").change(function () {
+                  var id = $(this).children(":selected")[0].attributes.value.nodeValue;
+                  loadProducts(id);
+                });
+
+                function loadProducts(id){
+                  if(id != 0 ){
+                    $.getJSON("/product/getByCategoryId", { id: id }).done(function( json ) {
+                      if(json.code == 0){
+                          $('#product').empty();
+                          $('#product').append($('<option>', {
+                              value: "0",
+                              text: ""
+                          }));
+                          for(var elem in json.result) {
+                            if(savedProduct!=null && savedProduct!=0){
+                              if(savedProduct == json.result[elem].idProduct){
+                                $('#product').append($('<option>', {
+                                  value: json.result[elem].idProduct,
+                                  text: json.result[elem].nameProduct,
+                                  selected:"selected"
+                                }));
+                              }else{
+                                $('#product').append($('<option>', {
+                                  value: json.result[elem].idProduct,
+                                  text: json.result[elem].nameProduct
+                                }));
+                              }
+                            }else{
+                              $('#product').append($('<option>', {
+                                  value: json.result[elem].idProduct,
+                                  text: json.result[elem].nameProduct
+                              }));
+                            }
+                             
+                          }
+                      }
+                    });
+                  }else{
+                    $.getJSON("/product").done(function( json ) {
+                          $('#product').empty();
+                          $('#product').append($('<option>', {
+                                  value: "0",
+                                  text: ""
+                              }));
+                             
+                          for(var elem in json) {
+                              $('#product').append($('<option>', {
+                                  value: json[elem].idProduct,
+                                  text: json[elem].nameProduct
+                              }));
+                          }
+                      
+                    });
+                  }
+                }
+
+                var savedCategory = "<%=category%>";
+                var savedProduct = "<%=product%>";
+                var savedAddress = "<%=address%>";
+                if(savedCategory!=null && savedCategory!=0){
+                  loadProducts(savedCategory)
+                }
+                if(savedAddress!=null && savedAddress!=""){ 
+                  $("#address").val(savedAddress);
+                  $("#lat").val("<%=lat%>");
+                  $("#long").val("<%=long%>");
+                }
+
+              }); 
+            </script>
+            <div class="col-left sidebar col-sm-3 col-xs-12 col-sm-pull-9">
+              <aside class="col-left sidebar">
+                  <div class="side-nav-categories">
+                  <div class="block-title"> Recherche </div>
+                  <!--block-title--> 
+                  <!-- BEGIN BOX-CATEGORY -->
+                  <div class="box-content box-category">
+                    <form method="GET" action="/itemList/filter/1">
+
+                      <p>
+                        <label>Nom : </label><br>
+                        <input class="form-control" type="text" name="manualSearch" value="<%=manualSearch%>" style="width:100%">
+                      </p>
+                      <p>
+                        <label>Categorie : </label><br>
+                        <select class="form-control" id="category" name="category">
+                            <option value="0"></option>
+                            <% if(categories) {
+                              categories.forEach(function (item) { 
+                                if(saveSearch != null && saveSearch.category != null && saveSearch.category !=0 ){ 
+                                  if(saveSearch.category == item.idCategory){ 
+                              %>
+                              <option value=<%= item.idCategory%> selected="selected"><%= item.nameCategory%></option> 
+                              <% } else { %>
+                                <option value=<%= item.idCategory%>><%= item.nameCategory%></option> 
+                              <% } %>
+                                  
+                               <% }else{ %>
+                                  <option value=<%= item.idCategory%>><%= item.nameCategory%></option> 
+                                <% }
+                              %> 
+                            <% }) } %>
+                        </select> 
+                      </p>
+                      <p>
+                        <label>Type de Produit : </label><br>
+                        <select class="form-control" id="product" name="product">
+                            <option></option>
+                            <% if(products){
+                              products.forEach(function (item) { 
+                              if(saveSearch != null && saveSearch.product != null && saveSearch.product !=0 ){ 
+                                if(saveSearch.product == item.idProduct ){ 
+                            %>
+                            <option value=<%= item.idProduct%> selected="selected"><%= item.nameProduct%></option> 
+                            <% } else { %>
+                              <option value=<%= item.idProduct%>><%= item.nameProduct%></option> 
+                            <% } %>
+                                
+                             <% }else{ %>
+                                <option value=<%= item.idProduct%>><%= item.nameProduct%></option> 
+                              <% }
+                            %>
+                              
+                            <% }) }%>
+                        </select> 
+                      </p>
+                      <p>
+                          <label>Prix : </label><br>
+                          <% if(saveSearch == null) { %>
+                            <input id="price" type="text" class="span2" name="price" value="<%= prixMin %>,<%= prixMax %>" data-slider-min=<%= prixMin %> data-slider-max=<%= prixMax %> data-slider-step="1" data-slider-value="[<%= prixMin %>,<%= prixMax %>]"/>
+                           <% }else{ %>
+                            <input id="price" type="text" class="span2" name="price" value="<%= saveSearch.priceMin %>,<%= saveSearch.priceMax %>" data-slider-min=<%= prixMin %> data-slider-max=<%= prixMax %> data-slider-step="1" data-slider-value="[<%= saveSearch.priceMin %>,<%= saveSearch.priceMax %>]"/>
+                           <% } %>
+                        </p>
+                      <p>
+                          <label for="address">Proche de :</label>
+                          <br>
+                          <input type="text" class="input-text required-entry" id="address" name="address" autocomplete="off" style="width:100%">
+                          <input type="hidden" class="form-control" id="lat" name="lat">
+                          <input type="hidden" class="form-control" id="long" name="long">
+                      </p>
+                      <p style="text-align:center">
+                          <button type="submit" id="submitbtn" class="btn btn-info">Rechercher</button>
+                      </p>
+                    </form>
+                  </div>
+                  <!--box-content box-category--> 
+                  </div>
+              </aside>
+            </div>
+
+
+        </div>
+  
+  </div>
+</section>
 
   </div>
 <% include ./partials/footer %>
