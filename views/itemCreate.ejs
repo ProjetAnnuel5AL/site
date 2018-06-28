@@ -16,8 +16,19 @@
                 
                 google.maps.event.addListener(autocomplete, 'place_changed', function () {
                     var place = autocomplete.getPlace();
+                    var cp ="";
+                    for (var i = 0; i < place.address_components.length; i++) {
+                        for (var j = 0; j < place.address_components[i].types.length; j++) {
+                            if (place.address_components[i].types[j] == "postal_code") {
+                                cp = place.address_components[i].long_name;
+                                break;
+                            }
+                        }
+                    }
+                   
                     selectAddress(place.geometry.location.lat(), place.geometry.location.lng(), 15, true);
                     $("#city").val(place.vicinity);
+                    $("#cp").val(cp);
                 });
                 selectAddress(47.930565, 2.436864, 5, false);
 
@@ -202,6 +213,7 @@
                                 <div id="map" class="form-control"style="height:500px;"></div>
                                 <input type="hidden" class="form-control" id="location" name="location">
                                 <input type="hidden" class="form-control" id="city" name="city"/>
+                                <input type="hidden" class="form-control" id="cp" name="cp"/>
                             </li>
                             <li>
                                 <label for="photo">Photos (Max 3)</label>

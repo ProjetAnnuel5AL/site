@@ -25,5 +25,29 @@ module.exports = function(app, urlApi){
 			});
 		}else res.send(null);
   });
+
+  app.get('/product', function(req, res, next) {
+	 
+		var rp = require("request-promise");
+		rp({
+			uri: urlApi + "/products",
+			method: "GET",
+			json: true,
+			headers: {
+			'User-Agent': 'Request-Promise'
+
+			}
+		}).then(function (body) {  
+			
+			if (body.code == "0") {
+				res.send(body.result);
+			} else {
+				res.send(null);
+			}
+		
+		}).catch(function(err){
+			res.send(null);
+		})
+	});
     
 };

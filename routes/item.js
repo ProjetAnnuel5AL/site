@@ -200,6 +200,7 @@ module.exports = function(app, urlApi, utils){
               "address": fields.address,
               "location": fields.location,
               "city": fields.city,
+              "cp": fields.cp,
               "photo": files.photo,
               "price": fields.price,
               "unitId": fields.unit,
@@ -318,7 +319,6 @@ module.exports = function(app, urlApi, utils){
     var unitsList;
     var categoriesList;
     var item;
-    console.log(req.body);
 		if(req.session.type && req.session.type == 1) {
       var form = new formidable.IncomingForm();
       form.multiples=true;
@@ -335,7 +335,7 @@ module.exports = function(app, urlApi, utils){
           }
         }).then(function (body) {
           if(body){
-            console.log("body set");
+            
             if (body.code == "0") {
               res.render("itemCreate.ejs", { msgError: "", msgSuccess:"Annonce supprimée avec succès", session: req.session });
             }
