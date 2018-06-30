@@ -38,7 +38,7 @@ module.exports = function(app, urlApi, utils, config){
                         }
                     }
                 }
-                //console.log(photo)
+
                 res.render("visualisationAnnonce.ejs", {
                     session: req.session,
                     item : item,
