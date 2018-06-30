@@ -32,7 +32,7 @@ module.exports = function(app, urlApi, utils){
         if (body.code == 0) {
           listTab = body.result.list
           nbItems = body.result.nbTotalItem
-          //e.log(body)
+    
           rp({
             uri: urlApi + "/item/getPriceMinMax",
             method: "GET",
