@@ -5,13 +5,17 @@
     <title>Fiche producteur</title>
     <% include ./partials/header %>
 </head>
-<body >
-<% include ./partials/navbar %>
-<div class="container">
-    <div class="col-sm-8 col-sm-offset-2 ">
-        <% if (msgSuccess.length > 0) { %>
-            <div class="alert alert-success"> <%= msgSuccess %> </div>
-        <% } %>
+<body class="cms-index-index cms-home-page">
+    <div id="page">
+    <header>
+        <% include ./partials/topBar %>
+    </header>
+    <div class="container">
+        <div class="col-sm-8 col-sm-offset-2 ">
+            <% if (msgSuccess.length > 0) { %>
+                <div class="alert alert-success"> <%= msgSuccess %> </div>
+            <% } %>
+        </div>
     </div>
 </div>
 

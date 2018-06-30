@@ -1,18 +1,26 @@
+<script type="text/javascript" src="/js/updateNotification.js"></script>
+<script type="text/javascript">
+  $("document").ready(function(){
+    var userLogin = '<%- session.login %>';
+    updateNotif(userLogin);
+    setInterval(function(){updateNotif(userLogin)}, 30000);
+  });
+</script>
 <div class="header-container">
     <div class="header-top">
       <div class="container">
         <div class="row"> 
             <!-- Header Language -->
-            <div class="col-xs-12 col-sm-6">
+            <div class="col-xs-12 col-sm-4" style="float:left">
                 <%if (session.type) {%>
                 <div class="welcome-msg"> Bienvenue <%=session.login%> ! </div>   
                 <% } %>             
             </div>
-            <div class="col-xs-6 hidden-xs"> 
+            <div class="col-xs-8 hidden-xs" style="float:right"> 
             <!-- Header Top Links -->
             <div class="toplinks">
               <div class="links">
-                <div class="home"><a title="Accueil" href="/" ><span class="hidden-xs">Accueil</span></a> </div>
+                <div class="home"><a style="height:30px;" title="Accueil" href="/" ><span class="hidden-xs">Accueil</span></a> </div>
                 <div class="items"><a title="Annonces" href="/itemList/1" ><span class="hidden-xs">Annonces</span></a> </div>
                 <%if (session.type) { %>
                 <div class="myaccount"><a title="Mon compte" href="/userDashboard/profil"><span class="hidden-xs">Mon compte</span></a> </div>
@@ -24,8 +32,36 @@
                     <li role="item"><a title="Déposer une annonce" href="/item/new">  Déposer une annonce </a> </li>
                   </ul>
                 </div>
+                <div class="dropdown block-company-wrapper hidden-xs"> <a role="button" data-toggle="dropdown" data-target="#" class="block-company dropdown-toggle" href="#"> Mes coopératives <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li role="item"><a title="Créer une coopérative" href="/producersGroup/new">Créer une coopérative</a> </li>
+                    <li role="item"><a title="Consulter mes coopératives" href="/producersGroup/list">Consulter mes coopératives</a> </li>
+                  </ul>
+                </div>
                 <% } %>
                 <div class="deconnexion"><a title="Déconnexion" href="/logout"><span class="hidden-xs">Déconnexion</span></a> </div>
+                <div class="top-cart-contain pull-right" style="margin-top:0px;"> 
+                  <!-- Top Cart -->
+                  <div class="mini-cart">
+                    <div class="dropdown block-company-wrapper hidden-xs" data-toggle="dropdown" data-hover="dropdown"> <a href="" style="height:30px;"><i class="fa fa-exclamation-circle" id="imageNotif" style="font-size:15px;color:red; display:none"></i> <span class="hidden-xs" id="notifLabel">Notifications (0)</span> </a> </div>
+                    <div>
+                      <div class="top-cart-content" style="display: none; top:28px;"> 
+                        
+                        <!--block-subtitle-->
+                        <ul class="mini-products-list" id="notif-sidebar">
+                          
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Top Cart -->
+                  <div id="ajaxconfig_info" style="display:none"> <a href="#/"></a>
+                    <input value="" type="hidden">
+                    <input id="enable_module" value="1" type="hidden">
+                    <input class="effect_to_cart" value="1" type="hidden">
+                    <input class="title_shopping_cart" value="Go to shopping cart" type="hidden">
+                  </div>
+                </div>
                 <% } %>
                 <!-- End Header Company -->
                 <% if(!session.type) { %>
