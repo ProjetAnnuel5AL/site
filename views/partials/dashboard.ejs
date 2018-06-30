@@ -8,11 +8,23 @@
             <ul>
             <li> <a class="" >Utilisateur</a> <span class="subDropdown minus"></span>
                 <ul class="level0_415" style="display:block" >
-                <li><a href="/userDashboard/profil"> Informations générales </a> <span class="subDropdown"></span></li>  
-                <li><a href="/userDashboard/pwd"> Mot de passe </a> <span class="subDropdown"></span></li>  
-                <li><a href="/userDashboard/address"> Informations pour livraison </a> <span class="subDropdown"></span></li> 
-                <li><a href="/userDashboard/orders"> Mes commandes </a> <span class="subDropdown"></span></li>                         
+                    <li><a href="/userDashboard/profil"> Informations générales </a> <span class="subDropdown"></span></li>  
+                    <li><a href="/userDashboard/pwd"> Mot de passe </a> <span class="subDropdown"></span></li>  
+                    <li><a href="/userDashboard/address"> Informations pour livraison </a> <span class="subDropdown"></span></li> 
+                    <li><a href="/userDashboard/orders"> Mes commandes </a> <span class="subDropdown"></span></li>
+                </ul>                         
             </li>
+            <% if(session.type == 1){ %>
+            <li> <a class="" >Producteur</a> <span class="subDropdown minus"></span>
+                <ul class="level0_415" style="display:block" >
+                    <li><a href="/producerDashboard/profil"> Informations producteur </a> <span class="subDropdown"></span></li>
+                    <li><a href="/producerDashboard/item/new"> Créer un annonce </a> <span class="subDropdown"></span></li>   
+                    <li><a href="/producerDashboard/items"> Mes annonces </a> <span class="subDropdown"></span></li> 
+                    <li><a href="/producerDashboard/orders"> Commandes </a> <span class="subDropdown"></span></li>   
+                </ul>                      
+            </li>
+            <% } %>
+           
             </ul>
         </div>
         <!--box-content box-category--> 

@@ -348,7 +348,6 @@ module.exports = function(app, urlApi, utils){
                   msgSuccess: "", session: req.session });
           }
           }).catch(function (err) {
-            console.log(err);
             res.render("itemCreate.ejs", {
               msgError: "Erreur lors de la suppression de l'annonce. Veuillez recommmencer !",
               msgSuccess: "",
@@ -357,7 +356,6 @@ module.exports = function(app, urlApi, utils){
           });
       });
     }else{
-      console.log("redirect");
 			res.redirect("/");
 		}
   });
