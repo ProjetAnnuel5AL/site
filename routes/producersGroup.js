@@ -83,14 +83,14 @@ module.exports = function(app, urlApi, utils, config){
                             if(files.avatar.name==""){
                                 avatar = "../img/picture.png";
                             }else{
-                                avatar = config.urlAvatarProducer +"/"+  body.id +"/avatar."+extension;
+                                avatar = config.urlAvatarProducer +"/"+  body.result +"/avatar."+extension;
                             }
                             res.render("producersGroupCreate.ejs", {
                                 session: req.session,
                                 group: newGroup,
                                 avatar: avatar,
                                 msgError:"",
-                                msgSuccess: "Votre coopérative a été créée avec succès. Vous pouvez dès maintenant ajouter des membres <a href='/producersGroup/"+body.id+"'>ICI</a>"+ 
+                                msgSuccess: "Votre coopérative a été créée avec succès. Vous pouvez dès maintenant ajouter des membres <a href='/producersGroup/"+body.result+"'>ICI</a>"+ 
                                 "<br>Vous pouvez aussi à tout moment gérer vos membres dans l'onglet <strong>Mes coopératives → Consulter mes coopératives</strong>"
                             });
                         }else{
@@ -140,8 +140,7 @@ module.exports = function(app, urlApi, utils, config){
           }
         }).then(function (body) {
           if (body.code == 0) {
-            console.log(body);
-            coopMember = body.list;
+            coopMember = body.result;
             rp({
               url: urlApi + "/producersGroup/founder/userId/",
               method: "GET",
@@ -155,7 +154,7 @@ module.exports = function(app, urlApi, utils, config){
             }).then(function (body) {
               console.log(body);
               if (body.code == 0) {
-                coopAdmin = body.list;
+                coopAdmin = body.result;
                 res.render("producersGroupList.ejs", {
                   session: req.session,
                   coopAdmin: coopAdmin,
@@ -186,7 +185,7 @@ module.exports = function(app, urlApi, utils, config){
               });
             });
           } else {
-            res.render("producersGroupList.ejs", { msgError: body.message, msgSuccess: msgSuccess, coopAdmin: [], coopMember: [], session: req.session });
+            res.render("producersGroupList.ejs", { msgError: body.message, msgSuccess: msgSuccess, coopAdmin: [], coopMember: [],  urlApi: urlApi, session: req.session });
           }
         }).catch(function (err) {
           console.log(err);
@@ -225,7 +224,7 @@ module.exports = function(app, urlApi, utils, config){
         }).then(function (body) {
           console.log(body);
           if (body.code == 0) {
-            coopMembers = body.list;
+            coopMembers = body.result;
             rp({
               url: urlApi + "/producersGroup/idGroup/",
               method: "GET",
@@ -238,7 +237,8 @@ module.exports = function(app, urlApi, utils, config){
               }
             }).then(function (body) {
               if (body.code == 0) {
-                coop = body.coop;
+                coop = body.result;
+                coop.description = coop.description.replace(/\n|\r/g,'<br />'); 
                 res.render("producersGroup.ejs", {
                   session: req.session,
                   coop: coop,
@@ -271,7 +271,7 @@ module.exports = function(app, urlApi, utils, config){
           } else {
             console.log("error");
             console.log(body);
-            res.render("producersGroup.ejs", { msgError: msgError, msgSuccess: msgSuccess, coop: {}, coopMembers: [], session: req.session });
+            res.render("producersGroup.ejs", { msgError: msgError, msgSuccess: msgSuccess, coop: {}, coopMembers: [],  urlApi: urlApi, session: req.session });
           }
         }).catch(function (err) {
           console.log(err);
@@ -430,7 +430,7 @@ module.exports = function(app, urlApi, utils, config){
         }).then(function (body) {
           console.log(body);
           if(body.code == 0){
-            res.send(body.object);
+            res.send(body.result);
           }else{
             res.send(null);
           }

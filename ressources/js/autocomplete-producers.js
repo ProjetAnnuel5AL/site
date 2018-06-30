@@ -75,6 +75,10 @@ function addSelectedMember(){
   }
 }
 
+function escapeString(str){
+    return str.replace(/[\\$'"]/g, "\\$&")
+}
+
 function addMemberVerified(producerUserId){
   $.post( "/notification/userId", { idUser: producerUserId, title: "Invitation à une coopérative", 
   description: "Vous avez été invité à la coopérative "+coopName , 
