@@ -29,29 +29,30 @@
                     <div>
                         <img src="/img/general.svg" id="general" class="illustrationImage"/><h3 style="display: inline-block;">Administrateur:</h3>
                     </div><hr>
+                    <div class="category-adm">
+                    <ul class="adm-grid">
+                        <div class="slider-items slider-width-col4 products-grid block-content owl-carousel owl-theme" style="opacity: 1; display: block;">
+                            <div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 100%; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">
+
                     <% if(coopAdmin.length == 0){ %>
                         <div class="alert alert-info">
                             Vous n'êtes l'administrateur d'aucune coopérative - 
                             <strong><a href='/producersGroup/new'>Créer une coopérative</a></strong>
                         </div>
                     <% } else { %>
-                    <div class="category-adm">
-                    <ul class="adm-grid">
-                        <div class="slider-items slider-width-col4 products-grid block-content owl-carousel owl-theme" style="opacity: 1; display: block;">
-                            <div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 100%; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">
-                                
+                                                    
                                 
                         <% for(var i=0; i<coopAdmin.length; i++){ %>
                             <div class="owl-item" style="width: 220px;"><div class="item">
                             <div class="item-inner">
                             <div class="item-img">
-                                    <div class="item-img-info"> <a class="product-image" title="Retis lapen casen" href="/producersGroup/<%= coopAdmin[i].id %>"> <img class="previewImage" alt="<%= coopAdmin[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopAdmin[i].id%>/<%=coopAdmin[i].avatar%>"> </a>
+                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroup/<%= coopAdmin[i].id %>"> <img class="previewImage" alt="<%= coopAdmin[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopAdmin[i].id%>/<%=coopAdmin[i].avatar%>"> </a>
                                     
                                     </div>
                                 </div>
                             <div class="item-info">
                                 <div class="info-inner">
-                                <div class="item-title"> <a title="Retis lapen casen" href="product_detail.html"><%= coopAdmin[i].name %></a> </div>
+                                <div class="item-title"> <a title="Cooperative" href="product_detail.html"><%= coopAdmin[i].name %></a> </div>
                                 <i class="fas fa-map-marker-alt"><%= coopAdmin[i].city %></i>
                                 <div class="item-content">
                                     <div class="item-price">
@@ -73,6 +74,9 @@
                         
                         <img src="/img/soldier.svg" id="soldier" class="illustrationImage"/><h3 style="display: inline-block;">Membre:</h3>
                     <hr>
+                    <div class="slider-items slider-width-col4 products-grid block-content owl-carousel owl-theme" style="opacity: 1; display: block;">
+                            <div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 100%; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">
+
                     <% if(coopMember.length == 0){ %>
                         <div class="alert alert-info">
                             Vous n'êtes membre d'aucune coopérative - faites vous inviter dans un coopérative près de chez vous!
@@ -80,9 +84,7 @@
                     <% } else { %>
                         <div class="category-adm">
                         <ul class="adm-grid">
-                        <div class="slider-items slider-width-col4 products-grid block-content owl-carousel owl-theme" style="opacity: 1; display: block;">
-                            <div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 100%; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">
-                                
+                                                        
                         <% for(var i=0; i<coopMember.length; i++){ %>
                             <div class="owl-item" style="width: 220px;"><div class="item">
                             <div class="item-inner">
