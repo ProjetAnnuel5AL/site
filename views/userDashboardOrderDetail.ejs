@@ -64,6 +64,8 @@
                                         <% if(order[i].statusPaypalTransact == "PENDING"){ %>
                                             En attente de reception<br />
                                             <a href="/userDashboard/orderDetails/validateReception/<%=order[i].idOrder%>/<%=order[i].idLigneOrder%>"><button name="send" class="button"><span>Valider la reception</span></button></a>
+                                        <% }else if(order[i].statusPaypalTransact == "DISPUTES"){ %>
+                                               Litige en cours
                                         <% }else{ %>
                                             Receptioné
                                         <% } %>  
