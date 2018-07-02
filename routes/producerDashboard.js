@@ -389,7 +389,8 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                             "price": fields.price,
                             "unitId": fields.unit,
                             "quantity": fields.quantity,
-                            "token": req.session.token
+                            "token": req.session.token,
+                            "loginUser" : req.session.login
                         }
                     }).then(function (body) {
                         if (body) {
@@ -424,7 +425,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
 
 
     app.get("/producerDashboard/items", function(req, res, next) {
-        if(!req.session.type && req.session.type != 1) {
+        if(!req.session.type || req.session.type != 1) {
             res.redirect("/");
         }else{
             var msgSuccess ="";
