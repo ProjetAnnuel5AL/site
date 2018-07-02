@@ -384,7 +384,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
 
     //TOUTES LA PARTIE ORDER A PARTIR D ICI
 
-    app.get("/userDashBoard/orders", function(req, res, next) {
+    app.get("/userDashboard/orders", function(req, res, next) {
         if(!req.session.type) {
 			res.redirect("/");
 		}else{
@@ -428,7 +428,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
 			res.redirect("/");
 		}else{
             rp({
-                url: urlApi + "/order/getOrderDetailsFromuser",
+                url: urlApi + "/order/getOrderDetailsFromUser",
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

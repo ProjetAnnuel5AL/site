@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Mes commandes</title>
+    <title>Commande</title>
     <% include ./partials/header %>
 </head>
 <body class="cms-index-index cms-home-page">
@@ -18,7 +18,7 @@
                         
                 <div class="col-sm-9 col-sm-push-3">
                     <article class="col-main">
-                        <h2 class="page-heading"> <span class="page-heading-title">Mes commandes</span> </h2>
+                        <h2 class="page-heading"> <span class="page-heading-title">Commandes</span> </h2>
                         <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
                             <colgroup>
                             <col>
@@ -34,7 +34,7 @@
                             </tr>
                             <% 
                                 function pad(n) {return n < 10 ? "0"+n : n;}
-                                if(orders){
+                                if(orders && orders.length>0){
                                 for(var i =0; i<orders.length; i++) {
                                 var dateTmp =  new Date(orders[i].dateOrder);
                                 var dateOrder = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
@@ -43,13 +43,16 @@
                                 <td style=""><%=dateOrder%></td>
                                 <td style=""><%=orders[i].idOrder%></td>
                                 <td style=""><span class="price"><%= orders[i].totalOrder.toFixed(2) %>€</span></td>
-                                <td><%=status[i]%></td>
-                                <td><a href="/userDashboard/orderDetails/<%=orders[i].idOrder%>"><button name="send" class="button"><span>Details</span></button></a></td>
+                                <td>
+                                    <%=status[i]%>
+                                </td>
+                                <td><a href="/producerDashboard/orderDetails/<%=orders[i].idOrder%>"><button name="send" class="button"><span>Details</span></button></a></td>
                             </tr>
-                            <% }} %>
+                            <% }}else{ %>
                             <tr style="height : 100px; max-height: 100px; vertical-align:middle;" >
-                                <td colspan="6"><h2>Vous n'avez passez aucune commande.</h2></td>
+                                <td colspan="6"><h2>Vous n'avez pas de commande.</h2></td>
                             </tr>
+                            <% } %>
                             </tbody>
                         </table>
                     <fieldset class="col2-set">
