@@ -56,7 +56,7 @@
                                 for(var i =0; i<order.length; i++) {  
                                 %>
                                 <tr class="first odd" style="height : 100px; max-height: 100px;">
-                                    <td style="width:40%;"><h2 class="product-name"><%=order[i].titleLigneOrder%> </h2><%=order[i].categoryLigneOrder%>, <%=order[i].productLigneOrder%></td>
+                                    <td style="width:40%;"><a href="/visualisationAnnonce/<%=order[i].idItemLigneOrder%>"><h2 class="product-name"><%=order[i].titleLigneOrder%> </h2><%=order[i].categoryLigneOrder%>, <%=order[i].productLigneOrder%></a></td>
                                     <td class="a-center"></td>
                                     <td class="a-right"><span class="cart-price"> <span class="price"><%=(order[i].prixUnitaireLigneOrder*1).toFixed(2)%> €</span> </span></td>
                                     <td class="a-center movewishlist"><%=order[i].quantiteLigneOrder%> </td>
