@@ -385,6 +385,14 @@ module.exports = function(app, urlApi, urlLocal, utils){
     //TOUTES LA PARTIE ORDER A PARTIR D ICI
 
     app.get("/userDashboard/orders", function(req, res, next) {
+        var msgError="";
+        var msgSuccess ="";
+        if(req.query.msgError && req.query.msgError!=""){
+            msgError = req.query.msgError
+        }
+        if(req.query.msgSuccess && req.query.msgSuccess!=""){
+            msgSuccess = req.query.msgSuccess
+        }
         if(!req.session.type) {
 			res.redirect("/");
 		}else{
@@ -405,16 +413,16 @@ module.exports = function(app, urlApi, urlLocal, utils){
                         session: req.session,
                         orders: body.result.orders,
                         status:  body.result.status,
-                        msgError:"",
-                        msgSuccess: ""
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
                     });
                 }else{
                     res.render("userDashboardOrders.ejs", {
                         session: req.session,
                         orders: null,
                         status: null,
-                        msgError:"",
-                        msgSuccess: ""
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
                     });
                 }
                 

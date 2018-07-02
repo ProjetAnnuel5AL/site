@@ -19,6 +19,7 @@ module.exports = function(app, urlApi, utils, config){
             var long;
             if(body.code ==0){
                 var producer = body.result;
+                producer.idProducer = req.params.id;
                 var avatar = "";
                
                 if(body.result.avatarProducer == "default"){

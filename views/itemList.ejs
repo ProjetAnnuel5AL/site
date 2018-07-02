@@ -4,29 +4,24 @@
 <head>
     <title>Liste annonces</title>
     <% include ./partials/header %>
-    
     <link rel="stylesheet" href="/css/slider.css">
     <script src="/js/bootstrap-slider.js"></script>
-    
-
-
 </head>
+
 <body class="cms-index-index cms-home-page">
   <div id="page"> 
       <!-- Header -->
       <header>
-          <% include ./partials/topBar %>
-          <% include ./partials/navbar %>
+        <% include ./partials/topBar %>
+        <% include ./partials/navbar %>
+        
       </header>
-
 <br>
 <% if(saveSearch!= null){ %>
 
-
 <script type="text/javascript">
-
   function changeFilterPage(num){             
-               window.location ="/itemList/filter/"+num+"?manualSearch=<%=saveSearch.manualSearch%>&category=<%=saveSearch.category%>&product=<%=saveSearch.product%>&priceMax=<%=saveSearch.priceMax%>&priceMin=<%=saveSearch.priceMin%>&lat=<%=saveSearch.lat%>&long=<%=saveSearch.long%>&address=<%=saveSearch.address%>";  
+    window.location ="/itemList/filter/"+num+"?manualSearch=<%=saveSearch.manualSearch%>&category=<%=saveSearch.category%>&product=<%=saveSearch.product%>&priceMax=<%=saveSearch.priceMax%>&priceMin=<%=saveSearch.priceMin%>&lat=<%=saveSearch.lat%>&long=<%=saveSearch.long%>&address=<%=saveSearch.address%>";  
   }
 </script>
 <% } %>
@@ -108,6 +103,7 @@
                       <div class="box-hover">
                         <ul class="add-to-links">
                           <li><a class="link-quickview" onclick="displayQuickView('<%=listTab[i].nameItem%>','<%=listTab[i].priceItem%>','<%=listTab[i].quantityItem%>','<%=listTab[i].nameUnit%>', '<%=desc%>', '<%=listTab[i].idItem%>', '<%=listTab[i].fileExtensionsItem%>', '<%=urlApi%>','<%=listTab[i].loginUser%>','<%=listTab[i].nameProduct%>','<%=listTab[i].nameCategory%>', '<%=listTab[i].cpItem%>', '<%=listTab[i].cityItem%>' );">Voir plus</a> </li>
+                          <li><a class="link-quickview">Voir plus</a> </li>
                         </ul>
                       </div>
                     </div>
