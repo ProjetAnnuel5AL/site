@@ -98,7 +98,12 @@
               <li class="item col-lg-4 col-md-4 col-sm-4 col-xs-6">
                 <div class="item-inner">
                   <div class="item-img">
-                    <div class="item-img-info"><a href="/visualisationAnnonce/<%=listTab[i].idItem%>" title="" class="product-image"><img style="height: 200px; max-width: 200px;" src="<%=urlApi%>/itemPhotos/<%=listTab[i].idItem%>/0.<%=listTab[i].fileExtensionsItem.split(';')[0]%>" alt="<%=listTab[i].nameProduct%>"></a>
+                    <div class="item-img-info" style=" border:1px solid LightGrey; width:260px; height:264px; max-width:260px; max-height:265px; display:table;">
+                      <span style="display:table-cell; vertical-align:middle;">
+                        <a href="/visualisationAnnonce/<%=listTab[i].idItem%>" title="" class="product-image">
+                          <img src="<%=urlApi%>/itemPhotos/<%=listTab[i].idItem%>/img_resize/0_small.<%=listTab[i].fileExtensionsItem.split(';')[0]%>" alt="<%=listTab[i].nameProduct%>">
+                        </a>
+                      </span>
                       <!--<div class="new-label new-top-left">New</div>-->
                       <div class="box-hover">
                         <ul class="add-to-links">

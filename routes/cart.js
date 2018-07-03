@@ -74,7 +74,7 @@ module.exports = function(app, urlApi, utils, config){
                 jsonCart.shippingCost = req.query.shippingCost;
                 jsonCart.deliveryTime = req.query.deliveryTime;
                 jsonCart.idDelivery = req.query.idDelivery;
-                jsonCart.img = urlApi+'/itemPhotos/'+req.query.id+'/0.'+req.query.ext
+                jsonCart.img = urlApi+'/itemPhotos/'+req.query.id+'/img_resize/0_xs.'+req.query.ext
                 req.session.cart.push(jsonCart)
                 res.json({
                     code : 0,

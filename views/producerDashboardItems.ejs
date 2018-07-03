@@ -42,7 +42,7 @@
                             for(var i =0; i<items.length; i++){ 
                             %>
                                 <tr style="height : 100px; max-height: 100px; vertical-align:middle;" >
-                                    <td><img width="75" src="<%=urlApi%>/itemPhotos/<%=items[i].idItem%>/0.<%=items[i].fileExtensionsItem.split(';')[0]%>" alt="<%=items[i].nameProduct%>"></td>
+                                    <td><img width="75" src="<%=urlApi%>/itemPhotos/<%=items[i].idItem%>/img_resize/0_xs.<%=items[i].fileExtensionsItem.split(';')[0]%>" alt="<%=items[i].nameProduct%>"></td>
                                     <td><strong><%=items[i].nameItem%></strong><br /><%=items[i].nameCategory%>, <%=items[i].nameProduct%><br /><%=items[i].addressItem%><br /><%=items[i].cpItem%> <%=items[i].cityItem%></td>
                                     <td><%=items[i].quantityItem%> <%=items[i].nameUnit%>(s)</td>
                                     <td><%=items[i].priceItem.toFixed(2)%>€</td>

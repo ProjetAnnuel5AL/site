@@ -257,8 +257,7 @@
                                                 <label>Séléctionner le transporteur que vous utiliserez pour assurer la livraison de cet article</label>
                                                 <select id="idDelivery" name="idDelivery" required>
                                                     <% deliverys.forEach(function (delivery) { %>
-                                                        <% console.log(item) %>
-                                                        <% console.log(delivery.idDelivery +"=="+ item.idDeliveryItem) %>
+                                                      
                                                         <% if(delivery.idDelivery == item.idDeliveryItem){ %>
                                                             <option value=<%=delivery.idDelivery%> selected="selected"><%= delivery.nameDelivery%></option> 
                                                         <%}else{%>

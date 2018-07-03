@@ -25,7 +25,9 @@ module.exports = function(app, urlApi, utils, config){
                 if(body.result.avatarProducer == "default"){
                     avatar = "../img/avatar.png";
                 }else{
-                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/"+ body.result.avatarProducer
+                    var avatarProducer = body.result.avatarProducer.split('.');
+                    
+                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/img_resize/"+ avatarProducer[0]+"_ms."+avatarProducer[1]
                 }
                 var LatLong = producer.locationProducer.split(',');
                 lat = LatLong[0];
