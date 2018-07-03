@@ -278,43 +278,59 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
         var msgError;
         var unitsList;
         var categoriesList;
+        var deliveryList;
 		if(req.session.type && req.session.type == 1) {
             msgError="";
             msgSuccess="";
             rp({
-                url: urlApi + "/units",
+                url: urlApi + "/delivery",
                 method: "GET",
                 headers: {
-                "Content-Type": "application/json"
+                    "Content-Type": "application/json"
                 },
-            }).then(function (body) {  
+            }).then(function (body) { 
                 if (body.code == 3) {
                     res.render("producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
                 } else {
-                var jsonUnit = JSON.parse(body);
-                unitsList = jsonUnit.result
-                rp({
-                    url: urlApi + "/categories",
-                    method: "GET",
-                    headers: {
-                    "Content-Type": "application/json"
-                    },
-                }).then(function (body) {
-                    if (body.code == 3) {
-                        res.render("producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
-                    } else {
-                        var jsonCategory = JSON.parse(body);
-                        categoriesList = jsonCategory.result
-                        res.render('producerDashboardItemNew.ejs', { msgError: "", msgSuccess:msgSuccess, units: unitsList, categories: categoriesList, session : req.session });
-                    }
-                }).catch(function (err) {
-                    res.render("producerDashboardItemNew.ejs", { msgError: "Erreur inconnue. Merci de réessayer.", msgSuccess:msgSuccess, session: req.session });
-                });
+                    var jsonDelivery = JSON.parse(body);
+                    deliveryList = jsonDelivery.result
+                    rp({
+                        url: urlApi + "/units",
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                    }).then(function (body) {  
+                        if (body.code == 3) {
+                            res.render("producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
+                        } else {
+                        var jsonUnit = JSON.parse(body);
+                        unitsList = jsonUnit.result
+                        rp({
+                            url: urlApi + "/categories",
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                        }).then(function (body) {
+                            if (body.code == 3) {
+                                res.render("producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
+                            } else {
+                                var jsonCategory = JSON.parse(body);
+                                categoriesList = jsonCategory.result
+                                res.render('producerDashboardItemNew.ejs', { msgError: "", msgSuccess:msgSuccess, deliverys: deliveryList, units: unitsList, categories: categoriesList, session : req.session });
+                            }
+                        }).catch(function (err) {
+                            res.render("producerDashboardItemNew.ejs", { msgError: "Erreur inconnue. Merci de réessayer.", msgSuccess:msgSuccess, session: req.session });
+                        });
+                        }
+                    }).catch(function (err) {
+                        console.log(err);
+                        res.render("producerDashboardItemNew.ejs", { msgError: "Erreur inconnue. Merci de réessayer.", msgSuccess:msgSuccess, session: req.session });
+                    });
                 }
-            }).catch(function (err) {
-                console.log(err);
-                res.render("producerDashboardItemNew.ejs", { msgError: "Erreur inconnue. Merci de réessayer.", msgSuccess:msgSuccess, session: req.session });
-            });
+            })
+           
         }else{
             res.redirect("/");
         }
@@ -366,9 +382,21 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 }
                 if(!fields.address){
                     msgError += "\n Veuillez saisir une adresse ! ";
+                } 
+                if(!fields.idDelivery){
+                    msgError += "\n Veuillez saisir un transporteur ! ";
                 }
-                
+                if(!fields.shippingCost){
+                    msgError += "\n Veuillez saisir des frais de port ! ";
+                } 
+                if(!fields.deliveryTimeStart || isInt(fields.deliveryTimeStart) == false || !fields.deliveryTimeEnd || isInt(fields.deliveryTimeEnd) == false){
+                    msgError += "\n Veuillez estimer la durée de la livraison ! ";
+                }  
+                if(!fields.quatityMaxOrder || fields.quatityMaxOrder <=0){
+                    msgError += "\n Veuillez saisir une quantité maximum par commande ! ";
+                }
                 if(msgError != ""){
+  
                     res.render('producerDashboardItemNew.ejs', {msgError:msgError, msgSuccess:msgSuccess, session : req.session});
                 }else{
                     rp({
@@ -389,6 +417,10 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                             "price": fields.price,
                             "unitId": fields.unit,
                             "quantity": fields.quantity,
+                            "deliveryTime" : fields.deliveryTimeStart + ";" + fields.deliveryTimeEnd,
+                            "idDelivery":fields.idDelivery,
+                            "shippingCost":fields.shippingCost,
+                            "quatityMaxOrder" :fields.quatityMaxOrder,
                             "token": req.session.token,
                             "loginUser" : req.session.login
                         }
@@ -423,6 +455,13 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
         }
     });
 
+    function isInt(value) {
+        if (isNaN(value)) {
+          return false;
+        }
+        var x = parseFloat(value);
+        return (x | 0) === x;
+      }
 
     app.get("/producerDashboard/items", function(req, res, next) {
         if(!req.session.type || req.session.type != 1) {
@@ -477,68 +516,86 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
         var unitsList;
         var categoriesList;
         var item;
+        var deliveryList;
         if(req.session.type && req.session.type == 1 && req.params.id) {
             rp({
-                url: urlApi + "/item/getItemProducer",
-                method: "POST",
+                url: urlApi + "/delivery",
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                json: {
-                    "loginUser": req.session.login,
-                    "token": req.session.token,
-                    "idItem" : req.params.id
-                }
-            }).then(function (body) {
-               
-                if(body.code == 0){
-                    item = body.result;
+            }).then(function (body) { 
+                if (body.code == 3) {
+                    res.render("producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
+                } else {
+                    var jsonDelivery = JSON.parse(body);
+                    deliveryList = jsonDelivery.result
                     rp({
-                        uri: urlApi + "/categories",
-                        method: "GET",
-                        json: true,
+                        url: urlApi + "/item/getItemProducer",
+                        method: "POST",
                         headers: {
-                          'User-Agent': 'Request-Promise'
-          
+                            "Content-Type": "application/json"
+                        },
+                        json: {
+                            "loginUser": req.session.login,
+                            "token": req.session.token,
+                            "idItem" : req.params.id
                         }
-                      }).then(function (body) { 
-                        categoriesList = body.result;
-                        rp({
-                            uri: urlApi + "/products",
-                            method: "GET",
-                            json: true,
-                            headers: {
+                    }).then(function (body) {
+                    
+                        if(body.code == 0){
+                            item = body.result;
+                            rp({
+                                uri: urlApi + "/categories",
+                                method: "GET",
+                                json: true,
+                                headers: {
                                 'User-Agent': 'Request-Promise'
                 
-                            }
-                        }).then(function (body) {  
-                            productsList = body.result;
-                            rp({
-                                url: urlApi + "/units",
-                                method: "GET",
-                                headers: {
-                                    "Content-Type": "application/json"
                                 }
-                            }).then(function (body) {
-                                var jsonUnit = JSON.parse(body);
-                                unitsList = jsonUnit.result
-                                res.render('producerDashboardItem.ejs', { 
-                                    msgError: msgError,
-                                    msgSuccess:msgSuccess, 
-                                    item: item, 
-                                    urlApi: urlApi, 
-                                    units: unitsList, 
-                                    categories: categoriesList, 
-                                    session : req.session 
+                            }).then(function (body) { 
+                                categoriesList = body.result;
+                                rp({
+                                    uri: urlApi + "/products",
+                                    method: "GET",
+                                    json: true,
+                                    headers: {
+                                        'User-Agent': 'Request-Promise'
+                        
+                                    }
+                                }).then(function (body) {  
+                                    productsList = body.result;
+                                    rp({
+                                        url: urlApi + "/units",
+                                        method: "GET",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        }
+                                    }).then(function (body) {
+                                        var jsonUnit = JSON.parse(body);
+                                        unitsList = jsonUnit.result
+                                        res.render('producerDashboardItem.ejs', { 
+                                            msgError: msgError,
+                                            msgSuccess:msgSuccess, 
+                                            item: item, 
+                                            urlApi: urlApi, 
+                                            units: unitsList, 
+                                            categories: categoriesList, 
+                                            deliverys: deliveryList,
+                                            session : req.session 
+                                        });
+                                    });
                                 });
                             });
-                        });
+                        }else{
+                            res.redirect("/");
+                        }
                     });
-                }else{
-                    res.redirect("/");
                 }
-          });  
+        
+            });  
         }else{
+            
             res.redirect("/");
         }
     });
@@ -548,6 +605,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
         var unitsList;
         var categoriesList;
         var item;
+        
         if(req.session.type && req.session.type == 1 && req.params.id) {
             var form = new formidable.IncomingForm();
             form.multiples=true;
@@ -591,6 +649,18 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 if(!fields.address){
                     msgError += "\nVeuillez saisir une adresse ! ";
                 }
+                if(!fields.idDelivery){
+                    msgError += "\n Veuillez saisir un transporteur ! ";
+                }
+                if(!fields.shippingCost){
+                    msgError += "\n Veuillez saisir des frais de port ! ";
+                } 
+                if(!fields.deliveryTimeStart || isInt(fields.deliveryTimeStart) == false || !fields.deliveryTimeEnd || isInt(fields.deliveryTimeEnd) == false){
+                    msgError += "\n Veuillez estimer la durée de la livraison ! ";
+                }  
+                if(!fields.quatityMaxOrder || fields.quatityMaxOrder <=0){
+                    msgError += "\n Veuillez saisir une quantité maximum par commande ! ";
+                }
                 
                 if(msgError != ""){
                     
@@ -618,18 +688,22 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                             "loginUser": req.session.login,
                             "token": req.session.token,
                             "addressChange": fields.addressChange,
-                            "photoChange": fields.photoChange
+                            "photoChange": fields.photoChange,
+                            "deliveryTimeItem" : fields.deliveryTimeStart + ";" + fields.deliveryTimeEnd,
+                            "idDeliveryItem":fields.idDelivery,
+                            "shippingCostItem":fields.shippingCost,
+                            "quatityMaxOrderItem" :fields.quatityMaxOrder,
                         }
                     }).then(function (body) {
-                        
                         if (body.code == "0") {
                             res.redirect("/producerDashboard/item/update/"+req.params.id+"?msgError=&msgSuccess=Annonce modifiée.");
                         } else {
-                            res.redirect("/producerDashboard/item/update/"+req.params.id+"?msgError=Erreur lors de la modification de l'annonce. Veuillez réessayer ultérieurement&msgSuccess=");
+                            res.redirect("/producerDashboard/item/update/"+req.params.id+"?msgError=Erreur 1  lors de la modification de l'annonce. Veuillez réessayer ultérieurement&msgSuccess=");
                         }
                 
                     }).catch(function (err) {
-                        res.redirect("/producerDashboard/item/update/"+req.params.id+"?msgError=Erreur lors de la modification de l'annonce. Veuillez réessayer ultérieurement&msgSuccess=");
+                        
+                        res.redirect("/producerDashboard/item/update/"+req.params.id+"?msgError=Erreur 2 lors de la modification de l'annonce. Veuillez réessayer ultérieurement&msgSuccess=");
                     });
                 }
             });
@@ -810,7 +884,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                     res.render("producerDashboardDisputes.ejs", {
                         session: req.session,
                         signalOrder: body.result,
-                        status : "En cours"
+                        status : "En cours",
                         msgError:"",
                         msgSuccess: ""
                     });

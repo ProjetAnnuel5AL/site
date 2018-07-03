@@ -224,12 +224,12 @@
                                                 <input type="hidden" name="photoChange" id="photoChange" value="false">
                                             </li>
                                             <li>
-                                                <label>Prix (€)</label>
-                                                <input type='number'class="input-text required-entry" id="price" name="price" step='0.01' placeholder='0.00' value="<%=item.priceItem%>" />
-                                            </li>
-                                            <li>
                                                 <label>Quantité disponible</label>
                                                 <input type='number' class="input-text required-entry" id="quantity" name="quantity" step='1' placeholder='0' value="<%=item.quantityItem%>" />
+                                            </li>
+                                            <li>
+                                                <label>Quantité maximun par commande</label>
+                                                <input type='number' class="input-text required-entry" id="quatityMaxOrder" name="quatityMaxOrder" step='1' placeholder='0' value="<%=item.quatityMaxOrderItem%>" />
                                             </li>
                                             <li>
                                                 <label>Unité</label>
@@ -240,13 +240,43 @@
                                                         <%}else{%>
                                                             <option value=<%=unit.idUnit%>><%= unit.nameUnit%></option> 
                                                         <%}%>
-                                                       
+                                                        
                                                     <% }) %>
                                                 </select>
                                             </li>
+                                            <li>
+                                                <label>Prix Unitaire TTC (€)</label>
+                                                <p><i>Attention une commision de 3,4 % du prix de vente + 0,25 €  sera prélevé pour les frais bancaires (frais de port inclus).</i></p>
+                                                <input type='number'class="input-text required-entry" id="price" name="price" step='0.01' placeholder='0.00' value="<%=item.priceItem%>" />
+                                            </li>
+                                            <li>
+                                                <label>Frais de port (€)</label>
+                                                <input type='number'class="input-text required-entry" id="shippingCost" name="shippingCost" step='0.01' placeholder='0.00' value="<%=item.shippingCostItem%>" />
+                                            </li>
+                                            <li>
+                                                <label>Séléctionner le transporteur que vous utiliserez pour assurer la livraison de cet article</label>
+                                                <select id="idDelivery" name="idDelivery" required>
+                                                    <% deliverys.forEach(function (delivery) { %>
+                                                        <% console.log(item) %>
+                                                        <% console.log(delivery.idDelivery +"=="+ item.idDeliveryItem) %>
+                                                        <% if(delivery.idDelivery == item.idDeliveryItem){ %>
+                                                            <option value=<%=delivery.idDelivery%> selected="selected"><%= delivery.nameDelivery%></option> 
+                                                        <%}else{%>
+                                                            <option value=<%=delivery.idDelivery%>><%= delivery.nameDelivery%></option> 
+                                                        <%}%>
+                                                        
+                                                    <% }) %>
+                                                </select>
+                                            </li>
+                                            <li>
+                                                <label>Estimation de la durée de livraison (délai maximum de 14 jours)</label><br />
+                                                <div  style="display: inline-block">Entre <input value="<%=item.deliveryTimeItem.split(';')[0]%>" style="width:50px;" type="number" class="input-text required-entry" id="deliveryTimeStart" name="deliveryTimeStart"  pattern="\d*" step='1' min="0" max="14" placeholder='0' required/> et 
+                                                <input style="width:50px;" value="<%=item.deliveryTimeItem.split(';')[1]%>" required type="number" class="input-text required-entry" id="deliveryTimeEnd"  pattern="\d*" name="deliveryTimeEnd" step='1' min="0" max="14" placeholder='0' required/> jours ouvrables</div>
+                                            </li>
+                                            
                                         </ul>
-                                        <button type="submit" id="submitbtn" class="btn btn-info">Créer</button>
-                                        <button onClick="deleteItem();" type="submit" id="deletebtn" class="btn btn-danger" style="visibility:hidden;">Supprimer</button>
+                                        <button type="submit" id="submitbtn" class="btn btn-info">Modifier</button>
+                                        
                                     </form>
                                     <% } %>
                                 </div>
