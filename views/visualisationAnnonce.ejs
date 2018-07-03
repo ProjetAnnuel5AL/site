@@ -31,7 +31,11 @@
     </div>
 </div>
 <% if (msgError != "Cette annonce n'existe pas") { %>
-
+  <%
+  var maxQuantity = item.infoItem.quatityMaxOrderItem;
+  if(item.infoItem.quantityItem < item.infoItem.quatityMaxOrderItem){
+    maxQuantity = item.infoItem.quantityItem
+  }%>
     <script type="text/javascript">
         $(document).ready(function () {
           /*var autocomplete = new google.maps.places.Autocomplete($("#adress")[0], {});
@@ -66,7 +70,8 @@
           }
       
       })
-      var max = Number(<%= item.infoItem.quantityItem %>);
+      
+      var max = Number(<%= maxQuantity %>);
 
       function changeMainImg(img){
         var mainImg = document.getElementById("mainImage");
@@ -91,7 +96,7 @@
           var url = document.URL.split('/');
           var id = url[url.length-1];
           /*on envoi aussi la qtemax possible à  l'achat dans le cas ou produit déjà dans panier pour vérif*/
-          $.getJSON("/cart/add", { id: id, qte:qte, qteMax : <%= item.infoItem.quantityItem%>, unit : "<%= item.infoItem.nameUnit %>", category : "<%=item.infoItem.nameCategory%>", product: "<%=item.infoItem.nameProduct%>", title:"<%=item.infoItem.nameItem%>", prixU : <%=item.infoItem.priceItem%>,ext: '<%=ext%>' }).done(function( json ) {
+          $.getJSON("/cart/add", { id: id, qte:qte, qteMax : <%= maxQuantity %>, unit : "<%= item.infoItem.nameUnit %>", category : "<%=item.infoItem.nameCategory%>", product: "<%=item.infoItem.nameProduct%>", title:"<%=item.infoItem.nameItem%>", prixU : <%=item.infoItem.priceItem%>, ext: '<%=ext%>', shippingCost:'<%=item.infoItem.shippingCostItem%>', deliveryTime : "<%=item.infoItem.deliveryTimeItem%>", idDelivery:"<%=item.infoItem.idDeliveryItem%>"   }).done(function( json ) {
               if(json.code == 0){
                   // on mettera un modal plus tard pour faire beau
                   alert("Vous avez ajouté au panier cet article.")
@@ -106,6 +111,7 @@
       </script>
 
     <% 
+        
         var nbComment = item.stars.length;
         var totalStar = 0;
         for(var i =0; i<nbComment; i++){
@@ -149,8 +155,8 @@
                       </div>
                       <div class="product-shop col-lg-8 col-sm-7 col-xs-12">
                         <div class="product-name">
-                          <h1><%=item.infoItem.nameItem %> <small>(<%= item.infoItem.nameCategory %>)</small></h1>
-                          
+                          <h1><%=item.infoItem.nameItem %></h1>
+                          <%= item.infoItem.nameCategory%>, <%=item.infoItem.nameProduct %>
                         </div>
                         <div class="ratings">
                           <div class="rating-box">
@@ -162,11 +168,11 @@
                         </div>
                         <div class="price-block">
                           <div class="price-box">
-                            <p class="special-price"> <span class="price-label">Regular Price:</span> <span class="price"> <%= item.infoItem.priceItem.toFixed(2) %>€</span> </p>
+                            <p class="special-price"> <span class="price-label">Regular Price:</span> <span class="price"> <%= item.infoItem.priceItem.toFixed(2) %>€</span><br /><small>Frais de port : <%= (item.infoItem.shippingCostItem*1).toFixed(2) %>€</small> </p>
                             <%if(item.infoItem.quantityItem<=0){%>
                               <p class="availability in-stock pull-right" ><span style="background-color : red"><%=item.infoItem.quantityItem%> <%=item.infoItem.nameUnit%> en stock</span></p>
                             <%}else{%>
-                              <p class="availability in-stock pull-right"><span><%=item.infoItem.quantityItem%> <%=item.infoItem.nameUnit%> en stock</span></p>
+                              <p class="availability in-stock pull-right"><span><%=item.infoItem.quantityItem%> <%=item.infoItem.nameUnit%> en stock<br />(limité à <%=item.infoItem.quatityMaxOrderItem%> par commage)</span></p>
                             <%}%>
                           </div>
                         </div>
@@ -180,16 +186,18 @@
                           line-height: 1.8;        
                           max-height: 1.8; "><%-item.infoItem.descriptionItem%></p>
                         </div>
+
+                        
                         <div class="add-to-box">
                             <% if(!session.type) { %>
                               <a href ="/login" >Pour ajouter au panier merci de vous connecter en cliquant ici.</a>
                             <% }else{ %>
-                              <% if(session.login != item.infoItem.loginUser && item.infoItem.quantityItem >0) { %>
+                              <% if(session.login != item.infoItem.loginUser && maxQuantity >0) { %>
                           <div class="add-to-cart">
                             <div class="pull-left">
                                 <div class="custom pull-left">
                                   <button onClick="var result = document.getElementById('qty'); var qty = result.value; if((!isNaN( qty ) &amp;&amp; qty &gt; 1)   ) result.value--;return false;" class="reduced items-count" type="button"><i class="fa fa-minus">&nbsp;</i></button>
-                                  <input type="number" class="input-text qty" title="Qty" value="1" max="10" min="1" id="qty" name="qty" style="-moz-appearance: textfield">
+                                  <input type="number" class="input-text qty" title="Qty" value="1" max="<%=maxQuantity%>>" min="1" id="qty" name="qty" style="-moz-appearance: textfield">
                                   <button onClick="addQte()" class="increase items-count" type="button"><i class="fa fa-plus">&nbsp;</i></button>
                                 </div>
                             </div>

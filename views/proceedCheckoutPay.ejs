@@ -42,7 +42,8 @@
 
                     <div class="col-sm-4">
                         <div class="shipping">
-                            <h3>Mes achats</h3>
+                            <h3>Mes achats<br /><small>Frais de port inclus</small></h3>
+                            
                             <div class="inner">
                                 <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
                                     <colgroup>
@@ -53,11 +54,11 @@
                                     <% 
                                         var total = 0; 
                                         for(var i =0; i<session.cart.length; i++) {
-                                        total += (session.cart[i].qte*session.cart[i].prixU);
+                                        total += (session.cart[i].qte*session.cart[i].prixU + session.cart[i].shippingCost*1);
                                     %>        
                                     <tr>
                                         <td colspan="1" class="a-left" style=""><%=session.cart[i].qte%> x <%=session.cart[i].title%><br /><small><%=session.cart[i].category%>, <%=session.cart[i].product%></small></td>
-                                        <td class="a-right" style=""><span class="price"><%= (session.cart[i].qte*session.cart[i].prixU).toFixed(2) %>€</span></td>
+                                        <td class="a-right"><span class="price"><%= (session.cart[i].qte*session.cart[i].prixU + session.cart[i].shippingCost*1).toFixed(2) %>€</span></td>
                                     </tr>
                                     <% } %>
                                     </tbody>
