@@ -3,7 +3,7 @@ module.exports = function(app, urlApi, utils, config){
     var rp = require("request-promise");
 
     app.get("/proceedCheckout/address", function(req, res, next) {
-        if(!req.session.cart /*|| req.session.cart.length==0*/ ) {
+        if(!req.session.cart || req.session.cart.length==0 ) {
 			res.redirect("/");
 		}else{
             rp({
@@ -29,7 +29,7 @@ module.exports = function(app, urlApi, utils, config){
     });
 
     app.post("/proceedCheckout/pay", function (req, res, next) {
-        if(!req.session.cart /*|| req.session.cart.length==0*/ ) {
+        if(!req.session.cart || req.session.cart.length==0 ) {
 			res.redirect("/");
 		}else{
             var address = null;
@@ -197,6 +197,7 @@ module.exports = function(app, urlApi, utils, config){
                         msgSuccess: ""
                     });
                 }else{
+                    //console.log(result)
                     //si code pas = 0 c qu'on a un petit malin donc on bloque
                     res.redirect("/")
                 }

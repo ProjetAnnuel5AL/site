@@ -789,5 +789,44 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
             });
         }
     });
+
+
+    app.get("/producerDashboard/disputes/progress", function(req, res, next) {
+        if(!req.session.type) {
+			res.redirect("/");
+		}else{
+            rp({
+                url: urlApi + "/signalOrder/getSignalOrdersFromProducer",
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token
+                }
+            }).then(function (body) {
+                if(body.code == 0){
+                    res.render("producerDashboardDisputes.ejs", {
+                        session: req.session,
+                        signalOrder: body.result,
+                        status : "En cours"
+                        msgError:"",
+                        msgSuccess: ""
+                    });
+                }else{
+                    res.render("producerDashboardDisputes.ejs", {
+                        session: req.session,
+                        orders: null,
+                        status: null,
+                        msgError:"",
+                        msgSuccess: ""
+                    });
+                }
+                
+            
+            });
+        }
+    });
     
 }
