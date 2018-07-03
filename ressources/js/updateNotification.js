@@ -35,7 +35,9 @@ function updateNotif(userLogin){
 }
 
 function deleteNotif(id){
-  $.getJSON("/notification/delete/idNotif", { id: id }).done(function (json) {
+  console.log(id);
+  $.post("/notification/delete/idNotif", { id: id }).done(function (json) {
+    console.log(json);
     if (json.code == 0) {
       updateNotif('<%- session.login %>');
     }

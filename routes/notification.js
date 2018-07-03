@@ -62,17 +62,19 @@ module.exports = function(app, urlApi, utils, config){
 			});
 		}else res.send(null);
   });
-  app.get('/notification/delete/idNotif', function(req, res, next) {
-		if(req.query.id){
+  app.post('/notification/delete/idNotif', function(req, res, next) {
+		console.log(req.body);
+		if(req.body.id){
 			var msgError;
 			msgError="";
 			rp({
-				url: urlApi + "/notification/idItem?id="+req.query.id,
+				url: urlApi + "/notification/idItem",
 				method: "DELETE",
 				headers: {
 					"Content-Type": "application/json"
 				},
         json: {
+					"id": req.body.id,
           "token": req.session.token
         }
 			}).then(function (body) {

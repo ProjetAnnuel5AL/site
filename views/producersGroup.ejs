@@ -1,4 +1,4 @@
-<!-- views/becomeProducer.ejs -->
+
 <!doctype html>
 <link rel="stylesheet" type="text/css" href="/css/progressBar.css">
 <html>
@@ -41,17 +41,31 @@
                     <img class="uploadedImageRound" alt="<%= coop.name %>" src="<%=urlApi%>/groupAvatar/<%=coop.id%>/<%=coop.avatar%>"/>
                     <h2><%= coop.countMembers %> Membres</h2>
                     <p><%= coop.description %></p>
-                    <h5>Administrateur: <%= coop.firstNameProducer %> <%= coop.lastNameProducer %></h5>
                     <div id="map" class="form-control" style="width: 90%; height:450px; margin-left: 5%;"></div>
                     <h5>Adresse: <%= coop.adress %></h5>
                     <h5>Email de la coopérative: <%= coop.email %></h5>
                     <h5>Téléphone de la coopérative: <%= coop.phone %></h5>
+                    <% if(coop.loginUser == session.login){ %>
+                    <button onClick="deleteGroup();" type="button" id="deletebtn" class="btn btn-danger">Supprimer</button>
+                    <form method="post" id="formDelete" action="/producersGroup/delete/idGroup">
+                        <input type="hidden" name="idGroup" id="idGroup" value="<%= coop.id %>"/>
+                        <input type="hidden" name="countMembers" id="countMembers" value="<%= coop.countMembers %>"/>
+                    </form>
+                    <% } %>
                 </div>
                 </div>
                 <div style="width: 50%; float:right;">
                     <div>
                         <div class="greenVerticalBar" style="float:left; width:1%"></div>
                         <div style="width: 95%; float:right">
+                            <h1 style="text-align: center">Administrateur:</h1>
+                            <ul class="prettyList" style"height:50px !important;">
+                                <li class="prettyList">
+                                    <img class="prettyList" src="<%=urlApi%>/producerAvatar/<%=coop.founderUserId%>/<%=coop.avatarProducer%>" />
+                                    <h3 class="prettyList"><%=coop.firstNameProducer%> <%=coop.lastNameProducer%></h3>
+                                    <p class="prettyList"><%=coop.descriptionProducer%> </br><strong>Code postal: </strong> <%=coop.cpProducer%></p>
+                                </li>
+                            </ul>
                             <h1 style="text-align: center">Membres:</h1></br>
                             <% if(coop.loginUser == session.login){ %>
                             <div>
@@ -72,9 +86,12 @@
                                     Cette coopérative ne possède aucun membres ! 
                                 </div>
                             <% } %>
-                            <ul class="prettyList">
+                            <ul class="prettyList prettyListMember">
                                 <% for(var i=0; i<coopMembers.length; i++) { %>
-                                    <li class="prettyList">
+                                    <li class="prettyList" id="member<%=coopMembers[i].id%>">
+                                    <% if(coop.loginUser == session.login){ %>
+                                    <i class="fa fa-times-circle-o fa-3x iconRed" onclick="removeMemberVerified(<%=coopMembers[i].id%>, '<%=coopMembers[i].firstNameProducer%>')"></i>
+                                    <% } %>
                                     <img class="prettyList" src="<%=urlApi%>/producerAvatar/<%=coopMembers[i].idProducer%>/<%=coopMembers[i].avatarProducer%>" />
                                     <h3 class="prettyList"><%=coopMembers[i].firstNameProducer%> <%=coopMembers[i].lastNameProducer%></h3>
                                     <p class="prettyList"><%=coopMembers[i].descriptionProducer%> </br><strong>Code postal: </strong> <%=coopMembers[i].cpProducer%></p>

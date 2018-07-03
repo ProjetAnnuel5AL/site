@@ -1,0 +1,102 @@
+<html>
+<head>
+    <title>Rechercher une Coopérative</title>
+    <% include ./partials/header %>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+              
+
+                $("#price").slider({});
+                $('.slider-horizontal').css({'width': '100%', 'height':'30px'});
+
+                var options = {
+                    componentRestrictions: {country: 'fr'}
+                };
+                var autocomplete = new google.maps.places.Autocomplete($("#address")[0], options);
+                
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                    var cp ="";
+                    for (var i = 0; i < place.address_components.length; i++) {
+                        for (var j = 0; j < place.address_components[i].types.length; j++) {
+                            if (place.address_components[i].types[j] == "postal_code") {
+                                cp = place.address_components[i].long_name;
+                                console.log(cp);
+                                break;
+                            }
+                        }
+                    }
+                   
+                   
+                    $("#lat").val(place.geometry.location.lat());
+                    $("#long").val(place.geometry.location.lng());
+                   
+                });
+        });
+    </script>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+        </header>
+        
+        <section class="main-container top-space col1-layout">
+            <div class="main container container-progress">
+                <div class="account-login">
+                    <% if (msgError.length > 0) { %>
+                        <div class="alert alert-danger"><%= msgError %></div>
+                    <% } %>
+                    <% if (msgSuccess.length > 0) { %>
+                        <div class="alert alert-success"> <%= msgSuccess %> </div>
+                    <% } 
+                    %>
+                  <div class="page-title">  
+                      <h2>Rechercher des coopératives</h2>
+                  </div>
+                  <form method="GET" action="/producersGroup/search/location">
+                    <p>
+                        <label for="address">Proche de :</label>
+                        <br>
+                        <input type="text" class="input-text required-entry" id="address" name="address" autocomplete="off" style="width:100%">
+                        <input type="hidden" class="form-control" id="lat" name="lat">
+                        <input type="hidden" class="form-control" id="long" name="long">
+                    </p>
+                    <p style="text-align:center">
+                        <button type="submit" id="submitbtn" onClick="SearchCoop();" class="btn btn-info">Rechercher (100 km)</button>
+                    </p>
+                   </form>
+                    <hr>
+                    <% for(var i=0; i<listTab.length; i++){ %>
+                            <div class="owl-item" style="width: 220px;"><div class="item">
+                            <div class="item-inner">
+                            <div class="item-img">
+                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroup/<%= listTab[i].id %>"> <img class="previewImage" alt="<%= listTab[i].name %>" src="<%=urlApi%>/groupAvatar/<%=listTab[i].id%>/<%=listTab[i].avatar%>"> </a>
+                                    
+                                    </div>
+                                </div>
+                            <div class="item-info">
+                                <div class="info-inner">
+                                <div class="item-title"> <a title="Cooperative" href="product_detail.html"><%= listTab[i].name %></a> </div>
+                                <i class="fas fa-map-marker-alt"><%= listTab[i].city %></i>
+                                <div class="item-content">
+                                    <div class="item-price">
+                                    <div class="price-box"> <span class="regular-price"> <span class="price"><%= listTab[i].countMembers %> Membres</span> </span> </div>
+                                    </div>
+                                    <div class="action">
+                                    <button class="button btn-cart" onclick="redirectToGroup(<%=listTab[i].id%>);" type="button" title="" data-original-title="Consulter"><span>Consulter</span> </button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div></div>
+                    <% }  %>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -173,9 +173,20 @@ Text Domain:  Freshia
   background-color: DodgerBlue !important; 
   color: #ffffff !important; 
 }
-.prettyList ul {
-  list-style-type: none;
+.iconRed{
+	color:red;
+	float:right;
+	cursor: pointer !important;
+}
+
+.prettyList ul{
+	list-style-type: none;
   width: 500px;
+}
+
+ul.prettyListMember {
+	height: 600px !important; 
+	overflow: auto;
 }
  
 .prettyList h3 {
@@ -195,6 +206,7 @@ Text Domain:  Freshia
 .prettyList li {
   padding: 10px;
   overflow: auto;
+	cursor: default !important;
 }
  
 .prettyList li:hover {
