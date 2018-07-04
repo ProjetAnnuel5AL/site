@@ -44,6 +44,7 @@ module.exports = function(app, urlApi, utils, config){
                     msgError:"",
                     msgSuccess: ""
                 });
+                
             }else{
                 res.render("ficheProducer.ejs", {
                     session: req.session,
