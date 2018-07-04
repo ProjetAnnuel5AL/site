@@ -79,6 +79,47 @@ function escapeString(str){
     return str.replace(/[\\$'"]/g, "\\$&")
 }
 
+function deleteGroup(){
+  swal({
+    title: "Supprimer le groupe",
+    text: "Vous êtes sur le point de supprimer la coopérative, la suppression entrainera l'exclusion de tous les membres, êtes vous-sûr ?",
+    icon: "warning",
+    buttons: ["Non", "Oui"],
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (willDelete) {
+      $('#formDelete').submit();
+    }
+  });
+}
+
+function removeMemberVerified(idProducerGroupMember, prenom){
+  swal({
+    title: "Exclure "+prenom,
+    text: "Vous êtes sur le point d'exclure "+prenom+" du groupe, êtes vous-sûr ?",
+    icon: "warning",
+    buttons: ["Non", "Oui"],
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    console.log(willDelete);
+    if (willDelete) {
+      $.post("/producersGroupMember/delete/id", { id: idProducerGroupMember }).done(function (json) {
+        console.log(json);
+        if (json && json.code == 0) {
+          swal('Ce membre a été exclu du groupe');
+          $('#member'+idProducerGroupMember).remove();
+        }else{
+          swal("Erreur!", "Erreur technique inconnue, veuillez réessayer plus tard", "error");
+        }
+      });
+    }
+  });
+  
+  
+}
+
 function addMemberVerified(producerUserId){
   $.post( "/notification/userId", { idUser: producerUserId, title: "Invitation à une coopérative", 
   description: "Vous avez été invité à la coopérative "+coopName , 

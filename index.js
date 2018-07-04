@@ -7,7 +7,8 @@ var config = require("config");  // we use node-config to handle environments
 
 var utils = require("./utils");
 var urlApi = "http://localhost:8888";
-var urlLocal = "http://localhost:8082"
+var urlLocal = "http://localhost:80";
+
 require("./env.js");
 
 var conf;
@@ -29,6 +30,7 @@ app.use(
     })
 );
 
+
 app.use(
     bodyParser.urlencoded({
         extended: true
@@ -44,7 +46,7 @@ app.set("view engine", "ejs"); // set up ejs for templating
 
 require("./routes")(app, urlApi, urlLocal, utils ,conf );
 
-var port=process.env.PORT || 8082;
+var port=process.env.PORT || 80;
 
 var server = app.listen(port, function() {
     console.log("Server started port "+port+"...");
