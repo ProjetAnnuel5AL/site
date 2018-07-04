@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Mes Annonces</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <h2 class="page-heading"> <span class="page-heading-title">Mes Annonces</span> </h2>
+                        <% if (msgError.length > 0) { %>
+                            <div class="alert alert-danger"><%= msgError %></div>
+                        <% } %>
+                        <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%= msgSuccess %> </div>
+                        <% } %>
+                        <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
+                           
+                            <tbody>  
+                                <tr>
+                                    <th></th>
+                                    <th>Nom</th>
+                                    <th>Quantité restante</th>
+                                    <th>Prix</th>
+                                    <th>Réapprovisionner</th>
+                                    <th>Modifier/Supprimer</th>
+                                </tr>
+
+                            <% 
+                            if(items && items.length>0){
+                            for(var i =0; i<items.length; i++){ 
+                            %>
+                                <tr style="height : 100px; max-height: 100px; vertical-align:middle;" >
+                                    <td><img width="75" src="<%=urlApi%>/itemPhotos/<%=items[i].idItem%>/img_resize/0_xs.<%=items[i].fileExtensionsItem.split(';')[0]%>" alt="<%=items[i].nameProduct%>"></td>
+                                    <td><strong><%=items[i].nameItem%></strong><br /><%=items[i].nameCategory%>, <%=items[i].nameProduct%><br /><%=items[i].addressItem%><br /><%=items[i].cpItem%> <%=items[i].cityItem%></td>
+                                    <td><%=items[i].quantityItem%> <%=items[i].nameUnit%>(s)</td>
+                                    <td><%=items[i].priceItem.toFixed(2)%>€</td>
+                                    <td align="center">
+                                        <form method="POST" action="/producerDashboard/item/restock">
+                                            <input type="hidden" name="idItem" value="<%=items[i].idItem%>">
+                                            <input style="width:50px;" type='number' class="input-text required-entry" id="quantity" name="quantity" step='1' placeholder='0' />
+                                            <br /><button name="send" type="submit" class="button" style="margin-top:5px;" onclick="return confirm('Voulez vous vraiment réapprovisionner l\'annonce : <%=items[i].nameItem%> ?');"><span>Ajouter</span></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <a href="/producerDashboard/item/update/<%=items[i].idItem%>"><button name="send" type="submit" class="button" style="margin-top:5px;"><span>Modifier</span></button></a><br />
+                                        <form method="POST" action="/producerDashboard/item/delete">
+                                            <input type="hidden" name="idItem" value="<%=items[i].idItem%>">
+                                            <button name="send" type="submit" class="button" style="margin-top:5px;" onclick="return confirm('Voulez vous vraiment supprimer l\'annonce : <%=items[i].nameItem%> ?');"><span>Supprimer</span></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }}else{ %>
+                                <tr style="height : 100px; max-height: 100px; vertical-align:middle;" >
+                                    <td colspan="6"><h2>Vous n'avez pas d'annonce.</h2></td>
+                                </tr>
+                            <% } %>
+                            </tbody>
+                        </table>
+                    <fieldset class="col2-set">
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ./partials/dashboard %>
+                </div>
+            </div>
+        </section>
+        <% include ./partials/footer %>
+    </div>
+</body>

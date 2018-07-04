@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Signaler un problème</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+        <section class="main-container top-space col1-layout">
+            <div class="main container">
+                <div class="account-login">
+                <div class="page-title">
+                    <h2>Signaler un problème avec votre commande : </h2>
+                </div>
+                <fieldset class="col2-set">
+                    <div class="update-users">
+                    <div class="content">
+                        <% if (msgError.length > 0) { %>
+                            <div class="alert alert-danger"><%= msgError %></div>
+                        <% } %>
+                        <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%= msgSuccess %> </div>
+                        <% } %>
+                        <h3>Commande n°<%=items[0].idOrder%>, du <%=items[0].dateOrder%></h3>
+                        <form action="/signalOrder/<%=items[0].idOrder%>" method="post">
+                            <ul>
+                                <li>
+                                    <br />
+                                    <label for="motif">Choisissez le motif qui se rapproche le plus de votre demande :</label>
+                                    <br>
+                                    <select class="form-control" id="motif" name="idMotif">
+                                        <option></option>
+                                        <% motifs.forEach(function (motif) { %>
+                                          <option value=<%= motif.idMotif%>><%= motif.libelleMotif%></option> 
+                                        <% }) %>
+                                    </select> 
+                                </li>
+                                <br />
+                                <li>
+                                    <label for="product">Produit(s) concerné(s) :</label>
+                                    <p id="warningMessage" style="visibility: hidden; position:absolute"><b>Attention votre commande comprend différents vendeurs. 
+                                    <br/>Si vous avez un problème sur des articles provenant de différents vendeurs, vous deverez faire un signalement par vendeur.</b></p>
+                                    
+                                    <%
+                                        var loginUser = null;
+                                        for (var i =0; i<items.length; i++){
+                                        if(loginUser == null){
+                                            loginUser = items[i].loginUser
+                                        }else{
+                                            if(loginUser != items[i].loginUser){%>
+                                                
+                                                <script type="text/javascript">
+                                                    document.getElementById("warningMessage").style.visibility="visible";  
+                                                    document.getElementById("warningMessage").style.position="relative";    
+                                                </script>
+                                    <%
+                                            }
+                                        }
+                                    %> 
+                         
+                                    <div id="<%=i%>div"><input type="checkbox" value="<%=items[i].idLigneOrder%>" id="<%=i%>checkbox" name="idLigneOrder" onClick="disableUnableCheckbox(this);"/> <%=items[i].titleLigneOrder%> ( <%=items[i].categoryLigneOrder%>, <%=items[i].productLigneOrder%>), vendeur : <%=items[i].loginUser%></div>
+                                    <% } %>
+                                </li>
+                                <li>
+                                    <br>
+                                    <label for="description">Veuillez décrire le plus précisement possible la nature de votre problème (minimum 20 caractères) :</label>
+                                    <br>
+                                    <textarea style="width:100%; height:200px;" maxlength="500" title="description" id="description" class="input-text required-entry" name="descriptionSignalOrder"></textarea>
+                                </li>
+                                <button name="send" type="submit" class="button" style="margin-top:5px;" onclick="return confirm('Valider la création de ce signalement ?');"><span>Soumettre</span></button>
+                            </ul>
+                        </form>
+                        <script type="text/javascript">
+                            
+                            var items = <%-JSON.stringify(items)%>;
+
+                            function disableUnableCheckbox(check){
+                                var index = check.id[0]
+                                var length = "<%=items.length%>"
+                                var cptCheck = 0;
+                                for (var i=0; i<length; i++){
+                                    if(items[i].loginUser != items[index].loginUser){
+                                        document.getElementById(i+"checkbox").setAttribute("disabled", "true");
+                                        document.getElementById(i+"checkbox").checked = false;
+                                        document.getElementById(i+"div").style.opacity = 0.5;
+                                    } 
+                                    if(document.getElementById(i+"checkbox").checked){
+                                        cptCheck++;
+                                    }
+                                }
+                                if(cptCheck == 0){
+                                    for (var i=0; i<length; i++){ 
+                                        if(items[i].loginUser != items[index].loginUser){
+                                            document.getElementById(i+"checkbox").removeAttribute("disabled");
+                                            document.getElementById(i+"div").style.opacity = 1;
+                                        }
+                                    }
+                                }
+                            }  
+                        </script>
+                    </div>
+                    </div>
+                </fieldset>
+                </div>
+            </div>
+        </section>
+        <% include ./partials/footer %>
+    </div>
+</body>

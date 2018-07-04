@@ -4,6 +4,7 @@ module.exports = function(app, urlApi, utils, config){
 
     app.get("/visualisationAnnonce/:id", function(req, res) {
         var photo =[];
+        var photoSmall =[];
         var item;
         var lat;
         var long;
@@ -30,11 +31,13 @@ module.exports = function(app, urlApi, utils, config){
                
                 if(item.infoItem.fileExtensionsItem == ""){
                     photo[0] = "../img/nophoto.png";
+                    photoSmall[0] = "../img/nophoto.png";
                 }else{
                     var ext = item.infoItem.fileExtensionsItem.split(';'); 
                     for(var i =0; i<ext.length; i++){
                         if(ext[i] !="") {
-                            photo[i] =urlApi+'/itemPhotos/'+item.infoItem.idItem+'/'+i+'.'+ext[i]
+                            photo[i]= urlApi+'/itemPhotos/'+item.infoItem.idItem+'/img_resize/'+i+'_ms.'+ext[i]
+                            photoSmall[i] = urlApi+'/itemPhotos/'+item.infoItem.idItem+'/img_resize/'+i+'_xxs.'+ext[i]
                         }
                     }
                 }
@@ -43,6 +46,7 @@ module.exports = function(app, urlApi, utils, config){
                     session: req.session,
                     item : item,
                     photo : photo,
+                    photoSmall : photoSmall,
                     lat : lat,
                     long : long,
                     msgError:"",
@@ -53,6 +57,7 @@ module.exports = function(app, urlApi, utils, config){
                     session: req.session,
                     item : item,
                     photo : photo,
+                    photoSmall : photoSmall,
                     lat : lat,
                     long : long,
                     msgError:"Cette annonce n'existe pas",

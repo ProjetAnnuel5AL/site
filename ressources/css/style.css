@@ -530,7 +530,7 @@ a.button:hover {
 	vertical-align: middle;
 	text-align: center;
 	display: inline-block;
-	margin-top: 27px;
+	
 	margin-bottom: 20px;
 }
 .header-top {
@@ -2884,7 +2884,7 @@ margin:
 	text-align: center;
 }
 .category-products ul.products-grid li.item img {
-	width: 100%;
+	
 }
 .products-grid .item .actions {
 	position: absolute;
@@ -3019,7 +3019,7 @@ margin:
 	display: inline-block;
 }
 .products-grid .item .item-inner .item-img .item-img-info a.product-image img {
-	width: 100%;
+	
 }
 .products-grid .item .item-inner .item-img .item-img-info a.product-image img {
 	-webkit-transition-duration: 500ms;

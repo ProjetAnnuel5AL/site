@@ -71,7 +71,10 @@ module.exports = function(app, urlApi, utils, config){
                 jsonCart.product = req.query.product;
                 jsonCart.title = req.query.title;
                 jsonCart.prixU = req.query.prixU;
-                jsonCart.img = urlApi+'/itemPhotos/'+req.query.id+'/0.'+req.query.ext
+                jsonCart.shippingCost = req.query.shippingCost;
+                jsonCart.deliveryTime = req.query.deliveryTime;
+                jsonCart.idDelivery = req.query.idDelivery;
+                jsonCart.img = urlApi+'/itemPhotos/'+req.query.id+'/img_resize/0_xs.'+req.query.ext
                 req.session.cart.push(jsonCart)
                 res.json({
                     code : 0,
@@ -136,11 +139,15 @@ module.exports = function(app, urlApi, utils, config){
                     }
                 }).then(function (body) {
                     if(body.code == 0){
-                        if(body.result.infoItem.quantityItem >0){
+                        var maxQuantity = body.result.infoItem.quatityMaxOrderItem;
+                        if(body.result.infoItem.quantityItem < body.result.infoItem.quatityMaxOrderItem){
+                          maxQuantity = item.infoItem.quantityItem
+                        }
+                        if(maxQuantity >0){
                             res.json({
                                 code: 0,
                                 message :"",
-                                max : body.result.infoItem.quantityItem,
+                                max : maxQuantity,
                                 nameItem : body.result.infoItem.nameItem
                             })
                         }else{
@@ -149,7 +156,6 @@ module.exports = function(app, urlApi, utils, config){
                                 message :"Oups ! On dirait que cette annonce n'existe plus. Nous allons la supprimer de votre pannier.",
                             })
                         }
-                       
                     }else{
                         res.json({
                             code: 2,

@@ -4,29 +4,24 @@
 <head>
     <title>Liste annonces</title>
     <% include ./partials/header %>
-    
     <link rel="stylesheet" href="/css/slider.css">
     <script src="/js/bootstrap-slider.js"></script>
-    
-
-
 </head>
+
 <body class="cms-index-index cms-home-page">
   <div id="page"> 
       <!-- Header -->
       <header>
-          <% include ./partials/topBar %>
-          <% include ./partials/navbar %>
+        <% include ./partials/topBar %>
+        <% include ./partials/navbar %>
+        
       </header>
-
 <br>
 <% if(saveSearch!= null){ %>
 
-
 <script type="text/javascript">
-
   function changeFilterPage(num){             
-               window.location ="/itemList/filter/"+num+"?manualSearch=<%=saveSearch.manualSearch%>&category=<%=saveSearch.category%>&product=<%=saveSearch.product%>&priceMax=<%=saveSearch.priceMax%>&priceMin=<%=saveSearch.priceMin%>&lat=<%=saveSearch.lat%>&long=<%=saveSearch.long%>&address=<%=saveSearch.address%>";  
+    window.location ="/itemList/filter/"+num+"?manualSearch=<%=saveSearch.manualSearch%>&category=<%=saveSearch.category%>&product=<%=saveSearch.product%>&priceMax=<%=saveSearch.priceMax%>&priceMin=<%=saveSearch.priceMin%>&lat=<%=saveSearch.lat%>&long=<%=saveSearch.long%>&address=<%=saveSearch.address%>";  
   }
 </script>
 <% } %>
@@ -103,7 +98,12 @@
               <li class="item col-lg-4 col-md-4 col-sm-4 col-xs-6">
                 <div class="item-inner">
                   <div class="item-img">
-                    <div class="item-img-info"><a href="/visualisationAnnonce/<%=listTab[i].idItem%>" title="" class="product-image"><img style="height: 200px; max-width: 200px;" src="<%=urlApi%>/itemPhotos/<%=listTab[i].idItem%>/0.<%=listTab[i].fileExtensionsItem.split(';')[0]%>" alt="<%=listTab[i].nameProduct%>"></a>
+                    <div class="item-img-info" style=" border:1px solid LightGrey; width:260px; height:264px; max-width:260px; max-height:265px; display:table;">
+                      <span style="display:table-cell; vertical-align:middle;">
+                        <a href="/visualisationAnnonce/<%=listTab[i].idItem%>" title="" class="product-image">
+                          <img src="<%=urlApi%>/itemPhotos/<%=listTab[i].idItem%>/img_resize/0_small.<%=listTab[i].fileExtensionsItem.split(';')[0]%>" alt="<%=listTab[i].nameProduct%>">
+                        </a>
+                      </span>
                       <!--<div class="new-label new-top-left">New</div>-->
                       <div class="box-hover">
                         <ul class="add-to-links">
@@ -150,18 +150,6 @@
         <div class="toolbar">
           <div class="row">
             <div class="col-lg-3 col-md-4">
-              <!--<div id="sort-by">
-                <label class="left">Sort By: </label>
-                <ul>
-                  <li><a href="#">Position<span class="right-arrow"></span></a>
-                    <ul>
-                      <li><a href="#">Name</a></li>
-                      <li><a href="#">Price</a></li>
-                      <li><a href="#">Position</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>-->
             </div>
             <div class="col-lg-6 col-sm-7 col-md-5">
               <div class="pager">
@@ -243,7 +231,7 @@
               address = saveSearch.address;
             } 
           %>
-            <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+            <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
             <script type="text/javascript">
            
              $(document).ready(function () {

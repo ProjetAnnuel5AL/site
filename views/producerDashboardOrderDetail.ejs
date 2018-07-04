@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Mes commandes</title>
+    <title>Détail de la commande</title>
     <% include ./partials/header %>
 </head>
 <body class="cms-index-index cms-home-page">
@@ -19,7 +19,6 @@
                 <div class="col-sm-9 col-sm-push-3">
                     <article class="col-main">
                         <% 
-                        
                             function pad(n) {return n < 10 ? "0"+n : n;}
                             var dateTmp =  new Date(order[0].dateOrder);
                             var dateOrder = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
@@ -27,6 +26,18 @@
                         <h2 class="page-heading" style="font-size: 20px;"> <span class="page-heading-title">Détail de la commande N°<%=order[0].idOrder%> du <%=dateOrder%></span> </h2>
                         <div class="table-responsive">
                             <fieldset>
+                            <h4><strong>Informations client : </strong></h4>
+                            <p>
+                            <% if(order[0].sexOrder == "H"){ %>
+                            Monsieur 
+                            <% }else{ %>
+                            Madame  
+                            <% } %>
+                            <%=order[0].lastNameOrder%> <%=order[0].firstNameOrder%><br/>
+                            <%=order[0].addressOrder%><br/>
+                            <%=order[0].cpOrder%> <%=order[0].cityOrder%>
+                            </p>
+                            <br />
                             <table class="data-table cart-table" id="shopping-cart-table" style="width:100%;">
                                 <thead>
                                 <tr class="first last">
@@ -41,22 +52,12 @@
                                
                                 <tbody>
                                 <% 
-                                    var producer =[];
-                                    var idProducer = [];
-                                    for(var i =0; i<order.length; i++) { 
-                                    if(idProducer.indexOf(order[i].idProducer) == -1 ){
-                                        idProducer.push(order[i].idProducer);
-                                        producer.push({
-                                            "idProducer" : order[i].idProducer,
-                                            "loginUser" : order[i].loginUser,
-                                            "idOrder" : order[i].idOrder,
-                                            
-                                        });
-                                    }
+                                var totalOrder = 0;
+                                for(var i =0; i<order.length; i++) {  
                                 %>
                                 <tr class="first odd" style="height : 100px; max-height: 100px;">
-                                    <td style="width:40%;"><a href="/visualisationAnnonce/<%=order[i].idItemLigneOrder%>"><h2 class="product-name"><%=order[i].titleLigneOrder%> </h2><%=order[i].categoryLigneOrder%>, <%=order[i].productLigneOrder%></a><br/>Vendeur : <%=order[i].lastNameProducer %> <%=order[i].firstNameProducer %> <a href="/ficheProducer/<%=order[i].idProducer%>">(<%=order[i].loginUser %>)</a></td>
-                                    <td class="a-center"><span class="cart-price"> <span class="price"><%=(order[i].shippingCostLigneOrder*1).toFixed(2)%>€</span><br/>
+                                    <td style="width:40%;"><a href="/visualisationAnnonce/<%=order[i].idItemLigneOrder%>"><h2 class="product-name"><%=order[i].titleLigneOrder%> </h2><%=order[i].categoryLigneOrder%>, <%=order[i].productLigneOrder%></a></td>
+                                    <td class="a-center"><span class="price"><%=(order[i].shippingCostLigneOrder*1).toFixed(2)%>€</span><br/>
                                         <% if(order[i].deliveryTimeLigneOrder.split(';')[0] != order[i].deliveryTimeLigneOrder.split(';')[1]) { %>
                                             Livraison prévue entre <%=order[i].deliveryTimeLigneOrder.split(';')[0]%> et <%=order[i].deliveryTimeLigneOrder.split(';')[1]%> jours ouvrés 
                                         <% }else{ %>
@@ -65,25 +66,27 @@
                                     </td>
                                     <td class="a-right"><span class="cart-price"> <span class="price"><%=(order[i].prixUnitaireLigneOrder*1).toFixed(2)%> €</span> </span></td>
                                     <td class="a-center movewishlist"><%=order[i].quantiteLigneOrder%> </td>
-                                    <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=(order[i].quantiteLigneOrder * order[i].prixUnitaireLigneOrder + order[i].shippingCostLigneOrder*1).toFixed(2)%>€</span> </span></td>
+                                    <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=(order[i].quantiteLigneOrder * order[i].prixUnitaireLigneOrder+ order[i].shippingCostLigneOrder*1).toFixed(2)%>€</span> </span></td>
                                     <td class="a-center last">
                                         <% if(order[i].statusPaypalTransact == "PENDING"){ %>
-                                            En attente de reception<br />
-                                            <a href="/userDashboard/orderDetails/validateReception/<%=order[i].idOrder%>/<%=order[i].idLigneOrder%>" onclick="return confirm('Voulez vous vraiment valider la recpetion ?');"><button name="send" class="button"><span>Reception</span></button></a>
-                                        <% }else if(order[i].statusPaypalTransact == "DISPUTES"){ %>
-                                               Litige en cours
-                                        <% }else{ %>
-                                            Receptioné
-                                        <% } %>  
+                                            En attente de reception client pour paiement<br />
+                                        <% }else if(order[i].statusPaypalTransact == "TO DO"){ %>
+                                            Paiement prévu à 00h00.
+                                        <% } else if(order[i].statusPaypalTransact == "SUCCESS"){ %>
+                                            Paiement effectué.
+                                        <% } else{ %>
+                                            Impossible de récupérer le statut.    
+                                        <% } %>
                                     </td>
                                 </tr>
+                                    <% totalOrder += (order[i].quantiteLigneOrder * order[i].prixUnitaireLigneOrder + order[i].shippingCostLigneOrder*1) %>
                                     <% } %>
                                 <tr>
-                                    <th class="image">Total &nbsp; &nbsp; &nbsp; <span class="cart-price"> <span class="price"><%=order[0].totalOrder.toFixed(2)%>€</span></th>
+                                    <th class="image">Total &nbsp; &nbsp; &nbsp; <span class="cart-price"> <span class="price"><%=totalOrder.toFixed(2)%>€</span> </span></th>
                                     <td></td>
                                     <td class="a-center"></td>
                                     <td class="a-right"></td>
-                                    <td class="a-center movewishlist"></td>
+                                   
                                     <td class="a-right movewishlist"></td>
                                     <td class="a-center last"></td>
                                 </tr>
@@ -91,18 +94,13 @@
                                 <tfoot>
                                     <tr class="first last">
                                         <td class="a-right last" colspan="50">
-                                            Télécharger mes factures : 
-                                            <% for(var i = 0; i<producer.length; i++){ %>
-                                                <br />
-                                                <a href ="/userDashboard/billExport/<%=producer[i].idProducer%>/<%=producer[i].idOrder%>" target="_blank"><img src ="/img/pdf.png" style="width: 5%"/></a>&nbsp;&nbsp;&nbsp;
-                                                Facture producteur pour <%= producer[i].loginUser%>
-                                            <% } %>
+                                            Télécharger ma factures : 
+                                            <a href ="/producerDashboard/billExport/<%=order[0].idOrder%>" target="_blank"><img src ="/img/pdf.png" style="width: 5%"/></a>&nbsp;&nbsp;&nbsp;
+                                            
                                         </td>
                                     </tr>
                                 </tfoot>
                             </table>
-                            <br>
-                            <p><i><a href="/signalOrder/<%=order[0].idOrder%>">Un problème avec votre commande ? cliquez ici.</a></i></p>
                             </fieldset>
                         </div>
                     <fieldset class="col2-set">
