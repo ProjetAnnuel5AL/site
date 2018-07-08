@@ -22,7 +22,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
             }).then(function (body) {
                 if(body.code == 0){
                     var emailUser = body.result.emailUser;  
-                    res.render("userDashboardProfil.ejs", {
+                    res.render("userDashboard/userDashboardProfil.ejs", {
                         session: req.session,
                         emailUser: emailUser,
                         msgError:"",
@@ -54,28 +54,28 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 if(body.code == 0){
                     emailUser = body.result.emailUser;  
                     if(emailUser == req.body.mailNew || emailUser == req.body.mailNewConfirm){
-                        res.render("userDashboardProfil.ejs", {
+                        res.render("userDashboard/userDashboardProfil.ejs", {
                             session: req.session,
                             emailUser: emailUser,
                             msgError:"Veuillez saisir une adresse mail différente de celle enregistrée actuellement !",
                             msgSuccess: ""
                         });
                     }else if(!req.body.mailNew) {
-                        res.render("userDashboardProfil.ejs", {
+                        res.render("userDashboard/userDashboardProfil.ejs", {
                             session: req.session,
                             emailUser: emailUser,
                             msgError:"Veuillez saisir une nouvelle adresse mail !",
                             msgSuccess: ""
                         });
                     }else if(!req.body.mailNewConfirm) {
-                        res.render("userDashboardProfil.ejs", {
+                        res.render("userDashboard/userDashboardProfil.ejs", {
                             session: req.session,
                             emailUser: emailUser,
                             msgError:"Veuillez valider votre nouvelle adresse mail !",
                             msgSuccess: ""
                         });
                     }else if(req.body.mailNew != req.body.mailNewConfirm) {
-                        res.render("userDashboardProfil.ejs", {
+                        res.render("userDashboard/userDashboardProfil.ejs", {
                             session: req.session,
                             emailUser: emailUser,
                             msgError:"Les deux adresses mails saisi ne sont pas identiques !",
@@ -95,14 +95,14 @@ module.exports = function(app, urlApi, urlLocal, utils){
                             }
                         }).then(function(body) {
                             if(body.code ==0){
-                                res.render("userDashboardProfil.ejs", {
+                                res.render("userDashboard/userDashboardProfil.ejs", {
                                     session: req.session,
                                     emailUser: req.body.mailNew,
                                     msgError:"",
                                     msgSuccess: "Adresse Modifié avec succes."
                                 });
                             }else{
-                                res.render("userDashboardProfil.ejs", {
+                                res.render("userDashboard/userDashboardProfil.ejs", {
                                     session: req.session,
                                     emailUser: emailUser,
                                     msgError:"Erreur lors de la mise a jour de l'adresse mail. Merci de réessayer ultérieurement.",
@@ -110,7 +110,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                                 });
                             }   
                         }).catch(function(err){
-                            res.render("userDashboardProfil.ejs", {
+                            res.render("userDashboard/userDashboardProfil.ejs", {
                                 session: req.session,
                                 emailUser: emailUser,
                                 msgError:"Erreur lors de la mise a jour de l'adresse mail. Merci de réessayer ultérieurement.",
@@ -131,7 +131,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
         if(!req.session.type) {
 			res.redirect("/");
 		}else{
-            res.render("userDashboardPwd.ejs", {
+            res.render("userDashboard/userDashboardPwd.ejs", {
                 session: req.session,
                 msgError:"",
                 msgSuccess: ""
@@ -144,24 +144,24 @@ module.exports = function(app, urlApi, urlLocal, utils){
 			res.redirect("/");
 		}else{
             if(!req.body.password) {
-                res.render("userDashboardPwd.ejs", {
+                res.render("userDashboard/userDashboardPwd.ejs", {
                     session: req.session,
                     msgError:"Veuillez saisir un mot de passe !", msgSuccess: "",
                 });
             }else if(!req.body.passwordConfirm) {
-                res.render("userDashboardPwd.ejs", {
+                res.render("userDashboard/userDashboardPwd.ejs", {
                     session: req.session,
                     msgError:"Veuillez retaper votre mot de passe",
                     msgSuccess: ""
                 });
             } else if(req.body.password != req.body.passwordConfirm){
-                res.render("userDashboardPwd.ejs", {
+                res.render("userDashboard/userDashboardPwd.ejs", {
                     session: req.session,
                     msgError:"Les mots de passe saisient ne sont pas identiques !",
                     msgSuccess: ""
                 });
             } else if(req.body.password.length<8 || req.body.password.search("[A-Z]+")== -1 || req.body.password.search("[a-z]+")== -1 || req.body.password.search("[0-9]+")== -1 || req.body.password.search(/[-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|\'\"\&]/g) == -1) {
-                res.render("userDashboardPwd.ejs", {
+                res.render("userDashboard/userDashboardPwd.ejs", {
                     session: req.session,
                     msgError:"Mot de passe invalide : 8 caractères minimum, au moins une majuscule et une minuscule, un chiffre et un caractère spéciale ( parmis les suivants : &\"'(-_)=+?.^$ ) sont requis ! ",
                     msgSuccess: ""
@@ -194,34 +194,34 @@ module.exports = function(app, urlApi, urlLocal, utils){
                             }
                         }).then(function(body) {    
                             if(body.code ==0){
-                                res.render("userDashboardPwd.ejs", {
+                                res.render("userDashboard/userDashboardPwd.ejs", {
                                     session: req.session,
                                     msgError:"",
                                     msgSuccess: "Changement du mot de passe effectué."
                                 });
                             }else{
-                                res.render("userDashboardPwd.ejs", {
+                                res.render("userDashboard/userDashboardPwd.ejs", {
                                     session: req.session,
                                     msgError:"Erreur lors de la mise a jour du mot de passe. Merci de réessayer ultérieurement.",
                                     msgSuccess: "" 
                                 });
                             }
                         }).catch(function (err) {
-                            res.render("userDashboardPwd.ejs", {
+                            res.render("userDashboard/userDashboardPwd.ejs", {
                                 session: req.session,
                                 msgError:"Erreur lors de la mise a jour du mot de passe. Merci de réessayer ultérieurement.",
                                 msgSuccess: ""
                             });
                         });
                     } else {
-                        res.render("userDashboardPwd.ejs", {
+                        res.render("userDashboard/userDashboardPwd.ejs", {
                             session: req.session,
                             msgError:"L'ancien mot de passe saisi est incorrect.",
                             msgSuccess: ""
                         });
                     }
                 }).catch(function (err) {
-                    res.render("userDashboardPwd.ejs", {
+                    res.render("userDashboard/userDashboardPwd.ejs", {
                         session: req.session,
                         msgError:"Erreur lors de la mise a jour du mot de passe. Merci de réessayer ultérieurement.",
                         msgSuccess: ""
@@ -247,7 +247,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }
             }).then(function (body) {
                 var address = body.result;  
-                res.render("userDashboardAddress.ejs", {
+                res.render("userDashboard/userDashboardAddress.ejs", {
                     session: req.session,
                     address: address,
                     msgError:"",
@@ -279,42 +279,42 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     address = getTmpAddress(req);
                 }
                 if(!req.body.lastName) {
-                    res.render("userDashboardAddress.ejs", {
+                    res.render("userDashboard/userDashboardAddress.ejs", {
                         session: req.session,
                         address: address,
                         msgError:"Veuillez saisir un nom !",
                         msgSuccess: ""
                     });
                 }else if(!req.body.firstName) {
-                    res.render("userDashboardAddress.ejs", {
+                    res.render("userDashboard/userDashboardAddress.ejs", {
                         session: req.session,
                         address: address,
                         msgError:"Veuillez saisir un prénom !",
                         msgSuccess: ""
                     });
                 }else if(!req.body.sex) {
-                    res.render("userDashboardAddress.ejs", {
+                    res.render("userDashboard/userDashboardAddress.ejs", {
                         session: req.session,
                         address: address,
                         msgError:"Veuillez saisir un sexe !",
                         msgSuccess: ""
                     });
                 }else if(!req.body.address) {
-                    res.render("userDashboardAddress.ejs", {
+                    res.render("userDashboard/userDashboardAddress.ejs", {
                         session: req.session,
                         address: address,
                         msgError:"Veuillez saisir une adresse !",
                         msgSuccess: ""
                     });
                 }else if(!req.body.city) {
-                    res.render("userDashboardAddress.ejs", {
+                    res.render("userDashboard/userDashboardAddress.ejs", {
                         session: req.session,
                         address: address,
                         msgError:"Veuillez saisir une ville !",
                         msgSuccess: ""
                     });
                 }else if(!req.body.cp) {
-                    res.render("userDashboardAddress.ejs", {
+                    res.render("userDashboard/userDashboardAddress.ejs", {
                         session: req.session,
                         address: address,
                         msgError:"Veuillez saisir un code postal !",
@@ -340,14 +340,14 @@ module.exports = function(app, urlApi, urlLocal, utils){
                         }
                     }).then(function(body) {   
                         if(body.code == 0){
-                            res.render("userDashboardAddress.ejs", {
+                            res.render("userDashboard/userDashboardAddress.ejs", {
                                 session: req.session,
                                 address: getTmpAddress(req),
                                 msgError:"",
                                 msgSuccess: "Adresse de livraison enregistrée."
                             });
                         }else{
-                            res.render("userDashboardAddress.ejs", {
+                            res.render("userDashboard/userDashboardAddress.ejs", {
                                 session: req.session,
                                 address: address,
                                 msgError:"Erreur lors de la mise a jour du mot de passe. Merci de réessayer ultérieurement.",
@@ -357,7 +357,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                         }
                     }).catch(function (err) {
                         
-                        res.render("userDashboardAddress.ejs", {
+                        res.render("userDashboard/userDashboardAddress.ejs", {
                             session: req.session,
                             address: address,
                             msgError:"Erreur lors de la mise a jour du mot de passe. Merci de réessayer ultérieurement.",
@@ -384,7 +384,15 @@ module.exports = function(app, urlApi, urlLocal, utils){
 
     //TOUTES LA PARTIE ORDER A PARTIR D ICI
 
-    app.get("/userDashBoard/orders", function(req, res, next) {
+    app.get("/userDashboard/orders", function(req, res, next) {
+        var msgError="";
+        var msgSuccess ="";
+        if(req.query.msgError && req.query.msgError!=""){
+            msgError = req.query.msgError
+        }
+        if(req.query.msgSuccess && req.query.msgSuccess!=""){
+            msgSuccess = req.query.msgSuccess
+        }
         if(!req.session.type) {
 			res.redirect("/");
 		}else{
@@ -401,20 +409,20 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }
             }).then(function (body) {
                 if(body.code == 0){
-                    res.render("userDashboardOrders.ejs", {
+                    res.render("userDashboard/userDashboardOrders.ejs", {
                         session: req.session,
                         orders: body.result.orders,
                         status:  body.result.status,
-                        msgError:"",
-                        msgSuccess: ""
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
                     });
                 }else{
-                    res.render("userDashboardOrders.ejs", {
+                    res.render("userDashboard/userDashboardOrders.ejs", {
                         session: req.session,
                         orders: null,
                         status: null,
-                        msgError:"",
-                        msgSuccess: ""
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
                     });
                 }
                 
@@ -428,7 +436,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
 			res.redirect("/");
 		}else{
             rp({
-                url: urlApi + "/order/getOrderDetailsFromuser",
+                url: urlApi + "/order/getOrderDetailsFromUser",
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -441,14 +449,14 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }
             }).then(function (body) {
                 if(body.code == 0){
-                    res.render("userDashboardOrderDetail.ejs", {
+                    res.render("userDashboard/userDashboardOrderDetail.ejs", {
                         session: req.session,
                         order: body.result,
                         msgError:"",
                         msgSuccess: ""
                     });
                 }else{
-                    res.render("userDashboardOrderDetail.ejs", {
+                    res.render("userDashboard/userDashboardOrderDetail.ejs", {
                         session: req.session,
                         order: null,
                         msgError:"Erreur lors de la récupération de la commande. Merci de réessayer ultérieurement.",
@@ -513,6 +521,93 @@ module.exports = function(app, urlApi, urlLocal, utils){
             });
             
         //}
+    });
+
+
+    app.get("/userDashboard/disputes", function(req, res, next) {
+        var msgSuccess ="";
+        var msgError="";
+        if(req.query.msgSuccess && req.query.msgSuccess !=""){
+            msgSuccess =req.query.msgSuccess;
+        }
+        if(req.query.msgError && req.query.msgError !=""){
+            msgError =req.query.msgError;
+        }
+        if(!req.session.type) {
+			res.redirect("/");
+		}else{
+            rp({
+                url: urlApi + "/dispute/getDisputesFromUser",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token
+                }
+            }).then(function (body) {
+                if(body.code == 0){
+                    res.render("userDashboard/userDashboardDisputes.ejs", {
+                        session: req.session,
+                        disputes: body.result,
+                        msgError: msgError,
+                        msgSuccess: msgSuccess
+                    });
+                }else{
+                    res.render("userDashboard/userDashboardDisputes.ejs", {
+                        session: req.session,
+                        disputes: null,
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
+                    });
+                }
+            });
+        }
+    });
+
+    app.get("/userDashboard/disputeDetails/:id", function(req, res, next) {
+        var msgSuccess ="";
+        var msgError="";
+        if(req.query.msgSuccess && req.query.msgSuccess !=""){
+            msgSuccess=req.query.msgSuccess;
+        }
+        if(req.query.msgError && req.query.msgError !=""){
+            msgError=req.query.msgError;
+        }
+        if(!req.session.type ) {
+			res.redirect("/");
+		}else{
+            rp({
+                url: urlApi + "/dispute/getDisputeDetailsFromUser",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token,
+                    "idDispute" : req.params.id
+                }
+            }).then(function (body) {
+                
+                if(body.code == 0){
+                    res.render("userDashboard/userDashboardDisputeDetail.ejs", {
+                        session: req.session,
+                        dispute: body.result,
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
+                    });
+                }else{
+                    res.render("userDashboard/userDashboardDisputeDetail.ejs", {
+                        session: req.session,
+                        dispute: null,
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
+                    });
+                }
+            });
+        }
     });
 
     

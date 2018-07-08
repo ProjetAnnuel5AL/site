@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Mes Litiges</title>
+    <% include ../partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ../partials/topBar %>
+            <% include ../partials/navbar %>
+        </header>
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <h2 class="page-heading"> <span class="page-heading-title">Mes Litiges</span> </h2>
+                        <% if (msgError.length > 0) { %>
+                            <div class="alert alert-danger"><%- msgError %></div>
+                        <% } %>
+                        <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%= msgSuccess %> </div>
+                        <% } %>
+                        <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
+                            <colgroup>
+                            <col>
+                            <col width="1">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th>Date</th>
+                                <th>Numéro de commande</th>
+                                <th>Motif</th>
+                                <th>Statut</th>
+                                <th></th>
+                            </tr>
+                            <% 
+                                function pad(n) {return n < 10 ? "0"+n : n;}
+                                if(disputes && disputes.length>0){
+                                for(var i =0; i<disputes.length; i++) {
+                                var dateTmp =  new Date(disputes[i].dateDispute);
+                                var dateDispute = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
+                            %>        
+                            <tr>
+                                <td style=""><%=dateDispute%></td>
+                                <td style=""><%=disputes[i].idOrderLigneOrder%></td>
+                                <td style=""><%= disputes[i].nameMotif %></td>
+                                <td>
+                                    <% if (disputes[i].statusDispute == "NEW"){ %>
+                                       En attente de la réponse du vendeur
+                                    <% }else if(disputes[i].statusDispute == "ACCEPTED") { %>
+                                        Le vendeur a accepté la réclamation.
+                                    <% }else if(disputes[i].statusDispute == "CONTEST") { %>
+                                        Le vendeur a contesté la réclamation. Arbitrage en cours.
+                                    <% }else if(disputes[i].statusDispute == "CLOSE") { %>
+                                       Cloturé.
+                                    <% } %>
+                                </td>
+                                <td><a href="/userDashboard/disputeDetails/<%=disputes[i].idDispute%>"><button name="send" class="button"><span>Details</span></button></a></td>
+                            </tr>
+                            <% }}else{ %>
+                            <tr style="height : 100px; max-height: 100px; vertical-align:middle;" >
+                                <td colspan="6"><h2>Vous n'avez pas de litiges.</h2></td>
+                            </tr>
+                            <% } %>
+                            </tbody>
+                        </table>
+                    <fieldset class="col2-set">
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ../partials/dashboard %>
+                </div>
+            </div>
+        </section>
+        <% include ../partials/footer %>
+    </div>
+</body>

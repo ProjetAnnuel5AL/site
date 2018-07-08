@@ -2,14 +2,14 @@
 <html lang="fr">
 <head>
     <title>Mes commandes</title>
-    <% include ./partials/header %>
+    <% include ../partials/header %>
 </head>
 <body class="cms-index-index cms-home-page">
     <div id="page"> 
         <!-- Header -->
         <header>
-            <% include ./partials/topBar %>
-            <% include ./partials/navbar %>
+            <% include ../partials/topBar %>
+            <% include ../partials/navbar %>
         </header>
         <br /> <br /> 
         <section class="main-container col2-left-layout bounceInUp animated">
@@ -19,6 +19,12 @@
                 <div class="col-sm-9 col-sm-push-3">
                     <article class="col-main">
                         <h2 class="page-heading"> <span class="page-heading-title">Mes commandes</span> </h2>
+                        <% if (msgError.length > 0) { %>
+                            <div class="alert alert-danger"><%- msgError %></div>
+                        <% } %>
+                        <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%= msgSuccess %> </div>
+                        <% } %>
                         <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
                             <colgroup>
                             <col>
@@ -33,11 +39,11 @@
                                 <th></th>
                             </tr>
                             <% 
-                                function pad(n) {return n < 10 ? "0"+n : n;}
+                                function pad(n) { return n < 10 ? "0"+n : n; }
                                 if(orders){
                                 for(var i =0; i<orders.length; i++) {
-                                var dateTmp =  new Date(orders[i].dateOrder);
-                                var dateOrder = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
+                                    var dateTmp =  new Date(orders[i].dateOrder);
+                                    var dateOrder = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
                             %>        
                             <tr>
                                 <td style=""><%=dateOrder%></td>
@@ -47,16 +53,21 @@
                                 <td><a href="/userDashboard/orderDetails/<%=orders[i].idOrder%>"><button name="send" class="button"><span>Details</span></button></a></td>
                             </tr>
                             <% }} %>
+                            <% if(!orders || orders.length<=0){ %>
+                            <tr style="height : 100px; max-height: 100px; vertical-align:middle;" >
+                                <td colspan="6"><h2>Vous n'avez passez aucune commande.</h2></td>
+                            </tr>
+                            <% } %>
                             </tbody>
                         </table>
                     <fieldset class="col2-set">
                     </fieldset>
                     </article>
                 </div>
-                <% include ./partials/dashboard %>
+                <% include ../partials/dashboard %>
                 </div>
             </div>
         </section>
-
+        <% include ../partials/footer %>
     </div>
 </body>

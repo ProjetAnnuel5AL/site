@@ -2,14 +2,14 @@
 <html lang="fr">
 <head>
     <title>Mes commandes</title>
-    <% include ./partials/header %>
+    <% include ../partials/header %>
 </head>
 <body class="cms-index-index cms-home-page">
     <div id="page"> 
         <!-- Header -->
         <header>
-            <% include ./partials/topBar %>
-            <% include ./partials/navbar %>
+            <% include ../partials/topBar %>
+            <% include ../partials/navbar %>
         </header>
         <br /> <br /> 
         <section class="main-container col2-left-layout bounceInUp animated">
@@ -31,7 +31,7 @@
                                 <thead>
                                 <tr class="first last">
                                     <th rowspan="1"><span class="nobr">Produit</span></th>
-                                    <th rowspan="1"></th>
+                                    <th rowspan="1">Livraison</th>
                                     <th colspan="1" class="a-center"><span class="nobr">Prix unitaire</span></th>
                                     <th class="a-center" rowspan="1">Quantité</th>
                                     <th colspan="1" class="a-center">Total</th>
@@ -55,15 +55,23 @@
                                     }
                                 %>
                                 <tr class="first odd" style="height : 100px; max-height: 100px;">
-                                    <td style="width:40%;"><h2 class="product-name"><%=order[i].titleLigneOrder%> </h2><%=order[i].categoryLigneOrder%>, <%=order[i].productLigneOrder%><br/>Vendeur : <%=order[i].lastNameProducer %> <%=order[i].firstNameProducer %> <a href="/ficheProducer/<%=order[i].idProducer%>">(<%=order[i].loginUser %>)</a></td>
-                                    <td class="a-center"></td>
+                                    <td style="width:40%;"><a href="/visualisationAnnonce/<%=order[i].idItemLigneOrder%>"><h2 class="product-name"><%=order[i].titleLigneOrder%> </h2><%=order[i].categoryLigneOrder%>, <%=order[i].productLigneOrder%></a><br/>Vendeur : <%=order[i].lastNameProducer %> <%=order[i].firstNameProducer %> <a href="/ficheProducer/<%=order[i].idProducer%>">(<%=order[i].loginUser %>)</a></td>
+                                    <td class="a-center"><span class="cart-price"> <span class="price"><%=(order[i].shippingCostLigneOrder*1).toFixed(2)%>€</span><br/>
+                                        <% if(order[i].deliveryTimeLigneOrder.split(';')[0] != order[i].deliveryTimeLigneOrder.split(';')[1]) { %>
+                                            Livraison prévue entre <%=order[i].deliveryTimeLigneOrder.split(';')[0]%> et <%=order[i].deliveryTimeLigneOrder.split(';')[1]%> jours ouvrés 
+                                        <% }else{ %>
+                                            Livraison prévue dans <%=order[i].deliveryTimeLigneOrder.split(';')[0]%> jours ouvrés
+                                        <% }%> 
+                                    </td>
                                     <td class="a-right"><span class="cart-price"> <span class="price"><%=(order[i].prixUnitaireLigneOrder*1).toFixed(2)%> €</span> </span></td>
                                     <td class="a-center movewishlist"><%=order[i].quantiteLigneOrder%> </td>
-                                    <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=(order[i].quantiteLigneOrder * order[i].prixUnitaireLigneOrder).toFixed(2)%>€</span> </span></td>
+                                    <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=(order[i].quantiteLigneOrder * order[i].prixUnitaireLigneOrder + order[i].shippingCostLigneOrder*1).toFixed(2)%>€</span> </span></td>
                                     <td class="a-center last">
                                         <% if(order[i].statusPaypalTransact == "PENDING"){ %>
                                             En attente de reception<br />
-                                            <a href="/userDashboard/orderDetails/validateReception/<%=order[i].idOrder%>/<%=order[i].idLigneOrder%>"><button name="send" class="button"><span>Valider la reception</span></button></a>
+                                            <a href="/userDashboard/orderDetails/validateReception/<%=order[i].idOrder%>/<%=order[i].idLigneOrder%>" onclick="return confirm('Voulez vous vraiment valider la recpetion ?');"><button name="send" class="button"><span>Reception</span></button></a>
+                                        <% }else if(order[i].statusPaypalTransact == "DISPUTES"){ %>
+                                               Litige en cours
                                         <% }else{ %>
                                             Receptioné
                                         <% } %>  
@@ -71,12 +79,12 @@
                                 </tr>
                                     <% } %>
                                 <tr>
-                                    <th class="image">Total</th>
+                                    <th class="image">Total &nbsp; &nbsp; &nbsp; <span class="cart-price"> <span class="price"><%=order[0].totalOrder.toFixed(2)%>€</span></th>
                                     <td></td>
                                     <td class="a-center"></td>
                                     <td class="a-right"></td>
                                     <td class="a-center movewishlist"></td>
-                                    <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=order[0].totalOrder.toFixed(2)%>€</span> </span></td>
+                                    <td class="a-right movewishlist"></td>
                                     <td class="a-center last"></td>
                                 </tr>
                                 </tbody>
@@ -93,16 +101,18 @@
                                     </tr>
                                 </tfoot>
                             </table>
+                            <br>
+                            <p><i><a href="/dispute/<%=order[0].idOrder%>">Un problème avec votre commande ? cliquez ici.</a></i></p>
                             </fieldset>
                         </div>
                     <fieldset class="col2-set">
                     </fieldset>
                     </article>
                 </div>
-                <% include ./partials/dashboard %>
+                <% include ../partials/dashboard %>
                 </div>
             </div>
         </section>
-
+        <% include ../partials/footer %>
     </div>
 </body>

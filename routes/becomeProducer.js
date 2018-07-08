@@ -27,7 +27,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
         if(!req.session.type) {
 			res.redirect("/");
 		}else if(req.session.type =="1"){
-            res.redirect("/userDashboard/profil")
+            res.redirect("/producerDashboard/profil")
         }else{
             var form = new formidable.IncomingForm();
             
@@ -167,7 +167,9 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                             "cityProducer": fields.city,
                             "locationProducer": fields.location,
                             "descriptionProducer": fields.description,
-                            "paypalProducer": fields.emailPaypal
+                            "paypalProducer": fields.emailPaypal,
+                            "cpProducer": fields.cp,
+
                         }
                     }).then(function(body) {   
                         if(body.code == 0){
@@ -191,7 +193,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                                 msgSuccess: "Vous êtes désormais enregistré en temps que producteur ! Vous trouverez ci-dessous votre fiche personnel. Un nouvel onglet a également été ajouté pour vous permettre de gérer vos ventes."
                             });
                         }else{
-                            
+                           
                             res.render("becomeProducer.ejs", {
                                 session: req.session,
                                 producer: localProducer,
@@ -304,6 +306,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
             locationProducer : fields.location,
             avatarProducer : "",
             descriptionProducer : fields.description,
+            cpProducer : fields.cp,
             comment : []
         };
         return producer;

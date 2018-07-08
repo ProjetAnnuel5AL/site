@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Mes Informations producteur</title>
+    <% include ../partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ../partials/topBar %>
+            <% include ../partials/navbar %>
+        </header>
+
+        <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var item;
+                var urlApi;
+                var options = {
+                    componentRestrictions: {country: 'fr'}
+                };
+                var autocomplete = new google.maps.places.Autocomplete($("#address")[0], options);
+                
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                    var cp ="";
+                    for (var i = 0; i < place.address_components.length; i++) {
+                        for (var j = 0; j < place.address_components[i].types.length; j++) {
+                            if (place.address_components[i].types[j] == "postal_code") {
+                                cp = place.address_components[i].long_name;
+                                break;
+                            }
+                        }
+                    }
+ 
+                    selectAddress(place.geometry.location.lat(), place.geometry.location.lng(), 15, true);
+                    $("#city").val(place.vicinity);
+                    $("#cp").val(cp);
+                    $("#addressChange").val="true";
+                });
+                selectAddress("<%=item.latItem%>", "<%=item.longItem%>", 15, true);
+                
+                loadProducts("<%=item.idCategory%>");
+
+                $("#category").change(function () {
+                    var id = $(this).children(":selected")[0].attributes.value.nodeValue;
+                    loadProducts(id);
+                });
+                $("#filePhoto").change(function () {
+                    readURL(this);
+                });
+                
+            });
+            
+            function loadProducts(id){
+               
+                $.getJSON("/product/getByCategoryId", { id: id }).done(function( json ) {
+
+                    if(json.code == 0){
+                        $('#product').empty();
+                        for(var elem in json.result) {
+                            if(json.result[elem].idProduct == "<%=item.productId%>"){
+                                $('#product').append($('<option>', {
+                                    value: json.result[elem].idProduct,
+                                    text: json.result[elem].nameProduct,
+                                    selected:"selected"
+                                }));
+                            }else{
+                                $('#product').append($('<option>', {
+                                    value: json.result[elem].idProduct,
+                                    text: json.result[elem].nameProduct,
+                                   
+                                }));
+                            }
+                           
+                        }
+                    }
+                });
+            }
+
+            function clearImages(visual){
+                $("#filePhoto").prop('required',true);
+                if(!visual){
+                    $("#filePhoto").val('');
+                }
+                
+                $('#exampleImg0').attr('src', "/img/picture.png");
+                $('#exampleImg1').attr('src', "/img/picture.png");
+                $('#exampleImg2').attr('src', "/img/picture.png");
+            }
+
+            function deleteItem(){
+                $('#editform').attr('action', "/item/delete").submit();
+            }
+
+            function readURL(input) {
+                clearImages(true);
+                if (input.files) {
+                    if(input.files.length < 4){
+                        
+                        document.getElementById("photoChange").value="true";
+                        for(var imageIndex = 0; imageIndex < input.files.length; imageIndex++)
+                        {
+                            (function (imageIndex) {
+                                var reader = new FileReader();
+                                reader.onload = function (e) {
+                                    var name = 'exampleImg'+imageIndex;
+                                    $('#'+name).attr('src', e.target.result);
+                                }
+                                reader.readAsDataURL(input.files[imageIndex]);
+                            })(imageIndex);
+                        }
+                    }else {
+                        alert("Erreur: vous ne pouvez mettre en ligne que 3 images maximum.");
+                        clearImages(false);
+                    }
+                }
+            }
+            function selectAddress(lat, long, zoom, marker){
+                var latlng = new google.maps.LatLng(lat, long)
+                
+                var myOptions = {
+                  center: latlng,
+                  zoom: zoom,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("map"),
+                    myOptions);
+                if(marker){
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        title: 'Adresse'
+                    });
+                    $("#location").val(lat + ','+ long);
+                }
+                
+            }
+    </script>
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <h2 class="page-heading"> <span class="page-heading-title">Annonce <%=item.nameItem%></span> </h2>
+                        <fieldset class="col2-set">
+                                <div class="update-users">
+                                <div class="content">
+                                    <% if (msgError.length > 0) { %>
+                                        <div class="alert alert-danger"><%= msgError %></div>
+                                    <% } %>
+                                    <% if (msgSuccess.length > 0) { %>
+                                        <div class="alert alert-success"> <%= msgSuccess %> </div>
+                                    <% } 
+                                    %>
+                                    <%if (typeof categories !== 'undefined' && typeof units !== 'undefined') { %>
+                                        <!-- LOGIN FORM -->
+                                        <form action="/producerDashboard/item/update/<%=item.idItem%>" method="post" id="editform" enctype="multipart/form-data">
+                                            <input type="hidden" class="form-control" id="idItem" name="idItem"/>
+                                            <input type="hidden" class="form-control" id="fileExtensions" name="fileExtensions"/>
+                                     
+                                        <ul class="form-list">
+                                            <li>
+                                                <label for="category">Choisissez une catégorie pour votre annonce</label>
+                                                <br>
+                                                <select class="form-control" id="category" name="category">
+                                                    <% categories.forEach(function (cat) {
+                                                        if( cat.idCategory == item.idCategory ){ %>
+                                                            <option value=<%= cat.idCategory%> selected="selected"><%= cat.nameCategory%></option> 
+                                                        <% }else{ %>
+                                                            <option value=<%= cat.idCategory%>><%= cat.nameCategory%></option> 
+                                                        <% } %>
+                                                     
+                                                    <% }) %>
+                                                </select> 
+                                            </li>
+                                            <li>
+                                                <label for="product">Choisissez le type de produit</label>
+                                                <br>
+                                                <select name="product" id="product" class="form-control" >
+                                                </select> 
+                                            </li>
+                                            <li>
+                                                <label for="name">Nom du produit</label>
+                                                <br>
+                                                <input type="text" title="name" class="input-text required-entry" id="name"  name="name" value="<%=item.nameItem%>" required>
+                                            </li>
+                                            <li>
+                                                <label for="description">Description (entre 20 et 500 caractères)</label>
+                                                <br>
+                                                <textarea style="width:100%; height:200px;" maxlength="500" title="description" id="description" class="input-text required-entry" name="description" required><%=item.descriptionItem%></textarea>
+                                            </li>
+                                            <li>
+                                                <label for="address">Adresse de production</label>
+                                                <br>
+                                                <input type="text" class="input-text required-entry" id="address" name="address" value="<%=item.addressItem%>" autocomplete="off">
+                                                </br>
+                                                <div id="map" class="form-control"style="height:500px;"></div>
+                                                <input type="hidden" class="form-control" id="location" name="location" value="<%=item.locationItem%>">
+                                                <input type="hidden" class="form-control" id="city" name="city" value="<%=item.cityItem%>"/>
+                                                <input type="hidden" class="form-control" id="cp" name="cp" value="<%=item.cpItem%>"/>
+                                                <input type="hidden" class="form-control" id="addressChange" name="addressChange" value="false"/>
+                                                
+                                            </li>
+                                            <li>
+                                                <label for="photo">Photos (Max 3)</label>
+                                                <div>
+                                                    <%
+                                                        var photos = item.fileExtensionsItem.split(';');
+                                                        for(var j=0; j<3; j++){
+                                                            if(photos[j] && photos[j]!=""){ %>
+                                                                <img src="<%=urlApi%>/itemPhotos/<%=item.idItem%>/<%=j%>.<%=photos[j]%>" / id="exampleImg<%=j%>" style="max-width: 150px;">
+                                                    <%      }else{ %>
+                                                                <img src="/img/picture.png" / id="exampleImg<%=j%>" style="max-width: 150px;">
+                                                    <%      }
+                                                        }
+                                                    %> 
+                                                </div></br>
+                                                <input type="file" name="photo" id="filePhoto" multiple accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|images/*" />
+                                                <button type="button" onClick="clearImages(false);">Reinitialiser les images</button>
+                                                <input type="hidden" name="photoChange" id="photoChange" value="false">
+                                            </li>
+                                            <li>
+                                                <label>Quantité disponible</label>
+                                                <input type='number' class="input-text required-entry" id="quantity" name="quantity" step='1' placeholder='0' value="<%=item.quantityItem%>" />
+                                            </li>
+                                            <li>
+                                                <label>Quantité maximun par commande</label>
+                                                <input type='number' class="input-text required-entry" id="quatityMaxOrder" name="quatityMaxOrder" step='1' placeholder='0' value="<%=item.quatityMaxOrderItem%>" />
+                                            </li>
+                                            <li>
+                                                <label>Unité</label>
+                                                <select id="unit" name="unit">
+                                                    <% units.forEach(function (unit) { %>
+                                                        <% if(unit.idUnit == item.idUnit){ %>
+                                                            <option value=<%=unit.idUnit%> selected="selected"><%= unit.nameUnit%></option> 
+                                                        <%}else{%>
+                                                            <option value=<%=unit.idUnit%>><%= unit.nameUnit%></option> 
+                                                        <%}%>
+                                                        
+                                                    <% }) %>
+                                                </select>
+                                            </li>
+                                            <li>
+                                                <label>Prix Unitaire TTC (€)</label>
+                                                <p><i>Attention une commision de 3,4 % du prix de vente + 0,25 €  sera prélevé pour les frais bancaires (frais de port inclus).</i></p>
+                                                <input type='number'class="input-text required-entry" id="price" name="price" step='0.01' placeholder='0.00' value="<%=item.priceItem%>" />
+                                            </li>
+                                            <li>
+                                                <label>Frais de port (€)</label>
+                                                <input type='number'class="input-text required-entry" id="shippingCost" name="shippingCost" step='0.01' placeholder='0.00' value="<%=item.shippingCostItem%>" />
+                                            </li>
+                                            <li>
+                                                <label>Séléctionner le transporteur que vous utiliserez pour assurer la livraison de cet article</label>
+                                                <select id="idDelivery" name="idDelivery" required>
+                                                    <% deliverys.forEach(function (delivery) { %>
+                                                      
+                                                        <% if(delivery.idDelivery == item.idDeliveryItem){ %>
+                                                            <option value=<%=delivery.idDelivery%> selected="selected"><%= delivery.nameDelivery%></option> 
+                                                        <%}else{%>
+                                                            <option value=<%=delivery.idDelivery%>><%= delivery.nameDelivery%></option> 
+                                                        <%}%>
+                                                        
+                                                    <% }) %>
+                                                </select>
+                                            </li>
+                                            <li>
+                                                <label>Estimation de la durée de livraison (délai maximum de 14 jours)</label><br />
+                                                <div  style="display: inline-block">Entre <input value="<%=item.deliveryTimeItem.split(';')[0]%>" style="width:50px;" type="number" class="input-text required-entry" id="deliveryTimeStart" name="deliveryTimeStart"  pattern="\d*" step='1' min="0" max="14" placeholder='0' required/> et 
+                                                <input style="width:50px;" value="<%=item.deliveryTimeItem.split(';')[1]%>" required type="number" class="input-text required-entry" id="deliveryTimeEnd"  pattern="\d*" name="deliveryTimeEnd" step='1' min="0" max="14" placeholder='0' required/> jours ouvrables</div>
+                                            </li>
+                                            
+                                        </ul>
+                                        <button type="submit" id="submitbtn" class="btn btn-info">Modifier</button>
+                                        
+                                    </form>
+                                    <% } %>
+                                </div>
+                                </div>
+                            </fieldset>
+                    </article>
+                </div>
+
+
+                <% include ../partials/dashboard %>
+                </div>
+            </div>
+        </section>
+        <% include ../partials/footer %>
+    </div>
+</body>

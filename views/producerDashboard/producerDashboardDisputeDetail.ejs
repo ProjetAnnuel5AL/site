@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Détail du litige</title>
+    <% include ../partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ../partials/topBar %>
+            <% include ../partials/navbar %>
+        </header>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#choixLitige1').on('change', function() {
+                    document.getElementById("description").style.visibility = "hidden";
+                    document.getElementById("description").style.position = "absolute";
+                })
+
+                $('#choixLitige2').on('change', function() {
+                    document.getElementById("description").style.visibility = "visible";
+                    document.getElementById("description").style.position = "relative";
+                })
+            });
+            function validateResponse(){
+                if(document.getElementById("choixLitige1").checked == true){
+                    return confirm("Voulez vous vraiment valider cette réponse ?")
+                }else{
+                    return confirm("Voulez vous vraiment valider cette réponse ? Celle-ci entrainera un arbitrage par nos service afin de résoudre ce litige.")
+                }
+            }
+        </script>
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <% 
+                            function pad(n) {return n < 10 ? "0"+n : n;}
+                            var dateTmp =  new Date(dispute[0].dateDispute);
+                            var dateDispute = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
+                        %>   
+                        <h2 class="page-heading" style="font-size: 20px;"> <span class="page-heading-title">Détail du litige N°<%=dispute[0].idDispute%> du <%=dateDispute%></span> </h2>
+                        <div class="table-responsive">
+                            <fieldset>
+                                    <% if (msgError.length > 0) { %>
+                                        <div class="alert alert-danger"><%- msgError %></div>
+                                    <% } %>
+                                    <% if (msgSuccess.length > 0) { %>
+                                        <div class="alert alert-success"> <%= msgSuccess %> </div>
+                                    <% } %>
+
+                                <h4><strong>Statut :</strong><br/> 
+                                    <% if (dispute[0].statusDispute == "NEW"){ %>
+                                        A traiter
+                                    <% }else if(dispute[0].statusDispute == "ACCEPTED") { %>
+                                        Vous avez accepté la réclamation
+                                    <% }else if(dispute[0].statusDispute == "CONTEST") { %>
+                                        Vous avez contesté la réclamation pour la raison suivante :<br />
+                                        <%- dispute[0].contestDescriptionDispute.replace(/\n|\r/g,'<br />') %>
+                                    <% }else if(dispute[0].statusDispute == "CLOSE") { %>
+                                        Cloturé
+                                        <% if(dispute[0].contestDescriptionDispute != ""){ %>
+                                            <h3>Résumé de la contestation : </h3><br/>
+                                            <h3>Motif :<h3>
+                                            <%- dispute[0].contestDescriptionDispute.replace(/\n|\r/g,'<br />') %>
+                                            <h3>Résultat arbitrage :</h3>
+                                            
+                                        <% } %>
+                                    <% } %>
+                                </h4><br />
+                                <h4><strong>Informations client : </strong></h4>
+                                <p>
+                                <% if(dispute[0].sexOrder == "H"){ %>
+                                Monsieur 
+                                <% }else{ %>
+                                Madame  
+                                <% } %>
+                                <%=dispute[0].lastNameOrder%> <%=dispute[0].firstNameOrder%><br/>
+                                <%=dispute[0].addressOrder%><br/>
+                                <%=dispute[0].cpOrder%> <%=dispute[0].cityOrder%>
+                                </p>
+                                
+                                <h4><strong>Produits concerné : </strong></h4>
+                                <%for(var i =0; i<dispute.length; i++){ %>
+                                    <div> <%=dispute[i].titleLigneOrder%> (<%=dispute[i].categoryLigneOrder%>, <%=dispute[i].productLigneOrder%>)</div>
+                                <% } %>
+                                <p><a href="/producerDashboard/orderDetails/<%=dispute[0].idOrderLigneOrder%>">Voir la commande</a></p>
+                                <h4><strong>Motif du litige : </strong></h4>
+                                <p><%=dispute[0].nameMotif%></p>
+                                <h5><strong>Description</strong> : </h5>
+                                <p><%-dispute[0].descriptionDispute.replace(/\n|\r/g,'<br />'); %></p>
+                            </fieldset>
+                            <% if(dispute[0].statusDispute == "NEW"){ %>
+                            <div>
+                                <h3><strong>Traiter le litige </strong></h3>
+                                <form method="POST" action="/producerDashboard/disputeDetails/<%=dispute[0].idDispute%>">
+                                    <input type="radio" name="choixLitige" id ="choixLitige1" value="ACCEPTED" required> J'accepte ce litige et de rembourser mon client.<br/>
+                                    <input type="radio" name="choixLitige" id ="choixLitige2" value="CONTESTED" required> Je refuse ce litige.
+                                    <div id="description" style=" visibility: hidden; position:absolute">
+                                        <br/>
+                                        <label>Décrivez le motif du refus</label>
+                                        <textarea style="width:100%; height:200px;" maxlength="500" title="description"  class="input-text required-entry" name="descriptionContest"></textarea>
+                                    </div>
+                                    <br/><br/>
+                                    <button type="submit" id="submitbtn" class="btn btn-info" onclick="return validateResponse()">Traiter mon litige</button>
+                                 </form>
+                            </div>
+                            <% } %>
+                        </div>
+                        
+                    <fieldset class="col2-set">
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ../partials/dashboard %>
+                </div>
+            </div>
+        </section>
+        <% include ../partials/footer %>
+    </div>
+</body>

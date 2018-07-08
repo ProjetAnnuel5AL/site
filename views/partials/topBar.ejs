@@ -20,16 +20,14 @@
             <!-- Header Top Links -->
             <div class="toplinks">
               <div class="links">
-                <div class="home"><a style="height:30px;" title="Accueil" href="/" ><span class="hidden-xs">Accueil</span></a> </div>
-                <div class="items"><a title="Annonces" href="/itemList/1" ><span class="hidden-xs">Annonces</span></a> </div>
                 <%if (session.type) { %>
-                <div class="myaccount"><a title="Mon compte" href="/userDashboard/profil"><span class="hidden-xs">Mon compte</span></a> </div>
-                
                 <%if (session.type == 1) {%>
                 <!-- Header Company -->
-                <div class="dropdown block-company-wrapper hidden-xs"> <a role="button" data-toggle="dropdown" data-target="#" class="block-company dropdown-toggle" href="#"> Mes annonces <span class="caret"></span></a>
+                <div class="dropdown block-company-wrapper hidden-xs"> <a role="button" data-toggle="dropdown" data-target="#" class="block-company dropdown-toggle" href="#"> Annonces <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li role="item"><a title="Déposer une annonce" href="/item/new">  Déposer une annonce </a> </li>
+                    <li role="item"><a title="Déposer une annonce" href="/producerDashboard/item/new"> Déposer une annonce </a> </li>
+                    <li role="item"><a title="Gérer mes annonces" href="/producerDashboard/items"> Consulter mes annonces </a> </li>
+                    <li role="item"><a title="Gérer mes ventes" href="/producerDashboard/orders"> Gerer mes ventes </a> </li>
                   </ul>
                 </div>
                 <div class="dropdown block-company-wrapper hidden-xs"> <a role="button" data-toggle="dropdown" data-target="#" class="block-company dropdown-toggle" href="#"> Mes coopératives <span class="caret"></span></a>
@@ -39,7 +37,17 @@
                   </ul>
                 </div>
                 <% } %>
-                <div class="deconnexion"><a title="Déconnexion" href="/logout"><span class="hidden-xs">Déconnexion</span></a> </div>
+                <%if (session.type == 3) {%>
+                  <div class="myaccount"><a title="Devenir producteur" href="/becomeProducer"><span class="hidden-xs">Devenir producteur</span></a> </div>
+                
+                <% } %>
+                <div class="dropdown block-company-wrapper hidden-xs"> <a role="button" data-toggle="dropdown" data-target="#" class="block-company dropdown-toggle" href="#"> Mon Compte <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li role="item"><a title="Créer une coopérative" href="/userDashboard/profil">Paramètres</a> </li>
+                    <li role="item"><a title="Consulter mes coopératives" href="/userDashboard/orders">Consulter mes commandes</a> </li>
+                    <li role="item"><a title="Consulter mes coopératives" href="/logout">Déconnexion</a> </li>
+                  </ul>
+                </div>
                 <div class="top-cart-contain pull-right" style="margin-top:0px;"> 
                   <!-- Top Cart -->
                   <div class="mini-cart">
@@ -62,6 +70,7 @@
                     <input class="title_shopping_cart" value="Go to shopping cart" type="hidden">
                   </div>
                 </div>
+               
                 <% } %>
                 <!-- End Header Company -->
                 <% if(!session.type) { %>
@@ -74,11 +83,14 @@
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-6 col-md-4 col-sm-4 col-xs-12 logo-block"> 
+    <div class="container" >
+      <div class="row" align="center" >
+        <div> 
           <!-- Header Logo -->
-          <!--<div class="logo"> <a title="mon logo" href="index.html"><img alt="Freshia" src="images/logo1.png"> </a> </div>-->
+          <div class="logo" sytle=" display: inline;">
+            <img alt="Le champ a la maison" src="/img/image_big.png" style="width:7%">&nbsp;
+            <div style="color: #FCA205; font-family: 'Raleway', sans-serif;; display: inline; font-size: 40px;">Le champ a la Maison</div>
+          </div>
           <!-- End Header Logo --> 
         </div>
         

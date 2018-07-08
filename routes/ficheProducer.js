@@ -19,12 +19,15 @@ module.exports = function(app, urlApi, utils, config){
             var long;
             if(body.code ==0){
                 var producer = body.result;
+                producer.idProducer = req.params.id;
                 var avatar = "";
                
                 if(body.result.avatarProducer == "default"){
                     avatar = "../img/avatar.png";
                 }else{
-                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/"+ body.result.avatarProducer
+                    var avatarProducer = body.result.avatarProducer.split('.');
+                    
+                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/img_resize/"+ avatarProducer[0]+"_ms."+avatarProducer[1]
                 }
                 var LatLong = producer.locationProducer.split(',');
                 lat = LatLong[0];
@@ -41,6 +44,7 @@ module.exports = function(app, urlApi, utils, config){
                     msgError:"",
                     msgSuccess: ""
                 });
+                
             }else{
                 res.render("ficheProducer.ejs", {
                     session: req.session,

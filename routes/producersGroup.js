@@ -201,6 +201,82 @@ module.exports = function(app, urlApi, utils, config){
       }
     });
 
+  app.get('/producersGroup/search/location', function(req, res, next) {  
+    console.log(req.body);
+    console.log(req.query);
+    var listTab= [];
+    if (!req.session.type) {
+        res.redirect("/");
+    }else{
+      if(!req.query.address || !req.query.lat || !req.query.long){
+        res.render("producersGroupSearch.ejs", {
+          session: req.session,
+          urlApi: urlApi,
+          listTab : listTab,
+          msgError: "Aucune adresse n'a été selectionnée",
+          msgSuccess: ""
+        });
+      }else{
+        rp({
+          url: urlApi + "/producersGroup/search",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          json: {
+            "token": req.session.token
+          },
+          qs: {
+            lat : req.query.lat,
+            long : req.query.long
+          }
+        }).then(function (body) {
+            if(body.code ==0){
+              res.render("producersGroupSearch.ejs", {
+                session: req.session,
+                urlApi: urlApi,
+                listTab : body.result,
+                msgError: "",
+                msgSuccess: ""
+              });
+            }else{
+              res.render("producersGroupSearch.ejs", {
+                session: req.session,
+                urlApi: urlApi,
+                listTab : listTab,
+                msgError: "Aucune coopérative trouvée dans la zone",
+                msgSuccess: ""
+              });
+            }
+          }).catch(function (err) {
+            console.log(err);
+            res.render("producersGroupSearch.ejs", {
+              session: req.session,
+              urlApi: urlApi,
+              listTab : listTab,
+              msgError: "Echec de la recherche (erreur inconnue 2)",
+              msgSuccess: ""
+            });
+          });
+      }
+    }
+  });
+
+  app.get('/producersGroup/search', function(req, res, next) {
+    if (!req.session.type) {
+        res.redirect("/");
+    }else{
+      res.render("producersGroupSearch.ejs", {
+        session: req.session,
+        urlApi: urlApi,
+        listTab: [],
+        msgError: "",
+        msgSuccess: ""
+      });
+    }
+  });
+
+
   app.get('/producersGroup/:id', function(req, res, next) {
       var msgError = "";
       var msgSuccess = "";
@@ -259,12 +335,12 @@ module.exports = function(app, urlApi, utils, config){
               }
             }).catch(function (err) {
               console.log(err);
-              res.render("producersGroup.ejs", {
+              res.render("erreur.ejs", {
                 session: req.session,
                 coop: {},
                 coopMembers: [],
                 urlApi: urlApi,
-                msgError: "Erreur inconnue 1. Merci de réessayer ultérieurement.",
+                msgError: "Erreur: coopérative non trouvée",
                 msgSuccess: ""
               });
             });
@@ -338,15 +414,17 @@ module.exports = function(app, urlApi, utils, config){
               }).then(function (body) {
                 if (body.code == 0) {
                   rp({
-                    url: urlApi + "/notification/idItem?id="+notifId,
+                    url: urlApi + "/notification/idItem",
                     method: "DELETE",
                     headers: {
                       "Content-Type": "application/json"
                     },
                     json: {
+                      "id": notifId,
                       "token": req.session.token
                     }
                   }).then(function (body) {
+                    console.log(body);
                     if (body.code == "0") {
                       res.redirect("/producersGroup/" + req.query.idGroup);
                     }else{
@@ -440,7 +518,142 @@ module.exports = function(app, urlApi, utils, config){
         });
       }
   });
-      
+  
+  app.post('/producersGroupMember/delete/id', function(req, res, next) {
+		if(req.body.id){
+			var msgError;
+			msgError="";
+			rp({
+				url: urlApi + "/producersGroupMember/id",
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json"
+				},
+        json: {
+          "id": req.body.id,
+          "token": req.session.token
+        }
+			}).then(function (body) {
+        console.log(body);
+				if (body.code == "0") {
+					res.send(body);
+				} else {
+					res.send(null);
+				}
+			}).catch(function (err) {
+				console.log(err);
+				res.send(null);
+			});
+		}else res.send(null);
+  });
+
+  app.post('/producersGroup/delete/idGroup', function(req, res, next) {
+    console.log(req.body);
+		if(req.body.idGroup && req.body.countMembers){
+			var msgError;
+			msgError="";
+      if(req.body.countMembers!='0'){
+        console.log("bbb")
+        rp({
+          url: urlApi + "/producersGroupMember/idGroup",
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          json: {
+            "idGroup": req.body.idGroup,
+            "token": req.session.token
+          }
+        }).then(function (body) {
+          console.log(body);
+          if (body.code == "0") {
+            rp({
+              url: urlApi + "/producersGroup/idGroup",
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              json: {
+                "idGroup": req.body.idGroup,
+                "token": req.session.token
+              }
+            }).then(function (body) {
+              if (body.code == "0") {
+                res.redirect('/producersGroup/List');
+              }else {
+                res.render("erreur.ejs", {
+                  session: req.session,
+                  urlApi: urlApi,
+                  msgError: "Erreur inconnue 1. Merci de réessayer ultérieurement.",
+                  msgSuccess: ""
+                });
+              }
+            }).catch(function (err) {
+              res.render("erreur.ejs", {
+                session: req.session,
+                urlApi: urlApi,
+                msgError: "Erreur inconnue 2. Merci de réessayer ultérieurement.",
+                msgSuccess: ""
+              });
+            });
+          } else {
+            res.render("erreur.ejs", {
+              session: req.session,
+              urlApi: urlApi,
+              msgError: "Erreur inconnue 3. Merci de réessayer ultérieurement.",
+              msgSuccess: ""
+            });
+          }
+        }).catch(function (err) {
+          res.render("erreur.ejs", {
+            session: req.session,
+            urlApi: urlApi,
+            msgError: "Erreur inconnue 4. Merci de réessayer ultérieurement.",
+            msgSuccess: ""
+          });
+        });
+      }else{
+        console.log("aaaa");
+        rp({
+          url: urlApi + "/producersGroup/idGroup",
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          json: {
+            "idGroup": req.body.idGroup,
+            "token": req.session.token
+          }
+        }).then(function (body) {
+          console.log(body);
+          if (body.code == "0") {
+            res.redirect('/producersGroup/List');
+          } else {
+            res.render("erreur.ejs", {
+              session: req.session,
+              urlApi: urlApi,
+              msgError: "Erreur inconnue 1. Merci de réessayer ultérieurement.",
+              msgSuccess: ""
+            });
+          }
+        }).catch(function (err) {
+          res.render("erreur.ejs", {
+            session: req.session,
+            urlApi: urlApi,
+            msgError: "Erreur inconnue 2. Merci de réessayer ultérieurement.",
+            msgSuccess: ""
+          });
+        });
+      }
+		}else{
+      res.render("erreur.ejs", {
+        session: req.session,
+        urlApi: urlApi,
+        msgError: "Erreur inconnue 5. Merci de réessayer ultérieurement.",
+        msgSuccess: ""
+      });
+    }
+  });
 
     function getGroup(fields){
         var producer = {

@@ -110,12 +110,14 @@
                     <col width="1">
                     <col width="1">
                     <col width="1">
+                    <col width="1">
                     </colgroup>
                     <thead>
                     <tr class="first last">
                         <th rowspan="1">&nbsp;</th>
                         <th rowspan="1"><span class="nobr">Produit</span></th>
                         <th rowspan="1"></th>
+                        <th>Livraison</th>
                         <th colspan="1" class="a-center"><span class="nobr">Prix unitaire</span></th>
                         <th class="a-center" rowspan="1">Quantité</th>
                         <th colspan="1" class="a-center">Total</th>
@@ -155,6 +157,13 @@
                         <td class="image"><a class="product-image" title="" href="/visualisationAnnonce/<%=session.cart[i].id%>"><img width="75" alt="Sample Product" src="<%=session.cart[i].img%>"></a></td>
                         <td><h2 class="product-name"> <a href="/visualisationAnnonce/<%=session.cart[i].id%>"><%=session.cart[i].title%></a> </h2><%=session.cart[i].category%>, <%=session.cart[i].product%></td>
                         <td class="a-center"></td>
+                        <td style="width:20%;"><span class="cart-price"> <span class="price"><%=(cart[i].shippingCost*1).toFixed(2)%>€</span><br/>
+                            <% if(cart[i].deliveryTime.split(';')[0] != cart[i].deliveryTime.split(';')[1]) { %>
+                                Livraison prévue entre <%=cart[i].deliveryTime.split(';')[0]%> et <%=cart[i].deliveryTime.split(';')[1]%> jours ouvrés 
+                            <% }else{ %>
+                                Livraison prévue dans <%=cart[i].deliveryTime.split(';')[0]%> jours ouvrés
+                            <% }%> 
+                        </span></td>
                         <td class="a-right"><span class="cart-price"> <span class="price"><%=(session.cart[i].prixU*1).toFixed(2)%> €</span> </span></td>
                         <td class="a-center movewishlist"> <select name="qte" id="<%=i%>" onchange="changeQte(this)">
                                 <% for(var j = 1; j<=cart[i].qteMax; j++) { %> 
@@ -165,23 +174,22 @@
                                     <% } %>
                                     
                                 <% } %>  
-                                
                             </select></td>
                         <% 
                             var prixT = (session.cart[i].qte * session.cart[i].prixU)
-                            prixGlobal += prixT;
+                            prixGlobal += prixT + (cart[i].shippingCost*1);
                         %>
-                        <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=prixT.toFixed(2)%>€</span> </span></td>
+                        <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=(prixT+ session.cart[i].shippingCost*1).toFixed(2)%>€</span> </span></td>
                         <td class="a-center last"><a class="button remove-item" title="Remove item" id="<%=cart[i].id%>" onclick="deleteItemCart(this)"><span><span>Remove item</span></span></a></td>
                     </tr>
                         <% } %>
                     <tr>
                         <th class="image">Total</th>
-                        <td></td>
+                        <td><span class="cart-price"> <span class="price"><%=prixGlobal.toFixed(2)%>€</span> </td>
                         <td class="a-center"></td>
                         <td class="a-right"></td>
                         <td class="a-center movewishlist"></td>
-                        <td class="a-right movewishlist"><span class="cart-price"> <span class="price"><%=prixGlobal.toFixed(2)%>€</span> </span></td>
+                        <td class="a-right movewishlist"></td>
                         <td class="a-center last"></td>
                     </tr>
                     </tbody>

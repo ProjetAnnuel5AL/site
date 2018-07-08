@@ -11,7 +11,7 @@
         <header>
             <% include ./partials/topBar %>
         </header>
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+        <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
         <script type="text/javascript">
             $(document).ready(function () {
                 var item;
@@ -23,10 +23,22 @@
                 var latlong = '<%=producer.locationProducer%>'
                 google.maps.event.addListener(autocomplete, 'place_changed', function () {
                     var place = autocomplete.getPlace();
+
+                    var cp ="";
+                    for (var i = 0; i < place.address_components.length; i++) {
+                        for (var j = 0; j < place.address_components[i].types.length; j++) {
+                            if (place.address_components[i].types[j] == "postal_code") {
+                                cp = place.address_components[i].long_name;
+                                break;
+                            }
+                        }
+                    }
+
                     selectAdress(place.geometry.location.lat(), place.geometry.location.lng(), 15, true);
                     $("#city").val(place.vicinity);
+                    $("#cp").val(cp);
                 });
-                console.log(latlong)
+               
                 if(latlong == null || latlong ==""){
                     selectAdress(47.930565, 2.436864, 5, false);
                 }else{
@@ -116,8 +128,9 @@
                                     <input type="text" class="input-text required-entry" id="address" name="address" value="<%= producer.addressProducer %>" autocomplete="off">
                                     </br>
                                     <div id="map" class="form-control"style="height:500px;"></div>
-                                    <input type="hidden" class="form-control" id="location" name="location">
-                                    <input type="hidden" class="form-control" id="city" name="city"/>
+                                    <input type="hidden" class="form-control" id="location" name="location" value="<%= producer.addressProducer %>">
+                                    <input type="hidden" class="form-control" id="city" name="city" value="<%= producer.cityProducer %>"/>
+                                    <input type="hidden" class="form-control" id="cp" name="cp" value="<%= producer.cpProducer %>"/>
                                 </li>
                                 <li>
                                     <label for="avatar">Photo (facultative) </label>
@@ -196,7 +209,7 @@
                 $.ajax({
                     url: "/becomeProducer/verifyPaypalAccount",
                     success: function(data) {
-                        console.log("succes")
+                        
                         if(data.code == 0){
                             if(data.email != emailPaypal){
                                 document.getElementById("displayPaypalEmail").innerHTML = "<b style=\"font-size:14px\">Compte " + data.email + " valide.<b>"
