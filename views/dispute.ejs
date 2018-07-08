@@ -27,7 +27,7 @@
                             <div class="alert alert-success"> <%= msgSuccess %> </div>
                         <% } %>
                         <h3>Commande n°<%=items[0].idOrder%>, du <%=items[0].dateOrder%></h3>
-                        <form action="/signalOrder/<%=items[0].idOrder%>" method="post">
+                        <form action="/dispute/<%=items[0].idOrder%>" method="post">
                             <ul>
                                 <li>
                                     <br />
@@ -70,7 +70,7 @@
                                     <br>
                                     <label for="description">Veuillez décrire le plus précisement possible la nature de votre problème (minimum 20 caractères) :</label>
                                     <br>
-                                    <textarea style="width:100%; height:200px;" maxlength="500" title="description" id="description" class="input-text required-entry" name="descriptionSignalOrder"></textarea>
+                                    <textarea style="width:100%; height:200px;" maxlength="500" title="description" id="description" class="input-text required-entry" name="descriptionDispute"></textarea>
                                 </li>
                                 <button name="send" type="submit" class="button" style="margin-top:5px;" onclick="return confirm('Valider la création de ce signalement ?');"><span>Soumettre</span></button>
                             </ul>

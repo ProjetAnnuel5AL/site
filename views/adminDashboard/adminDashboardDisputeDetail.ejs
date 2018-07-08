@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Détail du litige</title>
+    <% include ../partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ../partials/topBar %>
+            <% include ../partials/navbar %>
+        </header>
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <% 
+                            function pad(n) {return n < 10 ? "0"+n : n;}
+                            var dateTmp =  new Date(dispute[0].dateDispute);
+                            var dateDispute = pad(dateTmp.getDate())+"/"+pad(dateTmp.getMonth()+1)+"/"+dateTmp.getFullYear();
+                        %>   
+                        <h2 class="page-heading" style="font-size: 20px;"> <span class="page-heading-title">Détail du litige N°<%=dispute[0].idDispute%> du <%=dateDispute%></span> </h2>
+                        <div class="table-responsive">
+                            <fieldset>
+                                    <% if (msgError.length > 0) { %>
+                                        <div class="alert alert-danger"><%- msgError %></div>
+                                    <% } %>
+                                    <% if (msgSuccess.length > 0) { %>
+                                        <div class="alert alert-success"> <%= msgSuccess %> </div>
+                                    <% } %>
+
+                                <h4><strong>Statut :</strong> <br/><br/>
+                                    <% if (dispute[0].statusDispute == "NEW"){ %>
+                                        En attente de la réponse du vendeur
+                                    <% }else if(dispute[0].statusDispute == "ACCEPTED") { %>
+                                        Le vendeur a accepté la réclamation.
+                                    <% }else if(dispute[0].statusDispute == "CONTEST") { %>
+                                        Le vendeur a contesté la réclamation pour la raison suivante :<br />
+                                        <%- dispute[0].contestDescriptionDispute.replace(/\n|\r/g,'<br />') %>
+                                        <br />Arbitrage en cours.
+                                    <% }else if(dispute[0].statusDispute == "CLOSE") { %>
+                                        Cloturé.
+                                        <% if(dispute[0].contestDescriptionDispute != ""){ %>
+                                            <h3>Résumé de la contestation : </h3><br/>
+                                            <h3>Motif :<h3>
+                                            <%- dispute[0].contestDescriptionDispute.replace(/\n|\r/g,'<br />') %>
+                                            <h3>Résultat arbitrage :</h3>
+                                            
+                                        <% } %>
+                                    <% } %>
+                                </h4>
+                                <h4><strong>Vendeur : </strong></h4>
+                                <p>
+                                    Producteur : <a href="/ficheProducer/<%=dispute[0].idProducer%>"><%=dispute[0].loginUser%></a>
+                                </p>
+                                
+                                <h4><strong>Produits concerné : </strong></h4>
+                                <%for(var i =0; i<dispute.length; i++){ %>
+                                    <div> <%=dispute[i].titleLigneOrder%> (<%=dispute[i].categoryLigneOrder%>, <%=dispute[i].productLigneOrder%>)</div>
+                                <% } %>
+                                <p><a href="/userDashboard/orderDetails/<%=dispute[0].idOrderLigneOrder%>">Voir la commande</a></p>
+                                <h4><strong>Motif du litige : </strong></h4>
+                                <p><%=dispute[0].nameMotif%></p>
+                                <h5><strong>Description</strong> : </h5>
+                                <p><%-dispute[0].descriptionDispute.replace(/\n|\r/g,'<br />'); %></p>
+                            </fieldset>
+                            
+                        </div>
+                        
+                    <fieldset class="col2-set">
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ../partials/dashboard %>
+                </div>
+            </div>
+        </section>
+        <% include ../partials/footer %>
+    </div>
+</body>

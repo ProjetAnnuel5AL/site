@@ -2,7 +2,7 @@ module.exports = function(app, urlApi, utils, config) {
 
     var rp = require("request-promise");
 
-    app.get("/signalOrder/:id", function(req, res, next) {
+    app.get("/dispute/:id", function(req, res, next) {
         if(!req.session.type || !req.params.id || req.params.id =="") {
 			res.redirect("/");
         }else{
@@ -37,7 +37,7 @@ module.exports = function(app, urlApi, utils, config) {
                     }
                 }).then(function (body) {
                     if(body.code == 0){
-                        res.render("signalOrder.ejs", {
+                        res.render("dispute.ejs", {
                             session: req.session,
                             msgError:msgError,
                             msgSuccess: msgSuccess,
@@ -56,19 +56,19 @@ module.exports = function(app, urlApi, utils, config) {
         }
     });
 
-    app.post("/signalOrder/:id", function(req, res, next) {
+    app.post("/dispute/:id", function(req, res, next) {
         if(!req.session.type || !req.params.id || req.params.id =="") {
             res.redirect("/");
         }else{
             if(!req.body.idMotif){
-                res.redirect("/signalOrder/"+req.params.id+"?msgError=Veuillez saisir un motif.")
+                res.redirect("/dispute/"+req.params.id+"?msgError=Veuillez saisir un motif.")
             }else if(!req.body.idLigneOrder || req.body.idLigneOrder.length == 0){
-                res.redirect("/signalOrder/"+req.params.id+"?msgError=Veuillez saisir au moins un produit.")
-            }else if(!req.body.descriptionSignalOrder || req.body.descriptionSignalOrder.length>500 || req.body.descriptionSignalOrder.length<20){
-                res.redirect("/signalOrder/"+req.params.id+"?msgError=Veuillez saisir une description de votre problème comprise entre 20 et 500 caractères.")
+                res.redirect("/dispute/"+req.params.id+"?msgError=Veuillez saisir au moins un produit.")
+            }else if(!req.body.descriptionDispute || req.body.descriptionDispute.length>500 || req.body.descriptionDispute.length<20){
+                res.redirect("/dispute/"+req.params.id+"?msgError=Veuillez saisir une description de votre problème comprise entre 20 et 500 caractères.")
             }else{
                 rp({
-                    url: urlApi + "/signalOrder",
+                    url: urlApi + "/dispute",
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -78,15 +78,14 @@ module.exports = function(app, urlApi, utils, config) {
                         "token" : req.session.token,
                         "idOrder" : req.params.id,
                         "idLigneOrder" : req.body.idLigneOrder,
-                        "descriptionSignalOrder": req.body.descriptionSignalOrder,
+                        "descriptionDispute": req.body.descriptionDispute,
                         "idMotif": req.body.idMotif
                     }
                 }).then(function (body) {
-                    
                     if(body.code == 0){
                         res.redirect("/userDashboard/orders?msgSuccess=Votre signalement a bien été enregistré.")
                     }else{
-                        res.redirect("/signalOrder/"+req.params.id+"?msgError=Erreur lors de l'enregistrement de votre demande. Merci de réessayer ultérieurement. ")
+                        res.redirect("/dispute/"+req.params.id+"?msgError=Erreur lors de l'enregistrement de votre demande. Merci de réessayer ultérieurement. ")
                     }
                 }).catch(function(err){
                     res.redirect("/");
