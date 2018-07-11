@@ -1,0 +1,156 @@
+<!-- views/becomeProducer.ejs -->
+<!doctype html>
+<link rel="stylesheet" type="text/css" href="/css/progressBar.css">
+<html>
+<head>
+    <title>événement</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+        </header>
+        
+        <section class="main-container top-space col1-layout">
+            <div class="main container container-progress">
+                <div class="account-login">
+                <div class="page-title">
+                    <% if (msgError.length > 0) { %>
+                        <div class="alert alert-danger"><%= msgError %></div>
+                    <% } %>
+                    <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%- msgSuccess %> </div>
+                    <% } %>
+                    <center>
+                    <h2>Événements : </h2>
+                    <img src="/img/calendar.svg" / id="exampleImg0" style="max-width: 150px;"><br><br>
+                    <p>Crééez un événement, vos membres producteurs pourront s'y inscrire et vendre leurs produits
+                    </p>
+                    </center>
+                </div>
+                <hr>
+                <fieldset class="col2-set">
+                    <div class="col-1 update-users">
+                    <div class="content">
+                        <% if(founderLogin == session.login){ %>
+                        <div><h3>Créer un événement: </h3></div><br>
+                        <form action="/producersGroupEvent/new" id="myForm" method="post" enctype="multipart/form-data">
+                            <ul class="form-list">
+                                <li>
+                                    <label for="name">Nom de l'événement</label>
+                                    <br>
+                                    <input type="text" title="name" class="input-text required-entry" id="name" value="<%= event.name%>" name="name" required>
+                                </li>
+                                <li>
+                                    <label for="description">Description (entre 20 et 500 caractères)</label>
+                                    <br>
+                                    <textarea style="width:100%; height:200px;" maxlength="500" title="description" id="description" class="input-text required-entry" name="description" required><%= event.description %></textarea>
+                                </li>
+                                <li>
+                                    <label for="adress">Adresse de l'événement</label>
+                                    <br>
+                                    <input type="text" class="input-text required-entry" id="adress" name="adress" value="<%= event.adress %>" autocomplete="off">
+                                    </br>
+                                    <div id="map" class="form-control"style="height:500px;"></div>
+                                    <input type="hidden" class="form-control" id="location" value="<%= event.location %>" name="location">
+                                    <input type="hidden" class="form-control" id="city" value="<%= event.city %>" name="city"/>
+                                </li>
+                                <li>
+                                    <label for="date">Date et heure de l'évenement</label>
+                                    <br>
+                                    <div class='input-group date' id='datetimepicker'>
+                                        <input type='text' name="date" id="date" class="form-control no-margin" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                              </li>
+                            </ul>
+                            <input type="hidden" class="form-control" id="idGroup" value="<%= idGroup %>" name="idGroup">
+                            <input type="hidden" class="form-control" id="founderLogin" value="<%= founderLogin %>" name="founderLogin"/>
+                            <button name="send" type="submit" class="button" style="margin-top:60px;"><span>Créer son événement</span></button>
+                        </form>
+                        <% } else { %>
+                          <div class="alert alert-danger">Vous n'êtes pas l'administrateur de cette coopérative. Jouer avec les URLs, c'est mal !</div>
+                        <% } %>
+                        <!--on sort la section paypal du form sinon sa submit le form-->
+                        <span id='lippButton' style="margin-top:-75px; position:absolute"></span>
+                    </div>
+                    </div>
+                </fieldset>
+                </div>
+            </div>
+        </section>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment-with-locales.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+        <script type="text/javascript">
+           
+            $("document").ready(function(){
+                var urlApi;
+                var group;
+                var options = {
+                    componentRestrictions: {country: 'fr'}
+                };
+                $('#datetimepicker').datetimepicker({
+                  locale: 'fr',
+                  format : "YYYY/MM/DD HH:MM"
+                });
+                var autocomplete = new google.maps.places.Autocomplete($("#adress")[0], options);
+                
+                google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                    var place = autocomplete.getPlace();
+                    selectAdress(place.geometry.location.lat(), place.geometry.location.lng(), 15, true);
+                    $("#city").val(place.vicinity);
+                });
+                selectAdress(47.930565, 2.436864, 5, false);
+                $("#fileAvatar").change(function() {
+                    readURL(this);   
+                });
+                "<% if (typeof group !== 'undefined') { %>"
+                    group = JSON.parse('<%- JSON.stringify(group) %>');
+                    var latlng = group.location.split(',');
+                    selectAdress(latlng[0], latlng[1], 5, false);
+                "<% } %>"
+                
+            });
+            function selectAdress(lat, long, zoom, marker){
+                var latlng = new google.maps.LatLng(lat, long)
+                var myOptions = {
+                  center: latlng,
+                  zoom: zoom,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("map"),
+                    myOptions);
+                if(marker){
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        title: 'Adresse'
+                    });
+                    $("#location").val(lat + ','+ long);
+                }
+                
+            }
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+    
+                    reader.onload = function (e) {
+                        $('#avatarImg').attr('src', e.target.result);
+                    }
+    
+                    reader.readAsDataURL(input.files[0]);
+                }else{
+                    $('#avatarImg').attr('src', "img/avatar.png");
+                }
+            }
+        </script>
+
+    </div>
+    <% include ./partials/footer %>
+</body>

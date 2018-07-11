@@ -295,7 +295,8 @@ module.exports = function(app, urlApi, utils, config){
             'User-Agent': 'Request-Promise'
           },
           qs: {
-            idGroup: req.params.id
+            idGroup: req.params.id,
+            token: req.session.token
           }
         }).then(function (body) {
           console.log(body);
@@ -309,7 +310,8 @@ module.exports = function(app, urlApi, utils, config){
                 'User-Agent': 'Request-Promise'
               },
               qs: {
-                idGroup: req.params.id
+                idGroup: req.params.id,
+                token: req.session.token
               }
             }).then(function (body) {
               if (body.code == 0) {

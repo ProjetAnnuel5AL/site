@@ -1,0 +1,141 @@
+<!-- views/becomeProducer.ejs -->
+<!doctype html>
+<link rel="stylesheet" type="text/css" href="/css/progressBar.css">
+<html>
+<head>
+    <title>événement</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+        </header>
+        
+        <section class="main-container top-space col1-layout">
+            <div class="main container container-progress">
+                <div class="account-login">
+                <div class="page-title">
+                    <% if (msgError.length > 0) { %>
+                        <div class="alert alert-danger"><%= msgError %></div>
+                    <% } %>
+                    <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%- msgSuccess %> </div>
+                    <% } %>
+                    <center>
+                    <h2>Événement : </h2>
+                    <img src="/img/calendar.svg" / id="exampleImg0" style="max-width: 150px;"><br>
+                    </center>
+                </div>
+                <hr>
+                    <div class="content">
+                        
+                        <div style="width:50%; float:left;">
+                            <div id="coopInfo" class="center">
+                                <div><h1>Événement: </h1></div>
+                                <h3><%= coopEvent.nameEvent %>:</h3>
+                                <p style="width:50%"><%= coopEvent.descriptionEvent %></p>
+                                <div id="map" class="form-control" style="width: 90%; height:450px; margin-left: 5%;"></div>
+                                <h5>Adresse: <%= coopEvent.adressEvent %></h5>
+                                <h5>Date: <%= coopEvent.dateEvent %></h5>
+                            </div>
+                        </div>
+                        <div style="width: 50%; float:right;">
+                        <div>
+                            <div class="greenVerticalBar" style="float:left; width:1%"></div>
+                            <div style="width: 95%; float:right">
+                                
+                                <h1 style="text-align: center">Participants:</h1></br>
+                                <% if(memberOrAdmin) {%>
+                                    Rejoindre en tant que:
+                                    <select id="libelleAgriculteur">
+                                        <option value="Boucher">Boucher</option> 
+                                        <option value="Boulanger">Boulanger</option> 
+                                        <option value="Céréalier">Céréalier</option> 
+                                        <option value="Charcutier">Charcutier</option> 
+                                        <option value="Fromager">Fromager</option> 
+                                        <option value="Maraîcher">Maraîcher</option> 
+                                        <option value="Poissonier">Poissonier</option> 
+                                        <option value="Producteur de fruits">Producteur de fruits</option> 
+                                        <option value="Vignoble">Vignoble</option> 
+                                    </select>
+                                    <button class="joinEvent-btn" type="button" onclick="joinEvent();" id="joinBtn"><i class="fa fa-plus-square"></i> Rejoindre</button></br></br>
+                                <% } %>
+                                <% if(coopParticipants.length==0){ %>
+                                    <div class="alert alert-info">
+                                        Cet événement ne possède aucun participant pour l'instant, repassez plus tard ! 
+                                    </div>
+                                <% } %>
+                                <ul class="prettyList prettyListMember">
+                                    <% for(var i=0; i<coopParticipants.length; i++) { %>
+                                        <li class="prettyList" id="member<%=coopParticipants[i].id%>">
+                                        <img class="prettyList" src="<%=urlApi%>/producerAvatar/<%=coopParticipants[i].idProducer%>/<%=coopParticipants[i].avatarProducer%>" />
+                                        <h3 class="prettyList"><%=coopParticipants[i].firstNameProducer%> <%=coopParticipants[i].lastNameProducer%></h3>
+                                        <p class="prettyList"><%=coopParticipants[i].descriptionProducer%> </br><strong>Code postal: </strong> <%=coopParticipants[i].cpProducer%></p></br>
+                                        <p class="prettyList"><%=coopParticipants[i].libelleParticipant%></p>
+                                        </li>
+                                    <% } %>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment-with-locales.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+        <script type="text/javascript">
+           
+            $("document").ready(function(){
+                var urlApi;
+                var event;
+                "<% if (typeof coopEvent !== 'undefined') { %>"
+                    event = JSON.parse('<%- JSON.stringify(coopEvent) %>');
+                    var latlng = event.locationEvent.split(',');
+                    selectAdress(latlng[0], latlng[1], 5, false);
+                "<% } %>"
+                
+            });
+            function selectAdress(lat, long, zoom, marker){
+                var latlng = new google.maps.LatLng(lat, long)
+                var myOptions = {
+                  center: latlng,
+                  zoom: zoom,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("map"),
+                    myOptions);
+                if(marker){
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        title: 'Adresse'
+                    });
+                    $("#location").val(lat + ','+ long);
+                }
+                
+            }
+
+            function joinEvent(){
+                var libelle = $("#libelleAgriculteur").val();
+            }
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+    
+                    reader.onload = function (e) {
+                        $('#avatarImg').attr('src', e.target.result);
+                    }
+    
+                    reader.readAsDataURL(input.files[0]);
+                }else{
+                    $('#avatarImg').attr('src', "img/avatar.png");
+                }
+            }
+        </script>
+
+    </div>
+    <% include ./partials/footer %>
+</body>

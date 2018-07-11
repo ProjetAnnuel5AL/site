@@ -35,7 +35,7 @@
                 });
         });
         function redirectToGroup(id){
-            var url = "/producersGroup/newsFeed/" + id;
+            var url = "/producersGroupFeed/" + id;
             window.location.href = url;
         }
     </script>
@@ -77,13 +77,13 @@
                             <div class="owl-item" style="width: 220px;"><div class="item">
                             <div class="item-inner">
                             <div class="item-img">
-                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroup/newsFeed/<%= listTab[i].id %>"> <img class="previewImage" alt="<%= listTab[i].name %>" src="<%=urlApi%>/groupAvatar/<%=listTab[i].id%>/<%=listTab[i].avatar%>"> </a>
+                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroupFeed/<%= listTab[i].id %>"> <img class="previewImage" alt="<%= listTab[i].name %>" src="<%=urlApi%>/groupAvatar/<%=listTab[i].id%>/<%=listTab[i].avatar%>"> </a>
                                     
                                     </div>
                                 </div>
                             <div class="item-info">
                                 <div class="info-inner">
-                                <div class="item-title"> <a title="Cooperative" href="product_detail.html"><%= listTab[i].name %></a> </div>
+                                <div class="item-title"> <a title="Cooperative" href="/producersGroupFeed/<%= listTab[i].id %>"><%= listTab[i].name %></a> </div>
                                 <i class="fas fa-map-marker-alt"><%= listTab[i].city %> (<%= listTab[i].distance %>km)</i>
                                 <div class="item-content">
                                     <div class="item-price">
