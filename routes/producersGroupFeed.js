@@ -147,6 +147,7 @@ module.exports = function(app, urlApi, utils, config){
                               token: req.session.token
                             }
                           }).then(function (body) {
+                            console.log(body);
                             if(body.code == 0){
                               coopParticipants = body.result
                               res.render("producersGroupEvent.ejs", {
@@ -750,6 +751,36 @@ module.exports = function(app, urlApi, utils, config){
         });
       }
     });
+
+  app.post('/producersGroupEventParticipant/new', function(req, res, next) {
+		if(req.body.idGroup && req.body.idEvent && req.body.typeParticipant && req.body.libelleParticipant){
+			var msgError;
+			msgError="";
+			rp({
+				url: urlApi + "/producersGroupEventParticipant",
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+        json: {
+          "idEvent": req.body.idEvent,
+          "idGroup": req.body.idGroup,
+          "typeParticipant": req.body.typeParticipant ,
+          "libelleParticipant": req.body.libelleParticipant,
+          "token": req.session.token
+        }
+			}).then(function (body) {
+				if (body.code == 0) {
+					res.send(body);
+				} else {
+					res.send(null);
+				}
+			}).catch(function (err) {
+				console.log(err);
+				res.send(null);
+			});
+		}else res.send(null);
+  });
 
     function getEvent(fields){
         var event = {

@@ -201,41 +201,127 @@ module.exports = function(app, urlApi, utils, config){
       }
     });
 
-  app.get('/producersGroup/search/location', function(req, res, next) {  
-    console.log(req.body);
-    console.log(req.query);
+  app.get('/producersGroup/search/location', function(req, res, next) {
     var listTab= [];
+    var coopSubscribed = [];
+    var msgError = "";
     if (!req.session.type) {
         res.redirect("/");
     }else{
-      if(!req.query.address || !req.query.lat || !req.query.long){
+      rp({
+        url: urlApi + "/producersGroup/subscriber/id/",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        json: {
+          "token": req.session.token,
+          "loginUser": req.session.login
+        }
+      }).then(function (body) {
+        if (body.code == 0) {
+          coopSubscribed = body.result
+          if(!req.query.address || !req.query.lat || !req.query.long){
+            res.render("producersGroupSearch.ejs", {
+              session: req.session,
+              urlApi: urlApi,
+              listTab : listTab,
+              coopSubscribed : coopSubscribed,
+              msgError: "Aucune adresse n'a été selectionnée",
+              msgSuccess: ""
+            });
+          }else{
+            rp({
+              url: urlApi + "/producersGroup/search",
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              json: {
+                "token": req.session.token
+              },
+              qs: {
+                lat : req.query.lat,
+                long : req.query.long
+              }
+            }).then(function (body) {
+                if(body.code ==0){
+                  console.log(body);
+                  listTab = body.result
+                  if(listTab.length == 0){
+                    msgError = "Aucune coopérative trouvée dans la zone";
+                  }
+                }else{
+                  msgError = "Erreur inconnue 1";
+                }
+                res.render("producersGroupSearch.ejs", {
+                  session: req.session,
+                  urlApi: urlApi,
+                  listTab : listTab,
+                  coopSubscribed : coopSubscribed,
+                  msgError: msgError,
+                  msgSuccess: ""
+                });
+              }).catch(function (err) {
+                console.log(err);
+                res.render("producersGroupSearch.ejs", {
+                  session: req.session,
+                  urlApi: urlApi,
+                  listTab : listTab,
+                  coopSubscribed : coopSubscribed,
+                  msgError: "Echec de la recherche (erreur inconnue 2)",
+                  msgSuccess: ""
+                });
+              });
+          }
+        } else {
+          res.render("producersGroupSearch.ejs", {
+            session: req.session,
+            urlApi: urlApi,
+            listTab: listTab,
+            coopSubscribed: coopSubscribed,
+            msgError: "Une erreur est survenue (erreur inconnue 2)",
+            msgSuccess: ""
+          });
+        }
+      }).catch(function (err) {
+        console.log(err);
         res.render("producersGroupSearch.ejs", {
           session: req.session,
           urlApi: urlApi,
-          listTab : listTab,
-          msgError: "Aucune adresse n'a été selectionnée",
+          listTab: listTab,
+          coopSubscribed: coopSubscribed,
+          msgError: "Une erreur est survenue (erreur inconnue 3)",
           msgSuccess: ""
         });
-      }else{
-        rp({
-          url: urlApi + "/producersGroup/search",
+      });
+    }
+  });
+
+  app.get('/producersGroup/search', function(req, res, next) {
+    var listTab = [];
+    var coopSubscribed = [];
+    if (!req.session.type) {
+        res.redirect("/");
+    }else{
+      rp({
+          url: urlApi + "/producersGroup/subscriber/id/",
           method: "GET",
           headers: {
             "Content-Type": "application/json"
           },
           json: {
-            "token": req.session.token
-          },
-          qs: {
-            lat : req.query.lat,
-            long : req.query.long
+            "token": req.session.token,
+            "loginUser": req.session.login
           }
         }).then(function (body) {
             if(body.code ==0){
+              coopSubscribed = body.result
               res.render("producersGroupSearch.ejs", {
                 session: req.session,
                 urlApi: urlApi,
-                listTab : body.result,
+                listTab : listTab,
+                coopSubscribed : coopSubscribed,
                 msgError: "",
                 msgSuccess: ""
               });
@@ -244,7 +330,8 @@ module.exports = function(app, urlApi, utils, config){
                 session: req.session,
                 urlApi: urlApi,
                 listTab : listTab,
-                msgError: "Aucune coopérative trouvée dans la zone",
+                coopSubscribed : coopSubscribed,
+                msgError: "Une erreur est survenue (erreur inconnue 2)",
                 msgSuccess: ""
               });
             }
@@ -254,25 +341,11 @@ module.exports = function(app, urlApi, utils, config){
               session: req.session,
               urlApi: urlApi,
               listTab : listTab,
-              msgError: "Echec de la recherche (erreur inconnue 2)",
+              coopSubscribed : coopSubscribed,
+              msgError: "Une erreur est survenue (erreur inconnue 3)",
               msgSuccess: ""
             });
           });
-      }
-    }
-  });
-
-  app.get('/producersGroup/search', function(req, res, next) {
-    if (!req.session.type) {
-        res.redirect("/");
-    }else{
-      res.render("producersGroupSearch.ejs", {
-        session: req.session,
-        urlApi: urlApi,
-        listTab: [],
-        msgError: "",
-        msgSuccess: ""
-      });
     }
   });
 
