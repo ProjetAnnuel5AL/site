@@ -70,6 +70,16 @@ Text Domain:  Freshia
 	font-family: 'Rubik', sans-serif;
 	float:left;
 }
+.leafList{
+	list-style-image: url(/img/leaf.svg); 
+	width:65%;
+	font-size:18px;
+	text-align: left;
+}
+.leafList >li{
+	height: 50px;
+	padding-left: 20px;
+}
 .btnValidate:hover {
 	background: none repeat scroll 0 0 #29a329;
 }
@@ -9158,7 +9168,7 @@ a.shop-now-btn {
 	padding:0px;
 }
 
-header {background:#000 url(../images/footer-bg.jpg) no-repeat center center;height: 187px;}
+header {background:#000 url(../images/footer-bg.jpg) no-repeat center center;height: 217px;}
 
 .header-container {
     transition: all 0.5s;
