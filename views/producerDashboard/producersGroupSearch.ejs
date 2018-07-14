@@ -35,7 +35,7 @@
                 });
         });
         function redirectToGroup(id){
-            var url = "/producersGroup/newsFeed/" + id;
+            var url = "/producersGroupFeed/" + id;
             window.location.href = url;
         }
     </script>
@@ -77,13 +77,14 @@
                             <div class="owl-item" style="width: 220px;"><div class="item">
                             <div class="item-inner">
                             <div class="item-img">
-                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroup/newsFeed/<%= listTab[i].id %>"> <img class="previewImage" alt="<%= listTab[i].name %>" src="<%=urlApi%>/groupAvatar/<%=listTab[i].id%>/<%=listTab[i].avatar%>"> </a>
+                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroupFeed/<%= listTab[i].id %>"> <img class="previewImage" alt="<%= listTab[i].name %>" src="<%=urlApi%>/groupAvatar/<%=listTab[i].id%>/<%=listTab[i].avatar%>"> </a>
                                     
                                     </div>
                                 </div>
                             <div class="item-info">
                                 <div class="info-inner">
-                                <div class="item-title"> <a title="Cooperative" href="product_detail.html"><%= listTab[i].name %></a> </div>
+                                <div class="item-title"> <a title="Cooperative" href="/producersGroupFeed/<%= listTab[i].id %>"><%= listTab[i].name %></a> </div>
+
                                 <i class="fas fa-map-marker-alt"><%= listTab[i].city %> (<%= listTab[i].distance %>km)</i>
                                 <div class="item-content">
                                     <div class="item-price">
@@ -98,9 +99,56 @@
                             </div>
                             </div></div>
                     <% }  %>
+                    <% if(listTab.length > 0){ %>
+                    <hr>
+                    <% } %>
+                    <div>
+                        <img src="/img/subscription.svg" id="subsriber" class="illustrationImage"/><h3 style="display: inline-block;">Abonné:</h3>
+                    </div><hr>
+                    <div class="category-adm">
+                    <ul class="adm-grid">
+                        <div class="slider-items slider-width-col4 products-grid block-content owl-carousel owl-theme" style="opacity: 1; display: block;">
+                            <div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 100%; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">
+
+                    <% if(coopSubscribed.length == 0){ %>
+                        <div class="alert alert-info">
+                            Vous n'êtes abonné à aucune coopérative - Cherchez une coopérative ! 
+                        </div>
+                    <% } else { %>
+                                                    
+                                
+                        <% for(var i=0; i<coopSubscribed.length; i++){ %>
+                            <div class="owl-item" style="width: 220px;"><div class="item">
+                            <div class="item-inner">
+                            <div class="item-img">
+                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroupFeed/<%= coopSubscribed[i].id %>"> <img class="previewImage" alt="<%= coopSubscribed[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopSubscribed[i].id%>/<%=coopSubscribed[i].avatar%>"> </a>
+                                    
+                                    </div>
+                                </div>
+                            <div class="item-info">
+                                <div class="info-inner">
+                                <div class="item-title"> <a title="Cooperative" href="/producersGroupFeed/<%= coopSubscribed[i].id %>"><%= coopSubscribed[i].name %></a> </div>
+                                <i class="fas fa-map-marker-alt"><%= coopSubscribed[i].city %></i>
+                                <div class="item-content">
+                                    <div class="item-price">
+                                    <div class="price-box"> <span class="regular-price"> <span class="price"><%= coopSubscribed[i].countMembers %> Membres</span> </span> </div>
+                                    </div>
+                                    <div class="action">
+                                    <button class="button btn-cart" onclick="redirectToGroup(<%=coopSubscribed[i].id%>);" type="button" title="" data-original-title="Consulter"><span>Consulter</span> </button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            </div></div>
+                        <% } } %>
+                        </div></div></div>
+                    </ul>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
+    <% include ../partials/footer %>
 </body>
 </html>

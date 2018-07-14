@@ -20,9 +20,16 @@
                 </div>
                 <div class="center">
                 <img src="/img/farmer.svg" id="soldier" class="illustrationImage"/>
-                <h1 style="display:inline;">Coopérative</h1>
-                <img src="/img/gardener.svg" id="soldier" class="illustrationImage"/><br></br>
-                <a href="/producersGroupFeed/<%- coop.id %>" class="autocomplete-submit " id="inviteProducerbtn"><i class="fa fa-calendar"></i> Page des événements</a></br>
+                <h1 style="display:inline;"><%= coop.name %></h1>
+                <img src="/img/gardener.svg" id="soldier" class="illustrationImage"/></br></br>
+                <% if(!memberOrAdmin){ %>
+                <button class="autocomplete-submit" <% if(isSubcribed){ %>style="display:none;"<% } %> type="button" onclick="subscribe();" id="subscribebtn"><i class="fa fa-user-plus"></i> S'abonner</button>
+                <button class="autocomplete-cancel" <% if(!isSubcribed){ %>style="display:none;"<% } %> type="button" onclick="unsubscribe();" id="unsubscribebtn"><i class="fa fa-user-times"></i> Se désabonner</button>
+                <% } else { %>
+                    <div class="alert alert-success">
+                    Vous faites partie du staff de cette coopérative ! 
+                    </div>
+                <% } %>
                 </div>
                 <hr>
                 <% if (msgError.length > 0) { %>
@@ -46,13 +53,6 @@
                     <h5>Adresse: <%= coop.adress %></h5>
                     <h5>Email de la coopérative: <%= coop.email %></h5>
                     <h5>Téléphone de la coopérative: <%= coop.phone %></h5>
-                    <% if(coop.loginUser == session.login){ %>
-                    <button onClick="deleteGroup();" type="button" id="deletebtn" class="btn btn-danger">Supprimer</button>
-                    <form method="post" id="formDelete" action="/producersGroup/delete/idGroup">
-                        <input type="hidden" name="idGroup" id="idGroup" value="<%= coop.id %>"/>
-                        <input type="hidden" name="countMembers" id="countMembers" value="<%= coop.countMembers %>"/>
-                    </form>
-                    <% } %>
                 </div>
                 </div>
                 <div style="width: 50%; float:right;">
@@ -67,35 +67,23 @@
                                     <p class="prettyList"><%=coop.descriptionProducer%> </br><strong>Code postal: </strong> <%=coop.cpProducer%></p>
                                 </li>
                             </ul>
-                            <h1 style="text-align: center">Membres:</h1></br>
+                            <h1 style="text-align: center">Événements:</h1></br>
                             <% if(coop.loginUser == session.login){ %>
                             <div>
-                                <h4>Ajouter des membres:</h4>
-                                <div class="autocomplete" style="width:25%;">
-                                    <input id="autocompleteDept" class="autocomplete-field" type="text" name="myCountry" placeholder="Code postal">
-                                    <input type='hidden' id='autocompleteDeptId' value="" />
-                                </div>
-                                <div class="autocomplete" style="width:50%;">
-                                    <input id="autocompleteProducers" class="autocomplete-field" type="text" name="myCountry" placeholder="Nom, Prénom">
-                                    <input type='hidden' id='autocompleteProducerId' value="" />
-                                </div>
-                                <button class="autocomplete-submit" type="button" onclick="addSelectedMember();" id="inviteProducerbtn"><i class="fa fa-plus-square"></i> Inviter</button>
+                                <a href="/producersGroupEvent/new/<%- coop.id %>" class="autocomplete-submit large-submit-center" id="inviteProducerbtn"><i class="fa fa-calendar"></i> Créer un événement</a></br>
                             </div>
                             <% } %>
-                            <% if(coopMembers.length==0){ %>
+                            <% if(coopEvents.length==0){ %>
                                 <div class="alert alert-info">
-                                    Cette coopérative ne possède aucun membres ! 
+                                    Cette coopérative ne possède aucun événement ! 
                                 </div>
                             <% } %>
                             <ul class="prettyList prettyListMember">
-                                <% for(var i=0; i<coopMembers.length; i++) { %>
-                                    <li class="prettyList" id="member<%=coopMembers[i].id%>">
-                                    <% if(coop.loginUser == session.login){ %>
-                                    <i class="fa fa-times-circle-o fa-3x iconRed" onclick="removeMemberVerified(<%=coopMembers[i].id%>, '<%=coopMembers[i].firstNameProducer%>')"></i>
-                                    <% } %>
-                                    <img class="prettyList" src="<%=urlApi%>/producerAvatar/<%=coopMembers[i].idProducer%>/<%=coopMembers[i].avatarProducer%>" />
-                                    <h3 class="prettyList"><%=coopMembers[i].firstNameProducer%> <%=coopMembers[i].lastNameProducer%></h3>
-                                    <p class="prettyList"><%=coopMembers[i].descriptionProducer%> </br><strong>Code postal: </strong> <%=coopMembers[i].cpProducer%></p>
+                                <% for(var i=0; i<coopEvents.length; i++) { %>
+                                    <li class="prettyList" id="event<%=coopEvents[i].idEvent%>">
+                                    <a href="/producersGroupEvent/<%- coopEvents[i].idEvent %>" style="float:right; width:150px;" class="autocomplete-submit" id="eventbtn<%=coopEvents[i].idEvent%>"><i class="fa fa-eye"></i> Visionner l'événement</a>
+                                    <h3 class="prettyList"><%=coopEvents[i].nameEvent%></h3>
+                                    <p class="prettyList"><%=coopEvents[i].descriptionEvent%> </br><strong>Date: </strong> <%=coopEvents[i].dateEvent%></p>
                                     </li>
                                 <% } %>
                             </ul>
@@ -112,8 +100,6 @@
                 founderId = '<%- coop.founderUserId %>';
                 groupId = '<%- coop.id %>';
                 coopName = '<%- coop.name %>';
-                members = JSON.parse('<%- JSON.stringify(coopMembers).replace(/[\\$\'"]/g, "\\$&") %>');
-                autocompleteDept();
                 "<% if (typeof coop !== 'undefined') { %>"
                     coop = JSON.parse('<%- JSON.stringify(coop).replace(/[\\$\'"]/g, "\\$&") %>');
                     var latlng = coop.location.split(',');
@@ -146,5 +132,5 @@
     </div>
     <% include ../partials/footer %>
 </body>
-<script type="text/javascript" src="/js/autocomplete-producers.js"></script>
+<script type="text/javascript" src="/js/cooperation-feed.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
