@@ -32,14 +32,15 @@
                 </div>
                 <div class="dropdown block-company-wrapper hidden-xs"> <a role="button" data-toggle="dropdown" data-target="#" class="block-company dropdown-toggle" href="#"> Mes coopératives <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li role="item"><a title="Créer une coopérative" href="/producersGroup/new">Créer une coopérative</a> </li>
-                    <li role="item"><a title="Consulter mes coopératives" href="/producersGroup/list">Consulter mes coopératives</a> </li>
+                    <li role="item"><a title="Créer une coopérative" href="/producersGroup/new">Créer une coopérative</a></li>
+                    <li role="item"><a title="Consulter mes coopératives" href="/producersGroup/list">Consulter mes coopératives</a></li>
+                    <li role="item"><a title="Coopératives" href="/producersGroup/search" ><span class="hidden-xs">Rechercher des coopératives</span></a></li>
                   </ul>
                 </div>
                 <% } %>
                 <%if (session.type == 3) {%>
                   <div class="myaccount"><a title="Devenir producteur" href="/becomeProducer"><span class="hidden-xs">Devenir producteur</span></a> </div>
-                
+                  <div class="group"><a title="Coopératives" href="/producersGroup/search"><span class="hidden-xs">Coopératives</span></a></div>
                 <% } %>
                 <div class="dropdown block-company-wrapper hidden-xs"> <a role="button" data-toggle="dropdown" data-target="#" class="block-company dropdown-toggle" href="#"> Mon Compte <span class="caret"></span></a>
                   <ul class="dropdown-menu">
