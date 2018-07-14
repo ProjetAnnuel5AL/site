@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>Rechercher une Coopérative</title>
-    <% include ./partials/header %>
+    <% include ../partials/header %>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -44,7 +44,7 @@
     <div id="page"> 
         <!-- Header -->
         <header>
-            <% include ./partials/topBar %>
+            <% include ../partials/topBar %>
         </header>
         
         <section class="main-container top-space col1-layout">
@@ -148,5 +148,6 @@
             </div>
         </section>
     </div>
+    <% include ../partials/footer %>
 </body>
 </html>
