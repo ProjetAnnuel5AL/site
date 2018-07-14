@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "jshint index.js env.js config/ routes/ utils/ || true",
-    "deploy": "./script/deploy"
+    "dev_deploy": "./script/dev_deploy",
+    "prod_deploy": "./script/prod_deploy"
   },
   "repository": {
     "type": "git",

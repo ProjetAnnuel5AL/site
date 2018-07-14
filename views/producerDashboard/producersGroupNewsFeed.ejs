@@ -1,0 +1,149 @@
+
+<!doctype html>
+<link rel="stylesheet" type="text/css" href="/css/progressBar.css">
+<html>
+<head>
+    <title>Coopérative d'agriculteurs</title>
+    <% include ../partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ../partials/topBar %>
+        </header>
+        
+        <section class="main-container top-space col1-layout">
+            <div class="main container container-progress">
+                <div class="account-login">
+                <div class="page-title">  
+                </div>
+                <div class="center">
+                <img src="/img/farmer.svg" id="soldier" class="illustrationImage"/>
+                <h1 style="display:inline;">Coopérative</h1>
+                <img src="/img/gardener.svg" id="soldier" class="illustrationImage"/>
+                </div>
+                <hr>
+                <% if (msgError.length > 0) { %>
+                    <div class="alert alert-danger"><%= msgError %></div>
+                <% } %>
+                <% if (msgSuccess.length > 0) { %>
+                    <div class="alert alert-success"> <%- msgSuccess %> </div>
+                <% } %>
+                <% if(coop===undefined){ %>
+                    <div class="alert alert-danger">
+                        Cette coopérative n'existe pas ! 
+                    </div>
+                <% } else { %>
+                <div style="width:50%; float:left;">
+                <div id="coopInfo" class="center">
+                    <h1><%= coop.name %>:<h1>
+                    <img class="uploadedImageRound" alt="<%= coop.name %>" src="<%=urlApi%>/groupAvatar/<%=coop.id%>/<%=coop.avatar%>"/>
+                    <h2><%= coop.countMembers %> Membres</h2>
+                    <p><%= coop.description %></p>
+                    <div id="map" class="form-control" style="width: 90%; height:450px; margin-left: 5%;"></div>
+                    <h5>Adresse: <%= coop.adress %></h5>
+                    <h5>Email de la coopérative: <%= coop.email %></h5>
+                    <h5>Téléphone de la coopérative: <%= coop.phone %></h5>
+                    <% if(coop.loginUser == session.login){ %>
+                    <button onClick="deleteGroup();" type="button" id="deletebtn" class="btn btn-danger">Supprimer</button>
+                    <form method="post" id="formDelete" action="/producersGroup/delete/idGroup">
+                        <input type="hidden" name="idGroup" id="idGroup" value="<%= coop.id %>"/>
+                        <input type="hidden" name="countMembers" id="countMembers" value="<%= coop.countMembers %>"/>
+                    </form>
+                    <% } %>
+                </div>
+                </div>
+                <div style="width: 50%; float:right;">
+                    <div>
+                        <div class="greenVerticalBar" style="float:left; width:1%"></div>
+                        <div style="width: 95%; float:right">
+                            <h1 style="text-align: center">Administrateur:</h1>
+                            <ul class="prettyList" style"height:50px !important;">
+                                <li class="prettyList">
+                                    <img class="prettyList" src="<%=urlApi%>/producerAvatar/<%=coop.founderUserId%>/<%=coop.avatarProducer%>" />
+                                    <h3 class="prettyList"><%=coop.firstNameProducer%> <%=coop.lastNameProducer%></h3>
+                                    <p class="prettyList"><%=coop.descriptionProducer%> </br><strong>Code postal: </strong> <%=coop.cpProducer%></p>
+                                </li>
+                            </ul>
+                            <h1 style="text-align: center">Membres:</h1></br>
+                            <% if(coop.loginUser == session.login){ %>
+                            <div>
+                                <h4>Ajouter des membres:</h4>
+                                <div class="autocomplete" style="width:25%;">
+                                    <input id="autocompleteDept" class="autocomplete-field" type="text" name="myCountry" placeholder="Code postal">
+                                    <input type='hidden' id='autocompleteDeptId' value="" />
+                                </div>
+                                <div class="autocomplete" style="width:50%;">
+                                    <input id="autocompleteProducers" class="autocomplete-field" type="text" name="myCountry" placeholder="Nom, Prénom">
+                                    <input type='hidden' id='autocompleteProducerId' value="" />
+                                </div>
+                                 <button class="autocomplete-submit" type="button" onclick="addSelectedMember();" id="inviteProducerbtn"><i class="fa fa-plus-square"></i> Inviter</button>
+                            </div>
+                            <% } %>
+                            <% if(coopMembers.length==0){ %>
+                                <div class="alert alert-info">
+                                    Cette coopérative ne possède aucun membres ! 
+                                </div>
+                            <% } %>
+                            <ul class="prettyList prettyListMember">
+                                <% for(var i=0; i<coopMembers.length; i++) { %>
+                                    <li class="prettyList" id="member<%=coopMembers[i].id%>">
+                                    <% if(coop.loginUser == session.login){ %>
+                                    <i class="fa fa-times-circle-o fa-3x iconRed" onclick="removeMemberVerified(<%=coopMembers[i].id%>, '<%=coopMembers[i].firstNameProducer%>')"></i>
+                                    <% } %>
+                                    <img class="prettyList" src="<%=urlApi%>/producerAvatar/<%=coopMembers[i].idProducer%>/<%=coopMembers[i].avatarProducer%>" />
+                                    <h3 class="prettyList"><%=coopMembers[i].firstNameProducer%> <%=coopMembers[i].lastNameProducer%></h3>
+                                    <p class="prettyList"><%=coopMembers[i].descriptionProducer%> </br><strong>Code postal: </strong> <%=coopMembers[i].cpProducer%></p>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                </div>
+            </div>
+        </section>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
+        <script type="text/javascript">
+            $("document").ready(function(){
+                founderId = '<%- coop.founderUserId %>';
+                groupId = '<%- coop.id %>';
+                coopName = '<%- coop.name %>';
+                members = JSON.parse('<%- JSON.stringify(coopMembers).replace(/[\\$\'"]/g, "\\$&") %>');
+                autocompleteDept();
+                "<% if (typeof coop !== 'undefined') { %>"
+                    coop = JSON.parse('<%- JSON.stringify(coop).replace(/[\\$\'"]/g, "\\$&") %>');
+                    var latlng = coop.location.split(',');
+                    selectAdress(latlng[0], latlng[1], 15, true);
+                "<% } %>"
+            });
+
+            function selectAdress(lat, long, zoom, marker){
+                console.log(lat+","+long+","+zoom+","+marker);
+                var latlng = new google.maps.LatLng(lat, long)
+                var myOptions = {
+                  center: latlng,
+                  zoom: zoom,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var map = new google.maps.Map(document.getElementById("map"),
+                    myOptions);
+                    console.log(map);
+                if(marker){
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        title: 'Adresse'
+                    });
+                }
+            }
+            
+        </script>
+
+    </div>
+    <% include ../partials/footer %>
+</body>
+<script type="text/javascript" src="/js/autocomplete-producers.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

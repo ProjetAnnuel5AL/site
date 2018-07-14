@@ -34,7 +34,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
 
                
                 if(body.code == 0){
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: producer,
                         paypalClientId :config.paypalClientId,
@@ -53,7 +53,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
 
 
     app.post("/producerDashboard/profil", function(req, res, next) {
-        if(!req.session.type && req.session.type !="1") {
+        if(!req.session.type && req.session.type != 1) {
 			res.redirect("/");
 		}else{
             var form = new formidable.IncomingForm();
@@ -66,7 +66,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 var extensionT = files.avatar.name.split('.');
                 var extension = extensionT[extensionT.length-1];
                 if(files.avatar.name !="" && ( files.avatar.size> 5242880  ||  (extension != "jpg" && extension != "png" && extension != "jpeg" && extension != "gif" && extension != "bmp" && extension != "tif" && extension != "tiff"))){
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Le fichier utilisé pour la photo n'est pas confomre : \nExtensions acceptées :  \n\rPoid maximum : 5Mo  ",
@@ -76,7 +76,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.lastName) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir un nom !",
@@ -86,7 +86,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.firstName) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir un prénom !",
@@ -96,7 +96,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.birth) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir une date de naissance !",
@@ -106,7 +106,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.sex) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir un sexe !",
@@ -116,7 +116,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.email) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir un email !",
@@ -126,7 +126,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.phone) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir un numéro de téléphone !",
@@ -136,7 +136,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.address) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir une adresse !",
@@ -146,7 +146,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.city) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir une ville !",
@@ -156,7 +156,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.paypalChange || (fields.paypalChange=="true" && !fields.emailPaypal)) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez renseigner un compte paypal valide !",
@@ -166,7 +166,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else if(!fields.description || fields.description.length<20 || fields.description.length>500) {
-                    res.render("producerDashboardProfil.ejs", {
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir une description ayant entre 20 et 500 caractères !",
@@ -212,7 +212,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                             }
                             localProducer.avatarProducer = avatar;
                             req.session.verifPaypalValidity = {};
-                            res.render("producerDashboardProfil.ejs", {
+                            res.render("producerDashboard/producerDashboardProfil.ejs", {
                                 session: req.session,
                                 producer: localProducer,
                                 msgError:"",
@@ -223,7 +223,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                             });
                         }else{
 
-                            res.render("producerDashboardProfil.ejs", {
+                            res.render("producerDashboard/producerDashboardProfil.ejs", {
                                 session: req.session,
                                 producer: localProducer,
                                 msgError:"Erreur inconnu 2. Merci de réessayer ultérieurement.",
@@ -236,7 +236,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         }
                     }).catch(function (err) {
                         //console.log(err);
-                        res.render("producerDashboardProfil.ejs", {
+                        res.render("producerDashboard/producerDashboardProfil.ejs", {
                             session: req.session,
                             producer: localProducer,
                             msgError:"Erreur inconnu 1. Merci de réessayer ultérieurement.",
@@ -290,7 +290,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 },
             }).then(function (body) { 
                 if (body.code == 3) {
-                    res.render("producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
+                    res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
                 } else {
                     var jsonDelivery = JSON.parse(body);
                     deliveryList = jsonDelivery.result
@@ -302,7 +302,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         },
                     }).then(function (body) {  
                         if (body.code == 3) {
-                            res.render("producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
+                            res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
                         } else {
                         var jsonUnit = JSON.parse(body);
                         unitsList = jsonUnit.result
@@ -314,19 +314,19 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                             },
                         }).then(function (body) {
                             if (body.code == 3) {
-                                res.render("producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
+                                res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
                             } else {
                                 var jsonCategory = JSON.parse(body);
                                 categoriesList = jsonCategory.result
-                                res.render('producerDashboardItemNew.ejs', { msgError: "", msgSuccess:msgSuccess, deliverys: deliveryList, units: unitsList, categories: categoriesList, session : req.session });
+                                res.render('producerDashboard/producerDashboardItemNew.ejs', { msgError: "", msgSuccess:msgSuccess, deliverys: deliveryList, units: unitsList, categories: categoriesList, session : req.session });
                             }
                         }).catch(function (err) {
-                            res.render("producerDashboardItemNew.ejs", { msgError: "Erreur inconnue. Merci de réessayer.", msgSuccess:msgSuccess, session: req.session });
+                            res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: "Erreur inconnue. Merci de réessayer.", msgSuccess:msgSuccess, session: req.session });
                         });
                         }
                     }).catch(function (err) {
                         console.log(err);
-                        res.render("producerDashboardItemNew.ejs", { msgError: "Erreur inconnue. Merci de réessayer.", msgSuccess:msgSuccess, session: req.session });
+                        res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: "Erreur inconnue. Merci de réessayer.", msgSuccess:msgSuccess, session: req.session });
                     });
                 }
             })
@@ -397,7 +397,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 }
                 if(msgError != ""){
   
-                    res.render('producerDashboardItemNew.ejs', {msgError:msgError, msgSuccess:msgSuccess, session : req.session});
+                    res.render('producerDashboard/producerDashboardItemNew.ejs', {msgError:msgError, msgSuccess:msgSuccess, session : req.session});
                 }else{
                     rp({
                         url: urlApi + "/item",
@@ -427,22 +427,22 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                     }).then(function (body) {
                         if (body) {
                             if (body.code == "0") {
-                                res.render("producerDashboardItemNew.ejs", {
+                                res.render("producerDashboard/producerDashboardItemNew.ejs", {
                                     msgError: "",
                                     msgSuccess: "Annonce créée !",
                                     session: req.session
                                 }); 
                             } else {
-                                res.render("producerDashboardItemNew.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
+                                res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                                 msgSuccess: "", session: req.session });
                             }
                         } else {
-                            res.render("producerDashboardItemNew.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
+                            res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                                 msgSuccess: "", session: req.session });
                         }
                     }).catch(function (err) {
-                        console.log(err);
-                        res.render("producerDashboardItemNew.ejs", {
+                       
+                        res.render("producerDashboard/producerDashboardItemNew.ejs", {
                             msgError: "Erreur lors de la création de l'annonce. Veuillez recommmencer !",
                             msgSuccess: "",
                             session: req.session
@@ -488,7 +488,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
             }).then(function (body) {
                 var items = body.result;  
                 if(body.code == 0 || body.code == 1){
-                    res.render("producerDashboardItems.ejs", {
+                    res.render("producerDashboard/producerDashboardItems.ejs", {
                         session: req.session,
                         items: items,
                         urlApi: urlApi,
@@ -574,7 +574,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                                     }).then(function (body) {
                                         var jsonUnit = JSON.parse(body);
                                         unitsList = jsonUnit.result
-                                        res.render('producerDashboardItem.ejs', { 
+                                        res.render('producerDashboard/producerDashboardItem.ejs', { 
                                             msgError: msgError,
                                             msgSuccess:msgSuccess, 
                                             item: item, 
@@ -790,7 +790,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
     });
 
     app.get("/producerDashboard/orders", function(req, res, next) {
-        if(!req.session.type) {
+        if(!req.session.type || req.session.type!=1) {
 			res.redirect("/");
 		}else{
             rp({
@@ -806,7 +806,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 }
             }).then(function (body) {
                 if(body.code == 0){
-                    res.render("producerDashboardOrders.ejs", {
+                    res.render("producerDashboard/producerDashboardOrders.ejs", {
                         session: req.session,
                         orders: body.result.orders,
                         status:  body.result.status,
@@ -814,7 +814,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         msgSuccess: ""
                     });
                 }else{
-                    res.render("producerDashboardOrders.ejs", {
+                    res.render("producerDashboard/producerDashboardOrders.ejs", {
                         session: req.session,
                         orders: null,
                         status: null,
@@ -829,7 +829,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
     });
 
     app.get("/producerDashboard/orderDetails/:id", function(req, res, next) {
-        if(!req.session.type) {
+        if(!req.session.type || req.session.type!=1) {
 			res.redirect("/");
 		}else{
             rp({
@@ -846,14 +846,14 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 }
             }).then(function (body) {
                 if(body.code == 0){
-                    res.render("producerDashboardOrderDetail.ejs", {
+                    res.render("producerDashboard/producerDashboardOrderDetail.ejs", {
                         session: req.session,
                         order: body.result,
                         msgError:"",
                         msgSuccess: ""
                     });
                 }else{
-                    res.render("producerDashboardOrderDetail.ejs", {
+                    res.render("producerDashboard/producerDashboardOrderDetail.ejs", {
                         session: req.session,
                         order: null,
                         msgError:"Erreur lors de la récupération de la commande. Merci de réessayer ultérieurement.",
@@ -866,7 +866,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
 
 
     app.get("/producerDashboard/disputes/progress", function(req, res, next) {
-        if(!req.session.type) {
+        if(!req.session.type || req.session.type!=1) {
 			res.redirect("/");
 		}else{
             rp({
@@ -881,7 +881,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 }
             }).then(function (body) {
                 if(body.code == 0){
-                    res.render("producerDashboardDisputes.ejs", {
+                    res.render("producerDashboard/producerDashboardDisputes.ejs", {
                         session: req.session,
                         signalOrder: body.result,
                         status : "En cours",
@@ -889,7 +889,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         msgSuccess: ""
                     });
                 }else{
-                    res.render("producerDashboardDisputes.ejs", {
+                    res.render("producerDashboard/producerDashboardDisputes.ejs", {
                         session: req.session,
                         orders: null,
                         status: null,
@@ -897,10 +897,133 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         msgSuccess: ""
                     });
                 }
-                
-            
             });
         }
     });
     
+    app.get("/producerDashboard/disputes", function(req, res, next) {
+        var msgSuccess ="";
+        var msgError="";
+        if(req.query.msgSuccess && req.query.msgSuccess !=""){
+            msgSuccess =req.query.msgSuccess;
+        }
+        if(req.query.msgError && req.query.msgError !=""){
+            msgError =req.query.msgError;
+        }
+        if(!req.session.type || req.session.type!=1) {
+			res.redirect("/");
+		}else{
+            rp({
+                url: urlApi + "/dispute/getDisputesFromProducer",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token
+                }
+            }).then(function (body) {
+                if(body.code == 0){
+                    res.render("producerDashboard/producerDashboardDisputes.ejs", {
+                        session: req.session,
+                        disputes: body.result,
+                        msgError: msgError,
+                        msgSuccess: msgSuccess
+                    });
+                }else{
+                    res.render("producerDashboard/producerDashboardDisputes.ejs", {
+                        session: req.session,
+                        disputes: null,
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
+                    });
+                }
+            });
+        }
+    });
+
+    app.get("/producerDashboard/disputeDetails/:id", function(req, res, next) {
+        var msgSuccess ="";
+        var msgError="";
+        if(req.query.msgSuccess && req.query.msgSuccess !=""){
+            msgSuccess=req.query.msgSuccess;
+        }
+        if(req.query.msgError && req.query.msgError !=""){
+            msgError=req.query.msgError;
+        }
+        if(!req.session.type || req.session.type!=1) {
+			res.redirect("/");
+		}else{
+            rp({
+                url: urlApi + "/dispute/getDisputeDetailsFromProducer",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                json: {
+                    "loginUser": req.session.login,
+                    "token" : req.session.token,
+                    "idDispute" : req.params.id
+                }
+            }).then(function (body) {
+                if(body.code == 0){
+                    res.render("producerDashboard/producerDashboardDisputeDetail.ejs", {
+                        session: req.session,
+                        dispute: body.result,
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
+                    });
+                }else{
+                    res.render("producerDashboard/producerDashboardDisputeDetail.ejs", {
+                        session: req.session,
+                        dispute: null,
+                        msgError:msgError,
+                        msgSuccess: msgSuccess
+                    });
+                }
+            });
+        }
+    });
+
+    app.post("/producerDashboard/disputeDetails/:id", function(req, res, next) {
+        if(!req.session.type || req.session.type!=1) {
+			res.redirect("/");
+		}else{
+            //console.log(req.body)
+            if(!req.body.choixLitige){
+                res.redirect("/producerDashboard/disputeDetails/"+req.params.id+"?msgError=Veuillez choisir un choix.&msgSuccess=");
+            }else if(req.body.choixLitige == "CONTESTED" && (!req.body.descriptionContest || req.body.descriptionContest.length>500 || req.body.descriptionContest.length<20)){
+                res.redirect("/producerDashboard/disputeDetails/"+req.params.id+"?msgError=Veuillez saisir une description de votre problème comprise entre 20 et 500 caractères.&msgSuccess=");
+            }else{
+                var contestDescriptionDispute = null;
+                if(req.body.choixLitige == "CONTESTED"){
+                    contestDescriptionDispute = req.body.descriptionContest;
+                }     
+                
+                rp({
+                    url: urlApi + "/dispute/saveStatus",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    json: {
+                        "loginUser": req.session.login,
+                        "token" : req.session.token,
+                        "idDispute" : req.params.id,
+                        "statusDispute" : req.body.choixLitige,
+                        "contestDescriptionDispute" : contestDescriptionDispute
+                    }
+                }).then(function (body) {
+                    console.log(body)
+                    if(body.code == 0){
+                        res.redirect("/producerDashboard/disputes?msgSuccess=Litige traité.")
+                    }else{
+                        res.redirect("/producerDashboard/disputes?msgError=Erreur lors du traitement du litige.")
+                    }
+                });
+            }
+        }
+    });
+
 }

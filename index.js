@@ -6,8 +6,8 @@ var session  = require("express-session");
 var config = require("config");  // we use node-config to handle environments
 
 var utils = require("./utils");
-var urlApi = "http://localhost:8888";
-var urlLocal = "http://localhost:80";
+var urlApi = "http://vps536743.ovh.net:8888";
+var urlLocal = "http://vps536743.ovh.net:8082";
 
 require("./env.js");
 
@@ -46,7 +46,7 @@ app.set("view engine", "ejs"); // set up ejs for templating
 
 require("./routes")(app, urlApi, urlLocal, utils ,conf );
 
-var port=process.env.PORT || 80;
+var port=process.env.PORT || 8082;
 
 var server = app.listen(port, function() {
     console.log("Server started port "+port+"...");

@@ -2,14 +2,14 @@
 <html lang="fr">
 <head>
     <title>Mes commandes</title>
-    <% include ./partials/header %>
+    <% include ../partials/header %>
 </head>
 <body class="cms-index-index cms-home-page">
     <div id="page"> 
         <!-- Header -->
         <header>
-            <% include ./partials/topBar %>
-            <% include ./partials/navbar %>
+            <% include ../partials/topBar %>
+            <% include ../partials/navbar %>
         </header>
         <br /> <br /> 
         <section class="main-container col2-left-layout bounceInUp animated">
@@ -102,17 +102,17 @@
                                 </tfoot>
                             </table>
                             <br>
-                            <p><i><a href="/signalOrder/<%=order[0].idOrder%>">Un problème avec votre commande ? cliquez ici.</a></i></p>
+                            <p><i><a href="/dispute/<%=order[0].idOrder%>">Un problème avec votre commande ? cliquez ici.</a></i></p>
                             </fieldset>
                         </div>
                     <fieldset class="col2-set">
                     </fieldset>
                     </article>
                 </div>
-                <% include ./partials/dashboard %>
+                <% include ../partials/dashboard %>
                 </div>
             </div>
         </section>
-        <% include ./partials/footer %>
+        <% include ../partials/footer %>
     </div>
 </body>
