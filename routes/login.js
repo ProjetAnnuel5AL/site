@@ -43,9 +43,9 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }).then(function (body) {
                 
                     if(body.code == 3){
-                        res.render("login.ejs", { msgError: "Erreur : identifiant inconnu", session: req.session, msgSuccess: "" });
+                        res.render("login.ejs", { msgError: "Ce compte n'existe pas.", session: req.session, msgSuccess: "" });
                     }else if(body.code == 5 ){
-                        res.render("login.ejs", { msgError: "Erreur : Votre compte n'a pas encore été validé. Merci de l'activer en suivant le lien que nous vous avons envoyé par mail. Si vous n'avez pas recu ce mail cliquez <b><u><a href='/resend'>ici</a></u></b>.", session: req.session, msgSuccess: "" });
+                        res.render("login.ejs", { msgError: "Votre compte n'a pas encore été validé. Merci de l'activer en suivant le lien que nous vous avons envoyé par mail. Si vous n'avez pas recu ce mail cliquez <b><u><a href='/resend'>ici</a></u></b>.", session: req.session, msgSuccess: "" });
                     }else{
                         rp({
                             url: urlApi + "/user/auth",
