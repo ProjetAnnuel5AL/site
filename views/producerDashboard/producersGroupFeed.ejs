@@ -26,9 +26,7 @@
                 <button class="autocomplete-submit" <% if(isSubcribed){ %>style="display:none;"<% } %> type="button" onclick="subscribe();" id="subscribebtn"><i class="fa fa-user-plus"></i> S'abonner</button>
                 <button class="autocomplete-cancel" <% if(!isSubcribed){ %>style="display:none;"<% } %> type="button" onclick="unsubscribe();" id="unsubscribebtn"><i class="fa fa-user-times"></i> Se désabonner</button>
                 <% } else { %>
-                    <div class="alert alert-success">
-                    Vous faites partie du staff de cette coopérative ! 
-                    </div>
+                    <a href="/producersGroup/<%- coop.id %>" class="autocomplete-submit" id="inviteProducerbtn"><i class="fa fa-hand-o-right"></i> Page du groupe </a></br>
                 <% } %>
                 </div>
                 <hr>
@@ -48,7 +46,7 @@
                     <h1><%= coop.name %>:<h1>
                     <img class="uploadedImageRound" alt="<%= coop.name %>" src="<%=urlApi%>/groupAvatar/<%=coop.id%>/<%=coop.avatar%>"/>
                     <h2><%= coop.countMembers %> Membres</h2>
-                    <p><%= coop.description %></p>
+                    <p class="descriptionParagraph"><%- coop.description %></p>
                     <div id="map" class="form-control" style="width: 90%; height:450px; margin-left: 5%;"></div>
                     <h5>Adresse: <%= coop.adress %></h5>
                     <h5>Email de la coopérative: <%= coop.email %></h5>

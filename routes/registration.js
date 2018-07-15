@@ -20,6 +20,13 @@ module.exports = function(app, urlApi,urlLocal,  utils){
         }
     });
 
+    app.get("/conditions", function(req, res, next) {
+        {
+            res.render("conditions.ejs",  {msgError: "", msgSuccess: "", session: req.session});
+        }
+    });
+    
+
     // process the inscription form
     app.post("/registration", function (req, res, next) {
         if(req.session.type && req.session.type != ""){

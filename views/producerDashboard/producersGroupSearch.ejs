@@ -73,12 +73,17 @@
                     </p>
                    </form>
                     <hr>
+                    <div class="category-adm">
+                        <ul class="adm-grid">
+                            <div class="slider-items slider-width-col4 products-grid block-content owl-carousel owl-theme" style="opacity: 1; display: block;">
+                            <div class="owl-wrapper-outer"><div class="owl-wrapper" style="width: 100%; left: 0px; display: block; transition: all 0ms ease; transform: translate3d(0px, 0px, 0px);">
+
                     <% for(var i=0; i<listTab.length; i++){ %>
                             <div class="owl-item" style="width: 220px;"><div class="item">
                             <div class="item-inner">
                             <div class="item-img">
-                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroupFeed/<%= listTab[i].id %>"> <img class="previewImage" alt="<%= listTab[i].name %>" src="<%=urlApi%>/groupAvatar/<%=listTab[i].id%>/<%=listTab[i].avatar%>"> </a>
-                                    
+                                    <div class="item-img-info"> 
+                                        <a class="product-image" title="Cooperative" href="/producersGroupFeed/<%= listTab[i].id %>"> <img class="previewImage" alt="<%= listTab[i].name %>" src="<%=urlApi%>/groupAvatar/<%=listTab[i].id%>/<%=listTab[i].avatar%>"> </a>
                                     </div>
                                 </div>
                             <div class="item-info">
@@ -99,6 +104,9 @@
                             </div>
                             </div></div>
                     <% }  %>
+                        </div></div>
+                    </ul>
+                    </div>
                     <% if(listTab.length > 0){ %>
                     <hr>
                     <% } %>

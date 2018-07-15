@@ -53,6 +53,9 @@
                                     <input type="email" title="mail" id="mail" class="input-text required-entry" name="mail" required>
                                 </li>
                             </ul>
+                            <% include ./partials/userAgreements %>
+                            <label for="acceptCondition">J'accepte les conditions d'utilisation : </label>
+                            <input type="checkbox" id="acceptCondition" required name="acceptCondition"/></br>
                             <button id="send2" name="send" type="submit" class="button create-account"><span>Inscription</span></button>
                         </form>
                     </div>

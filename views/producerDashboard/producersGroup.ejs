@@ -41,7 +41,7 @@
                     <h1><%= coop.name %>:<h1>
                     <img class="uploadedImageRound" alt="<%= coop.name %>" src="<%=urlApi%>/groupAvatar/<%=coop.id%>/<%=coop.avatar%>"/>
                     <h2><%= coop.countMembers %> Membres</h2>
-                    <p><%= coop.description %></p>
+                    <p class="descriptionParagraph"><%- coop.description %></p>
                     <div id="map" class="form-control" style="width: 90%; height:450px; margin-left: 5%;"></div>
                     <h5>Adresse: <%= coop.adress %></h5>
                     <h5>Email de la coopérative: <%= coop.email %></h5>

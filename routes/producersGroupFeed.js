@@ -80,7 +80,7 @@ module.exports = function(app, urlApi, utils, config){
         }).then(function (body) {
           console.log(body);
           if (body.code == 0) {
-            coopEvent = body.result[0];
+            coopEvent = body.result;
             rp({
               url: urlApi + "/producersGroupMember/idGroup/",
               method: "GET",

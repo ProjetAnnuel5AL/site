@@ -85,7 +85,7 @@
                         <% if (msgSuccess.length > 0) { %>
                             <div class="alert alert-success"> <%= msgSuccess %> </div>
                         <% } %>
-    
+                        <span id='lippButton' style="margin-top:1675px; position:absolute;"></span>
                         <form action="/becomeProducer" id="myForm" method="post" enctype="multipart/form-data">
                             <ul class="form-list">
                                 <li>
@@ -138,7 +138,7 @@
                                     
                                 </li>
                                 <li>
-                                    <img src="img/avatar.png"  id="avatarImg" style="max-width: 300px;">
+                                    <img src="img/avatar.png"  id="avatarImg" style="height:300px;">
                                     <input type="file" name="avatar" id="fileAvatar" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|images/*">
                                     <br>       
                                 </li>
@@ -155,10 +155,13 @@
                                     <input type="hidden" name="emailPaypal" id="emailPaypal" value = "" required>
                                 </li>
                             </ul>
-                            <button name="send" type="submit" class="button" style="margin-top:60px;"><span>Devenir producteur</span></button>
+                            </br></br></br>
+                            <% include ./partials/sellerAgreements %>
+                            <label for="acceptCondition">J'accepte les conditions de vente : </label>
+                            <input type="checkbox" id="acceptCondition" required name="acceptCondition"/></br>
+                            <button name="send" type="submit" class="button" style="margin-top:10px;"><span>Devenir producteur</span></button>
                         </form>
-                        <!--on sort la section paypal du form sinon sa submit le form-->
-                        <span id='lippButton' style="margin-top:-75px; position:absolute"></span>
+                        <!--on sort la section paypal du form sinon ça submit le form-->
                     </div>
                     </div>
                 </fieldset>
