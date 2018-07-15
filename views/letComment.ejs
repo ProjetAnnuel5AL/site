@@ -1,0 +1,134 @@
+<!-- views/signup.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Laisser un commentaire</title>
+    <% include ./partials/header %>
+
+    
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+        <% if(producer) { %>
+            <section class="main-container top-space col1-layout">
+                <div class="main container">
+                    <div class="account-login">
+                    <div class="page-title">
+                        <h2>Laissé un commentaire pour le producteur : <%=producer.loginUser%></h2>
+                    </div>
+                    <fieldset class="col2-set">
+                        <div class="col-1 registered-users"><strong></strong>
+                        <div class="content">
+
+                     
+                     
+                            <!-- show any messages that come back with authentication -->
+                            <% if (msgError.length > 0) { %>
+                            <div class="alert alert-danger"><%= msgError %></div>
+                            <% } %>
+                            <% if (msgSuccess.length > 0) { %>
+                                <div class="alert alert-success"> <%= msgSuccess %> </div>
+                            <% } %>
+    
+                            <form action="/letComment/<%=idProducer%>" method="post">
+                                <ul class="form-list">
+                                    <li>
+                                        <label for="evalutation">Evalutaion </label>
+                                        <br />
+                                        <input id="input-21e" value="5" type="text" class="rating" data-min=0 data-max=5 data-step=0.5 data-size="xs" title="" name="stars">
+                                    </li>  
+                                    <li>
+                                        <label for="comment">Commentaire</label>
+                                        <br>
+                                        <textarea style="width:100%; height:200px;" maxlength="500" title="comment" id="comment" class="input-text required-entry" name="comment"></textarea>
+                                    </li>
+                                </ul>
+                                <button id="send2" name="send" type="submit" class="button create-account"><span>Laisser un commentaire</span></button>
+                            </form>
+                        </div>
+                        </div>
+                    </fieldset>
+                    </div>
+                    <br>
+                    <br>
+                </div>
+            </section>
+            <script>
+                jQuery(document).ready(function () {
+                    $("#input-21f").rating({
+                        starCaptions: function (val) {
+                            if (val < 3) {
+                                return val;
+                            } else {
+                                return 'high';
+                            }
+                        },
+                        starCaptionClasses: function (val) {
+                            if (val < 3) {
+                                return 'label label-danger';
+                            } else {
+                                return 'label label-success';
+                            }
+                        },
+                        hoverOnClear: false
+                    });
+                    var $inp = $('#rating-input');
+        
+                    $inp.rating({
+                        min: 0,
+                        max: 5,
+                        step: 1,
+                        size: 'lg',
+                        showClear: false
+                    });
+        
+                    $('#btn-rating-input').on('click', function () {
+                        $inp.rating('refresh', {
+                            showClear: true,
+                            disabled: !$inp.attr('disabled')
+                        });
+                    });
+        
+        
+                    $('.btn-danger').on('click', function () {
+                        $("#kartik").rating('destroy');
+                    });
+        
+                    $('.btn-success').on('click', function () {
+                        $("#kartik").rating('create');
+                    });
+        
+                    $inp.on('rating.change', function () {
+                        alert($('#rating-input').val());
+                    });
+        
+        
+                    $('.rb-rating').rating({
+                        'showCaption': true,
+                        'stars': '3',
+                        'min': '0',
+                        'max': '3',
+                        'step': '1',
+                        'size': 'xs',
+                        'starCaptions': {0: 'status:nix', 1: 'status:wackelt', 2: 'status:geht', 3: 'status:laeuft'}
+                    });
+                    $("#input-21c").rating({
+                        min: 0, max: 8, step: 0.5, size: "xl", stars: "8"
+                    });
+                });
+            </script>
+        <% } else{ %>
+            <br/><h3>Aucun producteur ne correspond à votre demande !</h3></br>
+        <% } %>
+       
+    </div>
+</body>
+</div>
+<% include ./partials/footer %>
+</body>
+</html>

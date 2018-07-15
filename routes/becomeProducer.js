@@ -36,11 +36,25 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                 var localProducer = getLocalProducer(fields);
                 var extensionT = files.avatar.name.split('.');
                 var extension = extensionT[extensionT.length-1];
+
+                var ibanExtensionT = files.iban.name.split('.');
+                var ibanExtension = ibanExtensionT[ibanExtensionT.length-1]
+              
                 if(files.avatar.name !="" && ( files.avatar.size> 5242880  ||  (extension != "jpg" && extension != "png" && extension != "jpeg" && extension != "gif" && extension != "bmp" && extension != "tif" && extension != "tiff"))){
                     res.render("becomeProducer.ejs", {
                         session: req.session,
                         producer: localProducer,
-                        msgError:"Le fichier utilisé pour la photo n'est pas confomre : \nExtensions acceptées :  \n\rPoid maximum : 5Mo  ",
+                        msgError:"Le fichier utilisé pour la photo n'est pas confomre : \nExtensions acceptées : */image  \n\rPoid maximum : 5Mo  ",
+                        msgSuccess: "",
+                        paypalClientId :config.paypalClientId,
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
+                    });
+                } if(!files.iban.name || ibanExtension != "pdf"){
+                    res.render("becomeProducer.ejs", {
+                        session: req.session,
+                        producer: localProducer,
+                        msgError:"Le fichier utilisé pour la votre IBAN/RIB n'est pas confomre : \nExtensions acceptées : .pdf ",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
                         paypalMode : config.paypalMode,
@@ -169,6 +183,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                             "descriptionProducer": fields.description,
                             "paypalProducer": fields.emailPaypal,
                             "cpProducer": fields.cp,
+                            "ibanProducer" : files.iban
 
                         }
                     }).then(function(body) {   
@@ -231,6 +246,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
 
     //set configs for openid_client_id and openid_client_secret if they are different from your
     //usual client_id and secret. openid_redirect_uri is required
+    
     paypal.configure({
         'mode': config.paypalMode,
         'openid_client_id': config.paypalClientId,

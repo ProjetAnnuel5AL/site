@@ -22,4 +22,5 @@ module.exports = function(app, urlApi, urlLocal, utils ,config) {
 	require("./proceedCheckout")(app, urlApi, utils, config);
 	require("./dispute")(app, urlApi, utils, config);
 	require("./report")(app, urlApi, utils, config);
+	require("./comment.js")(app, urlApi, urlLocal, utils);
 };

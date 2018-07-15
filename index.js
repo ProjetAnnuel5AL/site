@@ -7,7 +7,7 @@ var config = require("config");  // we use node-config to handle environments
 
 var utils = require("./utils");
 var urlApi = "http://localhost:8888";
-var urlLocal = "http://localhost:80";
+var urlLocal = "http://localhost:8082";
 
 require("./env.js");
 

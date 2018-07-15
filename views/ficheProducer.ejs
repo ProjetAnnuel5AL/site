@@ -17,14 +17,7 @@
         <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true&key=AIzaSyBm8DYeq7M1jOwLccw1_5idQoXpGcUd0uM&libraries=places"></script>
         <script type="text/javascript">
           $(document).ready(function () {
-            /*var autocomplete = new google.maps.places.Autocomplete($("#adress")[0], {});
-            google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                var place = autocomplete.getPlace();
-                selectAdress(place.geometry.location.lat(), place.geometry.location.lng(), 15, true);
-                //console.log(place.address_components);
-            });*/
-            
-        
+
             selectAdress(<%=lat%>, <%=long%>, 15, true);
         
             function selectAdress(lat, long, zoom, marker){
@@ -45,10 +38,8 @@
                     });
                     $("#location").val(lat + ','+ long);
                 }
-                
             }
-        
-          })
+          });
           
         </script>
         <br />

@@ -134,8 +134,7 @@
                                 </li>
                                 <li>
                                     <label for="avatar">Photo (facultative) </label>
-                                    <br>
-                                    
+                                    <br> 
                                 </li>
                                 <li>
                                     <img src="img/avatar.png"  id="avatarImg" style="max-width: 300px;">
@@ -148,9 +147,14 @@
                                     <textarea style="width:100%; height:200px;" maxlength="500" title="description" id="description" class="input-text required-entry" name="description" required><%= producer.descriptionProducer %></textarea>
                                 </li>
                                 <li>
+                                    <label for="iban">IBAN (format .pdf)</label>
+                                    <small>Attention cet IBAN sera utilisé pour créditer votre compte du montant de vos ventes !</small>
+                                    <input type="file" name="iban" id="iban" accept="application/pdf">
+                                    <br>       
+                                </li>
+                                <li>
                                     <label>Compte paypal <br /><i>Afin d'effectuer les transactions financières de vos ventes, merci de vous connecter avec votre compte paypal professionnel. Si vous n'en avez pas, vous pouvez en créer un <a href="https://www.paypal.com/fr/home">ici</a></i></label>
-                                    <br />
-                                    
+                                    <br/>
                                     <p id="displayPaypalEmail"></p>
                                     <input type="hidden" name="emailPaypal" id="emailPaypal" value = "" required>
                                 </li>
@@ -171,7 +175,7 @@
         paypal.use( ['login'], function (login) {
           login.render ({
             "appid":"<%=paypalClientId%>",
-            "authend":"<%=paypalMode%>>",
+            "authend":"<%=paypalMode%>",
             "scopes":"openid email https://uri.paypal.com/services/paypalattributes ",
             "containerid":"lippButton",
             "locale":"fr-fr",
