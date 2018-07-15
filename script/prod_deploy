@@ -1,0 +1,10 @@
+#!/bin/sh
+ 
+ssh ubuntu@lechampalamaison.fr <<EOF
+  cd /home/projetAnnuel/site
+  git stash
+  git pull
+  npm install --production
+  forever restartall
+  exit
+EOF

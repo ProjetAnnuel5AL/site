@@ -70,6 +70,16 @@ Text Domain:  Freshia
 	font-family: 'Rubik', sans-serif;
 	float:left;
 }
+.leafList{
+	list-style-image: url(/img/leaf.svg); 
+	width:65%;
+	font-size:18px;
+	text-align: left;
+}
+.leafList >li{
+	height: 50px;
+	padding-left: 20px;
+}
 .btnValidate:hover {
 	background: none repeat scroll 0 0 #29a329;
 }
@@ -150,6 +160,24 @@ Text Domain:  Freshia
   color: #fff !important;
 	width:20% !important;
 }
+.joinEvent-btn{
+	border: 1px solid transparent !important;
+  background-color: #f1f1f1 !important;
+  padding: 6px !important;
+  font-size: 14px !important;
+	background-color: #29a329 !important;
+  color: #fff !important;
+	width:20% !important;
+}
+.autocomplete-cancel{
+	border: 1px solid transparent !important;
+  background-color: #f1f1f1 !important;
+  padding: 10px !important;
+  font-size: 16px !important;
+	background-color: #ff3333 !important;
+  color: #fff !important;
+	width:20% !important;
+}
 .autocomplete-field{
 	border: 1px solid transparent !important;
   background-color: #f1f1f1 !important;
@@ -172,6 +200,11 @@ Text Domain:  Freshia
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important; 
   color: #ffffff !important; 
+}
+.large-submit-center{
+	display:block;
+	text-align:center;
+	width:100% !important;
 }
 .iconRed{
 	color:red;
@@ -227,7 +260,9 @@ ul.prettyListMember {
 	padding-bottom: 0px;
 	text-align:left;
 }
-
+.no-margin{
+	margin: 0px 0px 0px 0px !important;
+}
 .illustrationImage{
 	vertical-align: top;
 	margin-right: 1%;
@@ -9133,7 +9168,7 @@ a.shop-now-btn {
 	padding:0px;
 }
 
-header {background:#000 url(../images/footer-bg.jpg) no-repeat center center;height: 187px;}
+header {background:#000 url(../images/footer-bg.jpg) no-repeat center center;height: 217px;}
 
 .header-container {
     transition: all 0.5s;

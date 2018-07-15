@@ -12,8 +12,59 @@
             <% include ./partials/topBar %>
             <% include ./partials/navbar %>
         </header>
-
-        <% include ./partials/footer %>
+        <section class="main-container top-space col1-layout">
+            <div class="main container container-progress">
+                <div class="content">
+                    <div style="width:49%; float:left;">
+                        <div id="producer" class="center">
+                            <h1>Être producteur : </h2>
+                            <img src="/img/producer.svg" / id="exampleImg0" style="max-width: 150px;"><br>
+                            <hr>
+                            <center>
+                            <ul class="leafList">
+                                <li>Vendre ses produits localement et en ligne </li>
+                                <li>Rejoindre ou créer une coopérative </li>
+                                <li>Elargir sa clientelle</li>
+                                <li>Augmenter ses marges</li>
+                                <li>Choisir son modèle d'agriculture</li>
+                                <li>Organiser des événements de vente</li>
+                                <li>Livrer avec d'autres producteurs pour limiter les coûts</li>
+                            </ul>
+                            </center>
+                        </div>
+                    </div>
+                
+                    <div style="width: 50.5%; float:right;">
+                        <div>
+                            <div class="greenVerticalBar" style="float:left; width:1%; height:650px;"></div>
+                            <div style="width: 95%; float:right">
+                                <div id="user" class="center">
+                                    <h1>Être consommateur : </h2>
+                                    <img src="/img/user.svg" / id="exampleImg1" style="max-width: 150px;"><br>
+                                    <hr>
+                                    <center>
+                                        <ul class="leafList">
+                                            <li>Consommer mieux</li>
+                                            <li>S'abonner à des coopératives</li>
+                                            <li>Assister l'économie locale</li>
+                                            <li>Faire des économies</li>
+                                            <li>Gagner du temps en commandant en ligne</li>
+                                            <li>Participer à des événements de vente</li>
+                                            <li>Faire partie du communauté</li>
+                                        </ul>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <center>
+            <h2>- Et bien plus encore! -</h2></br>
+            <a href="/registration" class="autocomplete-submit" id="joinbtn"> <i class="fa fa-hand-o-right"></i> Nous rejoindre! </a></br>
+        </center>
     </div> 
+    <% include ./partials/footer %>
 </body>
 </html>
