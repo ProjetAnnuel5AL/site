@@ -94,6 +94,21 @@ function deleteGroup(){
   });
 }
 
+function deleteEvent(){
+  swal({
+    title: "Supprimer l'événement",
+    text: "Vous êtes sur le point de supprimer l'événement, la suppression entrainera l'exclusion à l'événement de tous les participants, êtes vous-sûr ?",
+    icon: "warning",
+    buttons: ["Non", "Oui"],
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (willDelete) {
+      $('#formDelete').submit();
+    }
+  });
+}
+
 function removeMemberVerified(idProducerGroupMember, prenom){
   swal({
     title: "Exclure "+prenom,

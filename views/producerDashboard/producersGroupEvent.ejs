@@ -17,15 +17,16 @@
             <div class="main container container-progress">
                 <div class="account-login">
                 <div class="page-title">
-                    <% if (msgError.length > 0) { %>
-                        <div class="alert alert-danger"><%= msgError %></div>
-                    <% } %>
                     <% if (msgSuccess.length > 0) { %>
                             <div class="alert alert-success"> <%- msgSuccess %> </div>
                     <% } %>
+                    <% if (msgError.length > 0) { %>
+                        <div class="alert alert-danger"><%= msgError %></div>
+                    <% }else{ %>
                     <center>
                     <h2>Événement : </h2>
-                    <img src="/img/calendar.svg" / id="exampleImg0" style="max-width: 150px;"><br>
+                    <img src="/img/calendar.svg" / id="exampleImg0" style="max-width: 150px;"><br></br>
+                    <a href="/producersGroupFeed/<%- coop.id %>" class="autocomplete-submit " id="inviteProducerbtn"><i class="fa fa-calendar"></i> Page des événements</a></br>
                     </center>
                 </div>
                 <hr>
@@ -39,6 +40,14 @@
                                 <div id="map" class="form-control" style="width: 90%; height:450px; margin-left: 5%;"></div>
                                 <h5>Adresse: <%= coopEvent.adressEvent %></h5>
                                 <h5>Date: <%= coopEvent.dateEvent %></h5>
+                                <% if(coop.loginUser == session.login){ %>
+                                <button onClick="deleteEvent();" type="button" id="deletebtn" class="btn btn-danger">Supprimer</button>
+                                <form method="post" id="formDelete" action="/producersGroupEvent/delete/idEvent">
+                                    <input type="hidden" name="idEvent" id="idEvent" value="<%= coopEvent.idEvent %>"/>
+                                    <input type="hidden" name="idGroup" id="idGroup" value="<%= coop.id %>"/>
+                                    <input type="hidden" name="countParticipants" id="countParticipants" value="<%= coopParticipants.length %>"/>
+                                </form>
+                                <% } %>
                             </div>
                         </div>
                         <div style="width: 50%; float:right;">
@@ -80,6 +89,7 @@
                             </div>
                         </div>
                     </div>
+                    <% } %>
                 </div>
             </div>
         </section>
@@ -94,15 +104,17 @@
             $("document").ready(function(){
                 var urlApi;
                 var event;
-                groupId = '<%- coop.id %>';
-                eventId = '<%- coopEvent.idEvent %>';
-                userLogin = '<%- session.login %>';
+                
                 "<% if (typeof coopEvent !== 'undefined') { %>"
+                    groupId = '<%- coop.id %>';
+                    eventId = '<%- coopEvent.idEvent %>';
+                    userLogin = '<%- session.login %>';
                     participants = JSON.parse('<%- JSON.stringify(coopParticipants).replace(/[\\$\'"]/g, "\\$&") %>');
                     console.log(participants);
-                    event = JSON.parse('<%- JSON.stringify(coopEvent) %>');
+                    event = JSON.parse('<%- JSON.stringify(coopEvent).replace(/[\\$\'"]/g, "\\$&") %>');
+                    console.log(event);
                     var latlng = event.locationEvent.split(',');
-                    selectAdress(latlng[0], latlng[1], 5, false);
+                    selectAdress(latlng[0], latlng[1], 15, true);
                 "<% } %>"
                 
             });
@@ -171,6 +183,7 @@
                 }
             }
         </script>
+        <script type="text/javascript" src="/js/autocomplete-producers.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     </div>
