@@ -29,11 +29,10 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                     if(body.result.avatarProducer == "default"){
                         avatar = "../img/avatar.png";
                     }else{
-                        avatar = config.urlAvatarProducer +"/"+  producer.idProducer +"/"+ body.result.avatarProducer
+                        var avatarProducer = body.result.avatarProducer.split('.');
+                        avatar = config.urlAvatarProducer +"/"+  producer.idProducer +"/img_resize/"+ avatarProducer[0]+"_small."+ avatarProducer[1]
                     }
                     producer.avatarProducer = avatar;
-
-               
                 
                     res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
@@ -105,16 +104,6 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir un prénom !",
-                        msgSuccess: "",
-                        paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode,
-                        urlLocal: urlLocal
-                    });
-                }else if(!fields.birth) {
-                    res.render("producerDashboard/producerDashboardProfil.ejs", {
-                        session: req.session,
-                        producer: localProducer,
-                        msgError:"Veuillez saisir une date de naissance !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
                         paypalMode : config.paypalMode,
@@ -209,7 +198,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                             "avatarProducer": files.avatar,
                             "emailProducer": fields.email,
                             "phoneProducer": fields.phone,
-                            "birthProducer": fields.birth,
+                            "birthProducer": null,
                             "sexProducer": fields.sex,
                             "addressProducer": fields.address,
                             "cityProducer": fields.city,

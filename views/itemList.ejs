@@ -395,9 +395,9 @@
                           <label>Prix : </label><br>
                           
                           <% if(saveSearch == null) { %>
-                            <input id="price" type="text" class="span2" name="price" value="<%= prixMin %>,<%= prixMax %>" data-slider-min=<%= prixMin %> data-slider-max=<%= prixMax %> data-slider-step="1" data-slider-value="[<%= prixMin %>,<%= prixMax %>]"/>
+                            <input id="price" type="text" class="span2" name="price" value="<%= prixMin.toFixed(0) %>,<%= prixMax.toFixed(0) %>" data-slider-min=<%= prixMin.toFixed(0) %> data-slider-max=<%= prixMax.toFixed(0) %> data-slider-step="1" data-slider-value="[<%= prixMin.toFixed(0) %>,<%= prixMax.toFixed(0) %>]"/>
                            <% }else{ %>
-                            <input id="price" type="text" class="span2" name="price" value="<%= saveSearch.priceMin %>,<%= saveSearch.priceMax %>" data-slider-min=<%= prixMin %> data-slider-max=<%= prixMax %> data-slider-step="1" data-slider-value="[<%= saveSearch.priceMin %>,<%= saveSearch.priceMax %>]"/>
+                            <input id="price" type="text" class="span2" name="price" value="<%= (saveSearch.priceMin*1).toFixed(0) %>,<%= (saveSearch.priceMax*1).toFixed(0) %>" data-slider-min=<%= prixMin.toFixed(0) %> data-slider-max=<%= prixMax.toFixed(0) %> data-slider-step="1" data-slider-value="[<%= (saveSearch.priceMin*1).toFixed(0) %>,<%= (saveSearch.priceMax*1).toFixed(0) %>]"/>
                            <% } %>
                       </p>
                       <% } %>

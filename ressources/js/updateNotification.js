@@ -21,7 +21,7 @@ function updateNotif(userLogin){
           if(json.result[elem].type=="info"){
             element += "<button class='btnInfo' title='Ok' type='button' onclick='deleteNotif("+json.result[elem].id+");'><span>Ok</span></a></button>"; 
           }else{
-          element += "<button class='btnValidate' title='Accept' type='button'><a class='aNotif' href='"+json.result[elem].url+"'><span>Accepter</span></a></button>" +
+          element += "<a class='aNotif' href='"+json.result[elem].url+"?idNotif="+json.result[elem].id+"'><button class='btnValidate' title='Accept' type='button'><span>Accepter</span></button></a>" +
           "<button class='btnRefuse' title='Refuse' type='button' onclick='deleteNotif("+json.result[elem].id+");'><span>Refuser</span> </button>";
           }
           element += "</div>" +
