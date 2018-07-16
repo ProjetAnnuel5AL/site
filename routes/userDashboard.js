@@ -491,36 +491,22 @@ module.exports = function(app, urlApi, urlLocal, utils){
     });
 
     app.get("/userDashboard/billExport/:idProducer/:idOrder", function(req, res, next) {
-        //if(!req.session.type) {
-			//res.redirect("/");
-		//}else{
+        if(!req.session.type) {
+			res.redirect("/");
+		}else{
             rp({
-                url: urlApi + "/order/getBillFromUser",
+                url: urlApi + "/order/generateBill/idOrder/idProducer",
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                json: {
-                    "loginUser": req.session.login,
+                qs: {
                     "token" : req.session.token,
                     "idOrder" : req.params.idOrder,
-                    "idProducer" : req.params.idProducer
-
+                    "producerId" : req.params.idProducer
                 }
-            }).then(function (body) {
-                var file = fs.createWriteStream("ressources/pdf/file.jpg");
-                var request = http.get("http://localhost:8888/producerAvatar/4/avatar.jpg", function(response) {
-                  response.pipe(file);
-                  response.on('end', function () {
-                        var fullpath = process.cwd() + "/ressources/pdf/Job-Research.pdf";
-                        res.sendFile(fullpath)
-                  })
-                })
-               
-               
-            });
-            
-        //}
+            }).pipe(res);
+        }
     });
 
 
