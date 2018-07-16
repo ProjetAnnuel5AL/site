@@ -107,6 +107,7 @@ module.exports = function(app, urlApi, utils, config){
                     token: req.session.token
                   }
                 }).then(function (body) {
+                  console.log(body);
                   if (body.code == 0) {
                     coop = body.result;
                     if(coop.loginUser == req.session.login){
@@ -150,18 +151,76 @@ module.exports = function(app, urlApi, utils, config){
                             console.log(body);
                             if(body.code == 0){
                               coopParticipants = body.result
-                              res.render("producerDashboard/producersGroupEvent.ejs", {
-                                session: req.session,
-                                coop: coop,
-                                coopEvent: coopEvent,
-                                coopParticipants: coopParticipants,
-                                isSubcribed: isSubcribed,
-                                memberOrAdmin: memberOrAdmin,
-                                coopMembers: coopMembers,
-                                urlApi: urlApi,
-                                msgError: "",
-                                msgSuccess: ""
-                              });
+                              if(req.params.idNotif){
+                                console.log("aaaaaa");
+                                rp({
+                                  url: urlApi + "/notification/idItem",
+                                  method: "DELETE",
+                                  json: true,
+                                  headers: {
+                                    'User-Agent': 'Request-Promise'
+                                  },
+                                  qs: {
+                                    id: req.params.idNotif,
+                                    token: req.session.token
+                                  }
+                                }).then(function (body) {
+                                  if(body.code=="0"){
+                                    res.render("producerDashboard/producersGroupEvent.ejs", {
+                                      session: req.session,
+                                      coop: coop,
+                                      coopEvent: coopEvent,
+                                      coopParticipants: coopParticipants,
+                                      isSubcribed: isSubcribed,
+                                      memberOrAdmin: memberOrAdmin,
+                                      coopMembers: coopMembers,
+                                      urlApi: urlApi,
+                                      msgError: "",
+                                      msgSuccess: ""
+                                    });
+                                  }else{
+                                    res.render("producerDashboard/producersGroupEvent.ejs", {
+                                      session: req.session,
+                                      coop: {},
+                                      coopEvent: coopEvent,
+                                      coopParticipants: coopParticipants,
+                                      isSubcribed: isSubcribed,
+                                      memberOrAdmin: memberOrAdmin,
+                                      coopMembers: [],
+                                      urlApi: urlApi,
+                                      msgError: "Erreur: suppression notification en erreur",
+                                      msgSuccess: ""
+                                    });
+                                  }
+                                }).catch(function (err) {
+                                  console.log(err);
+                                  res.render("producerDashboard/producersGroupEvent.ejs", {
+                                    session: req.session,
+                                    coop: {},
+                                    coopEvent: coopEvent,
+                                    coopParticipants: coopParticipants,
+                                    isSubcribed: isSubcribed,
+                                    memberOrAdmin: memberOrAdmin,
+                                    coopMembers: [],
+                                    urlApi: urlApi,
+                                    msgError: "Erreur: suppression notification en erreur",
+                                    msgSuccess: ""
+                                  });
+                                });
+                              }else{
+                                res.render("producerDashboard/producersGroupEvent.ejs", {
+                                  session: req.session,
+                                  coop: coop,
+                                  coopEvent: coopEvent,
+                                  coopParticipants: coopParticipants,
+                                  isSubcribed: isSubcribed,
+                                  memberOrAdmin: memberOrAdmin,
+                                  coopMembers: coopMembers,
+                                  urlApi: urlApi,
+                                  msgError: "",
+                                  msgSuccess: ""
+                                });
+                              }
                             }else{
                               res.render("producerDashboard/producersGroupEvent.ejs", {
                                 msgError: "Erreur inconnue 1. Merci de réessayer ultérieurement.",
@@ -187,7 +246,7 @@ module.exports = function(app, urlApi, utils, config){
                               memberOrAdmin: memberOrAdmin,
                               coopMembers: [],
                               urlApi: urlApi,
-                              msgError: "Erreur: coopérative non trouvée",
+                              msgError: "Erreur: événement non trouvée",
                               msgSuccess: ""
                             });
                           });
@@ -219,7 +278,7 @@ module.exports = function(app, urlApi, utils, config){
                           memberOrAdmin: memberOrAdmin,
                           coopMembers: [],
                           urlApi: urlApi,
-                          msgError: "Erreur: coopérative non trouvée",
+                          msgError: "Erreur: événement non trouvée",
                           msgSuccess: ""
                         });
                       });
