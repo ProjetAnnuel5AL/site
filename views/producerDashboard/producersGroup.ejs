@@ -39,7 +39,11 @@
                 <div style="width:50%; float:left;">
                 <div id="coopInfo" class="center">
                     <h1><%= coop.name %>:<h1>
+                    <% if(coop.avatar == 'default'){%>
+                    <img class="uploadedImageRound" alt="<%= coop.name %>" src="/img/team.svg"/>
+                    <% } else { %>
                     <img class="uploadedImageRound" alt="<%= coop.name %>" src="<%=urlApi%>/groupAvatar/<%=coop.id%>/<%=coop.avatar%>"/>
+                    <% } %>
                     <h2><%= coop.countMembers %> Membres</h2>
                     <p class="descriptionParagraph"><%- coop.description %></p>
                     <div id="map" class="form-control" style="width: 90%; height:450px; margin-left: 5%;"></div>

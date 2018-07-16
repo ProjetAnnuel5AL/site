@@ -46,7 +46,13 @@
                             <div class="owl-item" style="width: 220px;"><div class="item">
                             <div class="item-inner">
                             <div class="item-img">
-                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroup/<%= coopAdmin[i].id %>"> <img class="previewImage" alt="<%= coopAdmin[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopAdmin[i].id%>/<%=coopAdmin[i].avatar%>"> </a>
+                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroup/<%= coopAdmin[i].id %>"> 
+                                    <% if(coopAdmin[i].avatar == 'default'){%>
+                                    <img class="previewImage" alt="<%= coopAdmin[i].name %>" src="/img/team.svg"/>
+                                    <% } else { %>
+                                    <img class="previewImage" alt="<%= coopAdmin[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopAdmin[i].id%>/<%=coopAdmin[i].avatar%>"> 
+                                    <% } %>
+                                    </a>
                                     
                                     </div>
                                 </div>
@@ -91,12 +97,18 @@
                             <div class="item-inner">
                             <div class="item-img">
                                     <div class="item-img-info">     
-                                        <a class="product-image" title="Retis lapen casen" href="/producersGroup/<%= coopMember[i].id %>"> <img class="previewImage" alt="<%= coopMember[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopMember[i].id%>/<%=coopMember[i].avatar%>"> </a>
+                                        <a class="product-image" title="Cooperative" href="/producersGroup/<%= coopMember[i].id %>"> 
+                                        <% if(coopMember[i].avatar == 'default'){%>
+                                        <img class="previewImage" alt="<%= coopMember[i].name %>" src="/img/team.svg"/>
+                                        <% } else { %>
+                                        <img class="previewImage" alt="<%= coopMember[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopMember[i].id%>/<%=coopMember[i].avatar%>"> 
+                                        <% } %>
+                                        </a>
                                     </div>
                                 </div>
                             <div class="item-info">
                                 <div class="info-inner">
-                                <div class="item-title"> <a title="Retis lapen casen" href="/producersGroup/<%= coopMember[i].id %>"><%= coopMember[i].name %></a> </div>
+                                <div class="item-title"> <a title="Cooperative" href="/producersGroup/<%= coopMember[i].id %>"><%= coopMember[i].name %></a> </div>
 
                                 <i class="fas fa-map-marker-alt"><%= coopMember[i].city %></i>
                                 <div class="item-content">
