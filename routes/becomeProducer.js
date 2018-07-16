@@ -50,7 +50,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                         paypalMode : config.paypalMode,
                         urlLocal: urlLocal
                     });
-                } if(!files.iban.name || ibanExtension != "pdf"){
+                }else if(!files.iban.name || ibanExtension != "pdf"){
                     res.render("becomeProducer.ejs", {
                         session: req.session,
                         producer: localProducer,
@@ -189,6 +189,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                     }).then(function(body) {   
                         if(body.code == 0){
                             req.session.type=1;
+                            req.session.token = body.result.token;
                             var avatar ="";
                             if(files.avatar.name==""){
                                 avatar = "../img/avatar.png";

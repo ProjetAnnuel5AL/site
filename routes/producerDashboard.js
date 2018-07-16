@@ -24,16 +24,17 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
             }).then(function (body) {
                 var producer = body.result;  
                 var avatar = "";
-               
-                if(body.result.avatarProducer == "default"){
-                    avatar = "../img/avatar.png";
-                }else{
-                    avatar = config.urlAvatarProducer +"/"+  producer.idProducer +"/"+ body.result.avatarProducer
-                }
-                producer.avatarProducer = avatar;
+                
+                if(body.code == 0){
+                    if(body.result.avatarProducer == "default"){
+                        avatar = "../img/avatar.png";
+                    }else{
+                        avatar = config.urlAvatarProducer +"/"+  producer.idProducer +"/"+ body.result.avatarProducer
+                    }
+                    producer.avatarProducer = avatar;
 
                
-                if(body.code == 0){
+                
                     res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: producer,
@@ -65,11 +66,25 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 var localProducer = getLocalProducer(fields,lat,long);
                 var extensionT = files.avatar.name.split('.');
                 var extension = extensionT[extensionT.length-1];
+
+                var ibanExtensionT = files.iban.name.split('.');
+                var ibanExtension = ibanExtensionT[ibanExtensionT.length-1]
+
                 if(files.avatar.name !="" && ( files.avatar.size> 5242880  ||  (extension != "jpg" && extension != "png" && extension != "jpeg" && extension != "gif" && extension != "bmp" && extension != "tif" && extension != "tiff"))){
                     res.render("producerDashboard/producerDashboardProfil.ejs", {
                         session: req.session,
                         producer: localProducer,
                         msgError:"Le fichier utilisé pour la photo n'est pas confomre : \nExtensions acceptées :  \n\rPoid maximum : 5Mo  ",
+                        msgSuccess: "",
+                        paypalClientId :config.paypalClientId,
+                        paypalMode : config.paypalMode,
+                        urlLocal: urlLocal
+                    });
+                }else if(files.iban.name && ibanExtension != "pdf"){
+                    res.render("producerDashboard/producerDashboardProfil.ejs", {
+                        session: req.session,
+                        producer: localProducer,
+                        msgError:"Le fichier utilisé pour la votre IBAN/RIB n'est pas confomre : \nExtensions acceptées : .pdf ",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
                         paypalMode : config.paypalMode,
@@ -176,6 +191,10 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         urlLocal: urlLocal
                     });
                 }else{  
+                    var iban =null;
+                    if (files.iban.name && files.iban.name!=""){
+                        iban = files.iban;
+                    }
                     rp({
                         url: urlApi + "/producer/update",
                         method: "POST",
@@ -200,7 +219,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                             "cpProducer": fields.cp,
                             "photoChange" : fields.photoChange,
                             "paypalChange" : fields.paypalChange,
-
+                            "ibanProducer": files.iban
                         }
                     }).then(function(body) {   
                         if(body.code == 0){

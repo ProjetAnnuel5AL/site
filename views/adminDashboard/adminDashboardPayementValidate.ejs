@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Informations et validation paiement</title>
+    <% include ../partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ../partials/topBar %>
+            <% include ../partials/navbar %>
+        </header>
+    
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">
+                        
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <h2 class="page-heading"> <span class="page-heading-title">Informations et validation paiement :</span> </h2>
+                        <% if (msgError.length > 0) { %>
+                            <div class="alert alert-danger"><%- msgError %></div>
+                        <% } %>
+                        <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%= msgSuccess %> </div>
+                        <% } %>
+                        <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
+
+                            <tbody>
+                            <tr>
+                                <th>Commande</th>
+                                <th>Montant</th>
+                                <th>Destinataire</th>    
+                            </tr>
+                            <form method ="POST" action="/adminDashboard/payementTodoSaveValidate">
+                            <% 
+                              
+                                if(payement){
+                                var idProducer = [];
+                                for(var j =0; j<payement.length; j++) { 
+                                    if(idProducer.indexOf(payement[j].idProducerLigneOrder) == -1 ){
+                                        idProducer.push(payement[j].idProducerLigneOrder);
+                                    }
+                                }
+                                for(var i =0; i<payement.length; i++) {
+                                    
+                                  
+                            %>        
+                            <tr>
+                                <td style=""><%=payement[i].idOrderLigneOrder%></td>
+                                <td style=""><span class="price"><%= payement[i].valuePaypalTransact.toFixed(2) %>€</span></td>
+                                <td style=""><%=payement[i].lastNameProducer%> <%=payement[i].firstNameProducer%></td>
+                                <td><input type="checkbox" value="<%=payement[i].idPaypalTransact%>" name="pay" checked="checked" style="visibility: hidden;"/></td>
+                            </tr>
+                            <% }%>
+
+                            <tr style="height : 100px; max-height: 100px; vertical-align:middle;" >
+                                <td colspan="3"><h2>IBAN nécessaire(s)</h2></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <% for(var i = 0; i<idProducer.length; i++){ %>
+                            
+                                       <a href="/adminDashboard/getIban/<%=idProducer[i]%>" target="_blank"><img src ="/img/pdf.png" style="width: 5%"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        
+                                    <% } %>
+                                </td>
+                            </tr>
+                           
+                            <tr>
+                                <td colspan="3"><input type="submit" value="Valider paiement(s)" onclick='return confirm("Valider que ces paiements manuel ont bien été effectués ?")'/></td>
+                            </tr>
+                        <% } %>
+                        </form>
+                            <% if(!payement || payement.length<=0){ %>
+                            <tr style="height : 100px; max-height: 100px; vertical-align:middle;" >
+                                <td colspan="6"><h2>Aucun virement à effectuer.</h2></td>
+                            </tr>
+                            <% } %>
+                            </tbody>
+                        </table>
+                    <fieldset class="col2-set">
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ../partials/dashboard %>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>

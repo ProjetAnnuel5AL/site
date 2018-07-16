@@ -342,7 +342,7 @@ input.input-text, select, textarea {
 	border: none;
 	padding:7px 10px;
 	outline: none;
-	color: #aaa;
+	color: black;
 	border:1px solid #ddd;
 }
 .totals {
@@ -441,7 +441,7 @@ input.input-text, select, textarea {
 	width: 100%;
 	margin-top: 5px;
 	outline: none;
-	color: #aaa;
+	color: black;
 }
 .customer-account-forgotpassword .form-list input.input-text {
 	background: #f5f5f5;
@@ -450,7 +450,7 @@ input.input-text, select, textarea {
 	width: 60%;
 	margin-top: 5px;
 	outline: none;
-	color: #aaa;
+	color: black;
 }
 /* 2. Discount Codes Box */
 .discount {
@@ -1079,14 +1079,14 @@ div.mgkosc-wide .input-text {
 	border: none;
 	padding: 10px;
 	outline: none;
-	color: #aaa;width:91%;
+	color: black;width:91%;
 }
 .mgkosc-login-input-box  input{
 	background-color: #f7f7f7;
 	border: none;
 	padding: 10px;
 	outline: none;
-	color: #aaa;width:91%;
+	color: black;width:91%;
 }
 #mgkosc-popup{ display:none; left:50%; margin-left:-250px; position:fixed; top:150px; background: #f9f9f9; z-index:10000; border: 10px solid #333333;
     border-radius: 10px 10px 10px 10px;}

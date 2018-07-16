@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Remboursement à effectuer</title>
+    <% include ../partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ../partials/topBar %>
+            <% include ../partials/navbar %>
+        </header>
+    
+        <br /> <br /> 
+        <section class="main-container col2-left-layout bounceInUp animated">
+            <div class="container">
+                <div class="row">       
+                <div class="col-sm-9 col-sm-push-3">
+                    <article class="col-main">
+                        <h2 class="page-heading"> <span class="page-heading-title">Remboursement à effectuer :</span> </h2>
+                        <% if (msgError.length > 0) { %>
+                            <div class="alert alert-danger"><%- msgError %></div>
+                        <% } %>
+                        <% if (msgSuccess.length > 0) { %>
+                            <div class="alert alert-success"> <%= msgSuccess %> </div>
+                        <% } %>
+                        <table class="table shopping-cart-table-total" id="shopping-cart-totals-table">
+                            <colgroup>
+                            <col>
+                            <col width="1">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th>Commande</th>
+                                <th>Montant</th>
+                                <th>Paypal id user</th>
+                                <th>Enregistrer le remboursement manuel</th> 
+                            </tr>    
+                            <% 
+                                if(payement){
+                                for(var i =0; i<payement.length; i++) {
+                            %>        
+                            <tr>
+                                <td style=""><%=payement[i].idOrderLigneOrder%></td>
+                                <td style=""><span class="price"><%= payement[i].valuePaypalTransact.toFixed(2) %>€</span></td>
+                                <td style=""><%=payement[i].payerIDPaypalTransact%> </td>
+                                <td><a href="/adminDashboard/validateRefund/<%=payement[i].idPaypalTransact%>" onclick='return confirm("Valider le remboursement ?");'>Enregistrer</a></td>
+                                
+                            </tr>
+                            <% }%>
+                            
+                        <% } %>
+                            <% if(!payement || payement.length<=0){ %>
+                            <tr style="height : 100px; max-height: 100px; vertical-align:middle;" >
+                                <td colspan="6"><h2>Aucun remboursement à effectuer.</h2></td>
+                            </tr>
+                            <% } %>
+                            </tbody>
+                        </table>
+                    <fieldset class="col2-set">
+                    </fieldset>
+                    </article>
+                </div>
+                <% include ../partials/dashboard %>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>

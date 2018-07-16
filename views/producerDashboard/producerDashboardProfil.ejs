@@ -69,11 +69,6 @@
             });
         </script>
 
-
-
-
-
-
         <br /> <br /> 
         <section class="main-container col2-left-layout bounceInUp animated">
             <div class="container">
@@ -109,7 +104,17 @@
                                         <li>
                                             <label for="birth">Date de naissance</label>
                                             <br>
-                                            <input type="date" title="birth" id="birth" class="input-text required-entry" name="birth" value="<%= producer.birthProducer %>" required>
+                                            <input type='text'  class="form-control" id='datetimepicker4' name="birth" onkeydown="return false;" style="width:100%" autocomplete="off" required/>
+                                    
+                                            <script type="text/javascript">
+                                                $(function () {
+                                                    $('#datetimepicker4').datetimepicker({
+                                                        format: 'DD/MM/YYYY'
+                                                    });
+                                                });
+                                                
+                                                
+                                            </script>
                                         </li>
                                         <li>
                                             <label for="sex">Sexe</label>
@@ -158,6 +163,12 @@
                                             <textarea style="width:100%; height:200px;" maxlength="500" title="description" id="description" class="input-text required-entry" name="description" required><%= producer.descriptionProducer %></textarea>
                                         </li>
                                         <li>
+                                            <label for="iban">Modifier votre IBAN (format .pdf)</label><br />
+                                            <small>Attention cet IBAN sera utilisé pour créditer votre compte du montant de vos ventes !</small>
+                                            <input type="file" name="iban" id="iban" accept="application/pdf">
+                                            <br>       
+                                        </li>
+                                        <li>
                                             <label>Compte paypal (Compte actuellement enregistré : <strong><%=producer.paypalProducer%></strong>) <br /><i>Afin d'effectuer les transactions financières de vos ventes, merci de vous connecter avec votre compte paypal professionnel. Cliquez sur Connexion avec Paypal pour modifier le compte actuellement enregistré.</i></label>
                                             <br />
                                             
@@ -167,7 +178,7 @@
                                             <input type="hidden" value="false" name="paypalChange" id="paypalChange" >
                                         </li>
                                     </ul>
-                                    <button name="send" type="submit" class="button" style="margin-top:60px;"><span>Modifier mes information</span></button>
+                                    <button name="send" type="submit" class="button" style="margin-top:60px;"><span>Modifier mes informations</span></button>
                                 </form>
                                 <!--on sort la section paypal du form sinon sa submit le form-->
                                 <span id='lippButton' style="margin-top:-75px; position:absolute"></span>

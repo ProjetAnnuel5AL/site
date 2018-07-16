@@ -38,7 +38,7 @@
                                         En attente de la réponse du vendeur
                                     <% }else if(dispute[0].statusDispute == "ACCEPTED") { %>
                                         Le vendeur a accepté la réclamation.
-                                    <% }else if(dispute[0].statusDispute == "CONTEST") { %>
+                                    <% }else if(dispute[0].statusDispute == "CONTESTED") { %>
                                         Le vendeur a contesté la réclamation pour la raison suivante :<br />
                                         <%- dispute[0].contestDescriptionDispute.replace(/\n|\r/g,'<br />') %>
                                         <br />Arbitrage en cours.
@@ -69,6 +69,24 @@
                                 <p><%-dispute[0].descriptionDispute.replace(/\n|\r/g,'<br />'); %></p>
                             </fieldset>
                             
+                        </div>
+                        <hr />
+                        <div class="table-responsive">
+                            <fieldset>
+                                <h4><strong>Arbitrer</strong> <br/><br/>     
+                                    <form method="POST" action="/adminDashboard/disputeDetails/<%=dispute[0].idDispute%>">
+                                        <label>Qui à raison ? </label><br />
+                                        <input type="radio" name="winner"  value="USER" required> Le client <br/>
+                                        <input type="radio" name="winner"  value="PRODUCER" required> Le vendeur
+                                        <div id="description">
+                                            <br/>
+                                            <label>Justifier l'arbitrage</label>
+                                            <textarea style="width:100%; height:200px;" maxlength="500" title="description"  class="input-text required-entry" name="description"></textarea>
+                                        </div>
+                                        <br/><br/>
+                                        <button type="submit" id="submitbtn" class="btn btn-info" onclick="return validateResponse()">Valider l'arbitrage</button>
+                                        </form>
+                            </fieldset>
                         </div>
                         
                     <fieldset class="col2-set">

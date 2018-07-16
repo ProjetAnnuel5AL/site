@@ -38,8 +38,8 @@
                                         En attente de la réponse du vendeur
                                     <% }else if(dispute[0].statusDispute == "ACCEPTED") { %>
                                         Le vendeur a accepté la réclamation.
-                                    <% }else if(dispute[0].statusDispute == "CONTEST") { %>
-                                        Le vendeur a contesté la réclamation pour la raison suivante :<br />
+                                    <% }else if(dispute[0].statusDispute == "CONTESTED") { %>
+                                        <u>Le vendeur a contesté la réclamation pour la raison suivante :</u><br /><br />
                                         <%- dispute[0].contestDescriptionDispute.replace(/\n|\r/g,'<br />') %>
                                         <br />Arbitrage en cours.
                                     <% }else if(dispute[0].statusDispute == "CLOSE") { %>
