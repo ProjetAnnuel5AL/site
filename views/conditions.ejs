@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Conditions d'utilisation</title>
+    <% include ./partials/header %>
+</head>
+<body class="cms-index-index cms-home-page">
+    <div id="page"> 
+        <!-- Header -->
+        <header>
+            <% include ./partials/topBar %>
+            <% include ./partials/navbar %>
+        </header>
+        <section class="main-container top-space col1-layout">
+            <div class="main container">
+                <div class="account-login">
+                <div class="page-title">
+                    <h2>Nos conditions : </h2>
+                </div>
+                <fieldset class="col2-set">
+                <div style="width:48%; float:left;">
+                    <div id="userAgreements">
+                      <% include ./partials/userAgreements %>
+                    </div>
+                </div>
+                <div style="width: 50.5%; float:right;">
+                  <div>
+                    <div style="width: 97%; float:right">
+                      <% include ./partials/sellerAgreements %>
+                    </div>
+                  </div>
+                </div>
+                </fieldset>
+              </div>
+            </div>
+        </section>
+        <% include ./partials/footer %>
+    </div>
+</body>

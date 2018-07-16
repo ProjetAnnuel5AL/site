@@ -70,6 +70,11 @@ Text Domain:  Freshia
 	font-family: 'Rubik', sans-serif;
 	float:left;
 }
+.descriptionParagraph{
+	word-break: break-all;
+	max-height: 150px;
+	overflow: auto;
+}
 .leafList{
 	list-style-image: url(/img/leaf.svg); 
 	width:65%;
@@ -206,6 +211,17 @@ Text Domain:  Freshia
 	text-align:center;
 	width:100% !important;
 }
+
+.panel-heading a:after {
+    font-family: 'Glyphicons Halflings';
+    content: "\e114";    
+    float: right; 
+    color: grey; 
+}
+.panel-heading a.collapsed:after {
+    content: "\e080";
+}
+
 .iconRed{
 	color:red;
 	float:right;
@@ -218,7 +234,7 @@ Text Domain:  Freshia
 }
 
 ul.prettyListMember {
-	height: 600px !important; 
+	height: 660px !important; 
 	overflow: auto;
 }
  
@@ -271,7 +287,7 @@ ul.prettyListMember {
 .greenVerticalBar {
     border-left: 6px solid green;
 		border-radius: 50%;
-    height: 1000px;
+    height: 1150px;
 		width: 6px;
 }
 .previewImage{
@@ -9168,13 +9184,12 @@ a.shop-now-btn {
 	padding:0px;
 }
 
-header {background:#000 url(../images/footer-bg.jpg) no-repeat center center;height: 217px;}
+header {background:#000 url(../images/footer-bg.jpg) no-repeat center center;height: 197px;}
 
 .header-container {
     transition: all 0.5s;
   
 }
-
 
 /*----------- 19.  Responsive ---------- */
 @media only screen and (min-width: 320px) and (max-width: 479px) {
