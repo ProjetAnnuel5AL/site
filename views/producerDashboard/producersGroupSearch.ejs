@@ -84,7 +84,13 @@
                             <div class="item-inner">
                             <div class="item-img">
                                     <div class="item-img-info"> 
-                                        <a class="product-image" title="Cooperative" href="/producersGroupFeed/<%= listTab[i].id %>"> <img class="previewImage" alt="<%= listTab[i].name %>" src="<%=urlApi%>/groupAvatar/<%=listTab[i].id%>/<%=listTab[i].avatar%>"> </a>
+                                        <a class="product-image" title="Cooperative" href="/producersGroupFeed/<%= listTab[i].id %>"> 
+                                        <% if(listTab[i].avatar == 'default'){%>
+                                        <img class="previewImage" alt="<%= listTab[i].name %>" src="/img/team.svg"/>
+                                        <% } else { %>
+                                        <img class="previewImage" alt="<%= listTab[i].name %>" src="<%=urlApi%>/groupAvatar/<%=listTab[i].id%>/<%=listTab[i].avatar%>"> 
+                                        <% } %>
+                                        </a>
                                     </div>
                                 </div>
                             <div class="item-info">
@@ -130,8 +136,13 @@
                             <div class="owl-item" style="width: 220px;"><div class="item">
                             <div class="item-inner">
                             <div class="item-img">
-                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroupFeed/<%= coopSubscribed[i].id %>"> <img class="previewImage" alt="<%= coopSubscribed[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopSubscribed[i].id%>/<%=coopSubscribed[i].avatar%>"> </a>
-                                    
+                                    <div class="item-img-info"> <a class="product-image" title="Cooperative" href="/producersGroupFeed/<%= coopSubscribed[i].id %>"> 
+                                    <% if(coopSubscribed[i].avatar == 'default'){%>
+                                    <img class="previewImage" alt="<%= coopSubscribed[i].name %>" src="/img/team.svg"/>
+                                    <% } else { %>
+                                    <img class="previewImage" alt="<%= coopSubscribed[i].name %>" src="<%=urlApi%>/groupAvatar/<%=coopSubscribed[i].id%>/<%=coopSubscribed[i].avatar%>"> 
+                                    <% } %>
+                                    </a>
                                     </div>
                                 </div>
                             <div class="item-info">

@@ -165,7 +165,7 @@ module.exports = function(app, urlApi, utils, config){
                 });
               } else {
                 res.render("producerDashboard/producersGroupList.ejs", {
-                  msgError: body.message,
+                  msgError: msgError,
                   msgSuccess: msgSuccess,
                   coopAdmin: [],
                   coopMember: [],
@@ -627,6 +627,7 @@ module.exports = function(app, urlApi, utils, config){
 		if(req.body.idGroup && req.body.countMembers){
 			var msgError;
 			msgError="";
+      
       if(req.body.countMembers!='0'){
         console.log("bbb")
         rp({

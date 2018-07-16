@@ -408,7 +408,7 @@ module.exports = function(app, urlApi, utils, config){
                         memberOrAdmin: memberOrAdmin,
                         coopMembers: [],
                         urlApi: urlApi,
-                        msgError: "Erreur: coopérative non trouvée",
+                        msgError: "Erreur: Evenement non trouvée",
                         msgSuccess: ""
                       });
                     });
@@ -782,6 +782,113 @@ module.exports = function(app, urlApi, utils, config){
 		}else res.send(null);
   });
 
+  app.post('/producersGroupEvent/delete/idEvent', function(req, res, next) {
+    console.log(req.body);
+		if(req.body.idEvent && req.body.countParticipants && req.body.idGroup){
+			var msgError;
+      var idGroup = req.body.idGroup;
+      var idEvent = req.body.idEvent;
+			msgError="";
+      if(req.body.countParticipants!='0'){
+        rp({
+          url: urlApi + "/producersGroupEventParticipant/idEvent",
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          json: {
+            "idEvent": idEvent,
+            "token": req.session.token
+          }
+        }).then(function (body) {
+          if (body.code == "0") {
+            rp({
+              url: urlApi + "/producersGroupEvent/idEvent",
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              json: {
+                "idEvent": idEvent,
+                "token": req.session.token
+              }
+            }).then(function (body) {
+              if (body.code == "0") {
+                res.redirect('/producersGroupFeed/'+idGroup);
+              }else {
+                res.render("erreur.ejs", {
+                  session: req.session,
+                  urlApi: urlApi,
+                  msgError: "Erreur inconnue 1. Merci de réessayer ultérieurement.",
+                  msgSuccess: ""
+                });
+              }
+            }).catch(function (err) {
+              res.render("erreur.ejs", {
+                session: req.session,
+                urlApi: urlApi,
+                msgError: "Erreur inconnue 2. Merci de réessayer ultérieurement.",
+                msgSuccess: ""
+              });
+            });
+          } else {
+            res.render("erreur.ejs", {
+              session: req.session,
+              urlApi: urlApi,
+              msgError: "Erreur inconnue 3. Merci de réessayer ultérieurement.",
+              msgSuccess: ""
+            });
+          }
+        }).catch(function (err) {
+          res.render("erreur.ejs", {
+            session: req.session,
+            urlApi: urlApi,
+            msgError: "Erreur inconnue 4. Merci de réessayer ultérieurement.",
+            msgSuccess: ""
+          });
+        });
+      }else{
+        rp({
+          url: urlApi + "/producersGroupEvent/idEvent",
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          json: {
+            "idEvent": req.body.idEvent,
+            "token": req.session.token
+          }
+        }).then(function (body) {
+          console.log(body);
+          if (body.code == "0") {
+            res.redirect('/producersGroupFeed/'+idGroup);
+          } else {
+            res.render("erreur.ejs", {
+              session: req.session,
+              urlApi: urlApi,
+              msgError: "Erreur inconnue 1. Merci de réessayer ultérieurement.",
+              msgSuccess: ""
+            });
+          }
+        }).catch(function (err) {
+          res.render("erreur.ejs", {
+            session: req.session,
+            urlApi: urlApi,
+            msgError: "Erreur inconnue 2. Merci de réessayer ultérieurement.",
+            msgSuccess: ""
+          });
+        });
+      }
+		}else{
+      res.render("erreur.ejs", {
+        session: req.session,
+        urlApi: urlApi,
+        msgError: "Erreur inconnue 5. Merci de réessayer ultérieurement.",
+        msgSuccess: ""
+      });
+    }
+  });
+  
     function getEvent(fields){
         var event = {
           name: fields.name,
