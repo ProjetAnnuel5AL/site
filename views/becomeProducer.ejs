@@ -86,7 +86,7 @@
                         <% if (msgSuccess.length > 0) { %>
                             <div class="alert alert-success"> <%= msgSuccess %> </div>
                         <% } %>
-                        <span id='lippButton' style="margin-top:1675px; position:absolute;"></span>
+                        <span id='lippButton' style="margin-top:1600px; position:absolute;z-index: 100"></span>
                         <form action="/becomeProducer" id="myForm" method="post" enctype="multipart/form-data">
                             <ul class="form-list">
                                 <li>
@@ -99,26 +99,7 @@
                                     <br>
                                     <input type="text" title="firstName" id="firstName" class="input-text required-entry" name="firstName" value="<%= producer.firstNameProducer %>" required>
                                 </li>
-                                <li>
-                                    <label for="birth">Date de naissance</label>
-                                    <br>
-                           
-                                            
-                                    <input type='text'  class="form-control" id='datetimepicker4' name="birth" onkeydown="return false;" style="width:100%" autocomplete="off" required/>
-                                    
-                                    <script type="text/javascript">
-                                        $(function () {
-                                            $('#datetimepicker4').datetimepicker({
-                                                format: 'DD/MM/YYYY'
-                                            });
-                                        });
-                                        
-                                        
-                                    </script>
-                                       
-                                   
-                                    <!--<input type="date" title="birth" id="birth" class="input-text required-entry" name="birth" value="<%= producer.birthProducer %>" required>-->
-                                </li>
+                              
                                 <li>
                                     <label for="sex">Sexe</label>
                                     <br>
@@ -169,13 +150,14 @@
                                     <br>       
                                 </li>
                                 <li>
+                                    <br><br>
                                     <label>Compte paypal <br /><i>Afin d'effectuer les transactions financières de vos ventes, merci de vous connecter avec votre compte paypal professionnel. Si vous n'en avez pas, vous pouvez en créer un <a href="https://www.paypal.com/fr/home">ici</a></i></label>
                                     <br/>
                                     <p id="displayPaypalEmail"></p>
                                     <input type="hidden" name="emailPaypal" id="emailPaypal" value = "" required>
                                 </li>
                             </ul>
-                            </br></br></br>
+                           <br /><br />
                             <% include ./partials/sellerAgreements %>
                             <label for="acceptCondition">J'accepte les conditions de vente : </label>
                             <input type="checkbox" id="acceptCondition" required name="acceptCondition"/></br>

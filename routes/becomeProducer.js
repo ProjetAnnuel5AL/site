@@ -39,7 +39,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
 
                 var ibanExtensionT = files.iban.name.split('.');
                 var ibanExtension = ibanExtensionT[ibanExtensionT.length-1]
-              
+
                 if(files.avatar.name !="" && ( files.avatar.size> 5242880  ||  (extension != "jpg" && extension != "png" && extension != "jpeg" && extension != "gif" && extension != "bmp" && extension != "tif" && extension != "tiff"))){
                     res.render("becomeProducer.ejs", {
                         session: req.session,
@@ -75,16 +75,6 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                         session: req.session,
                         producer: localProducer,
                         msgError:"Veuillez saisir un prénom !",
-                        msgSuccess: "",
-                        paypalClientId :config.paypalClientId,
-                        paypalMode : config.paypalMode,
-                        urlLocal: urlLocal
-                    });
-                }else if(!fields.birth) {
-                    res.render("becomeProducer.ejs", {
-                        session: req.session,
-                        producer: localProducer,
-                        msgError:"Veuillez saisir une date de naissance !",
                         msgSuccess: "",
                         paypalClientId :config.paypalClientId,
                         paypalMode : config.paypalMode,
@@ -175,7 +165,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                             "avatarProducer": files.avatar,
                             "emailProducer": fields.email,
                             "phoneProducer": fields.phone,
-                            "birthProducer": fields.birth,
+                            "birthProducer": null,
                             "sexProducer": fields.sex,
                             "addressProducer": fields.address,
                             "cityProducer": fields.city,
@@ -194,7 +184,8 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                             if(files.avatar.name==""){
                                 avatar = "../img/avatar.png";
                             }else{
-                                avatar = config.urlAvatarProducer +"/"+  body.result.id +"/avatar."+extension;
+                                
+                                avatar = config.urlAvatarProducer +"/"+  body.result.id +"/img_resize/avatar_small."+extension;
                             }
                             var LatLong = fields.location.split(',');
                             lat = LatLong[0];
