@@ -139,6 +139,7 @@ module.exports = function(app, urlApi, utils, config){
             "loginUser": req.session.login
           }
         }).then(function (body) {
+          console.log(body);
           if (body.code == 0) {
             coopMember = body.result;
             rp({
@@ -167,8 +168,8 @@ module.exports = function(app, urlApi, utils, config){
                 res.render("producerDashboard/producersGroupList.ejs", {
                   msgError: msgError,
                   msgSuccess: msgSuccess,
-                  coopAdmin: [],
-                  coopMember: [],
+                  coopAdmin: coopAdmin,
+                  coopMember: coopMember,
                   urlApi: urlApi,
                   session: req.session
                 });

@@ -123,8 +123,9 @@ function removeMemberVerified(idProducerGroupMember, prenom){
       $.post("/producersGroupMember/delete/id", { id: idProducerGroupMember }).done(function (json) {
         console.log(json);
         if (json && json.code == 0) {
-          swal('Ce membre a été exclu du groupe');
-          $('#member'+idProducerGroupMember).remove();
+          //swal('Ce membre a été exclu du groupe');
+          //$('#member'+idProducerGroupMember).remove();
+          location.reload();
         }else{
           swal("Erreur!", "Erreur technique inconnue, veuillez réessayer plus tard", "error");
         }

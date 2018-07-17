@@ -96,7 +96,8 @@
                 };
                 $('#datetimepicker').datetimepicker({
                   locale: 'fr',
-                  format : "YYYY/MM/DD HH:MM"
+                  format : "YYYY/MM/DD HH:MM",
+                  minDate: new Date()
                 });
                 var autocomplete = new google.maps.places.Autocomplete($("#adress")[0], options);
                 
