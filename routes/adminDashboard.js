@@ -334,7 +334,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     }
                 }).then(function (body) { 
                     
-                    
+
                     if(body.result){
                         var file;
                         var http = require('http');
@@ -348,6 +348,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                             //console.log('Saved!');
                         });
 
+                        
                          
                         var pathStr="";
                         var path = body.result.split('/');
