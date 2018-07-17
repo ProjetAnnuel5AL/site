@@ -9,10 +9,10 @@ module.exports = function(app, urlApi, utils, config) {
             var msgError="";
             var msgSuccess ="";
             if(req.query.msgError && req.query.msgError!=""){
-                msgError = req.query.msgError
+                msgError = req.query.msgError;
             }
             if(req.query.msgSuccess && req.query.msgSuccess!=""){
-                msgSuccess = req.query.msgSuccess
+                msgSuccess = req.query.msgSuccess;
             }
             var motifs;
             rp({
@@ -49,10 +49,10 @@ module.exports = function(app, urlApi, utils, config) {
                     }
                 }).catch(function(err){
                     res.redirect("/");
-                })            
+                });           
             }).catch(function(err){ 
                 res.redirect("/");
-            })
+            });
         }
     });
 
@@ -61,11 +61,11 @@ module.exports = function(app, urlApi, utils, config) {
             res.redirect("/");
         }else{
             if(!req.body.idMotif){
-                res.redirect("/dispute/"+req.params.id+"?msgError=Veuillez saisir un motif.")
+                res.redirect("/dispute/"+req.params.id+"?msgError=Veuillez saisir un motif.");
             }else if(!req.body.idLigneOrder || req.body.idLigneOrder.length == 0){
-                res.redirect("/dispute/"+req.params.id+"?msgError=Veuillez saisir au moins un produit.")
+                res.redirect("/dispute/"+req.params.id+"?msgError=Veuillez saisir au moins un produit.");
             }else if(!req.body.descriptionDispute || req.body.descriptionDispute.length>500 || req.body.descriptionDispute.length<20){
-                res.redirect("/dispute/"+req.params.id+"?msgError=Veuillez saisir une description de votre problème comprise entre 20 et 500 caractères.")
+                res.redirect("/dispute/"+req.params.id+"?msgError=Veuillez saisir une description de votre problème comprise entre 20 et 500 caractères.");
             }else{
                 rp({
                     url: urlApi + "/dispute",
@@ -83,16 +83,16 @@ module.exports = function(app, urlApi, utils, config) {
                     }
                 }).then(function (body) {
                     if(body.code == 0){
-                        res.redirect("/userDashboard/orders?msgSuccess=Votre signalement a bien été enregistré.")
+                        res.redirect("/userDashboard/orders?msgSuccess=Votre signalement a bien été enregistré.");
                     }else{
-                        res.redirect("/dispute/"+req.params.id+"?msgError=Erreur lors de l'enregistrement de votre demande. Merci de réessayer ultérieurement. ")
+                        res.redirect("/dispute/"+req.params.id+"?msgError=Erreur lors de l'enregistrement de votre demande. Merci de réessayer ultérieurement. ");
                     }
                 }).catch(function(err){
                     res.redirect("/");
-                })            
+                });            
             }
             
         }
     });
 
-}
+};

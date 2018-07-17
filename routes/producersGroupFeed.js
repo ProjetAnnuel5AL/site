@@ -7,7 +7,7 @@ module.exports = function(app, urlApi, utils, config){
     if(!req.session.type) {
 			res.redirect("/");
 		}else if(req.session.type !="1"){
-            res.redirect("/")
+            res.redirect("/");
         }else{
             rp({
               url: urlApi + "/producersGroup/idGroup/",
@@ -66,11 +66,9 @@ module.exports = function(app, urlApi, utils, config){
         res.redirect("/");
       } else {
         if (req.query.idNotif) {
-          console.log("aaaaaa");
           rp({
             url: urlApi + "/notification/idItem",
             method: "DELETE",
-            json: true,
             headers: {
               'User-Agent': 'Request-Promise'
             },
@@ -182,7 +180,7 @@ module.exports = function(app, urlApi, utils, config){
                           }).then(function (body) {
                             console.log(body);
                             if(body.code == 0){
-                              coopParticipants = body.result
+                              coopParticipants = body.result;
                               res.render("producerDashboard/producersGroupEvent.ejs", {
                                 session: req.session,
                                 coop: coop,
@@ -567,7 +565,7 @@ module.exports = function(app, urlApi, utils, config){
       if (!req.session.type) {
         res.redirect("/");
       } else if (req.session.type != "1") {
-        res.redirect("/")
+        res.redirect("/");
       } else {
         var form = new formidable.IncomingForm();
 
@@ -663,13 +661,13 @@ module.exports = function(app, urlApi, utils, config){
                           notifGroup[i] = notif;
                         }
                         for (i = 0; i < coopSubscriber.length; i++) {
-                          var notif = {};
-                          notif.idUser = coopSubscriber[i].idUser;
-                          notif.title = "Un nouvel événement est planifié";
-                          notif.description = "L'événement " + fields.name + " est organisé le " + fields.date + ". Consulter l'événement ?";
-                          notif.url = "/producersGroupEvent/" + eventId;
-                          notif.type = "choice";
-                          notifGroup[i + coopMembers.length] = notif;
+                          var notif2 = {};
+                          notif2.idUser = coopSubscriber[i].idUser;
+                          notif2.title = "Un nouvel événement est planifié";
+                          notif2.description = "L'événement " + fields.name + " est organisé le " + fields.date + ". Consulter l'événement ?";
+                          notif2.url = "/producersGroupEvent/" + eventId;
+                          notif2.type = "choice";
+                          notifGroup[i + coopMembers.length] = notif2;
                         }
                         rp({
                           url: urlApi + "/notification/multiple",
@@ -933,4 +931,4 @@ module.exports = function(app, urlApi, utils, config){
         };
         return event;
     }
-}
+};

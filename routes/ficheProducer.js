@@ -27,7 +27,7 @@ module.exports = function(app, urlApi, utils, config){
                 }else{
                     var avatarProducer = body.result.avatarProducer.split('.');
                     
-                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/img_resize/"+ avatarProducer[0]+"_ms."+avatarProducer[1]
+                    avatar = config.urlAvatarProducer +"/"+  req.params.id +"/img_resize/"+ avatarProducer[0]+"_ms."+avatarProducer[1];
                 }
                 var LatLong = producer.locationProducer.split(',');
                 lat = LatLong[0];
@@ -60,4 +60,4 @@ module.exports = function(app, urlApi, utils, config){
         
         });
     });
-}
+};

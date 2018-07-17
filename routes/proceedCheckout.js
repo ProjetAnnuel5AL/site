@@ -103,7 +103,7 @@ module.exports = function(app, urlApi, utils, config){
                         "addressUser" : req.body.address,
                         "cityUser" :req.body.city,
                         "cpUser" : req.body.cp,
-                    }
+                    };
                 }
             }
 
@@ -156,20 +156,20 @@ module.exports = function(app, urlApi, utils, config){
                         }
                     }).then(function(result){
                         //console.log(result);
-                    })
+                    });
                 }
                 res.json(body);
             }).catch(function(err){
                 res.json({
                     "code" : 1,
                     "message" : "Error rp"
-                })
+                });
             });
         }else{
             res.json({
                 "code" : 1,
                 "message" : "Missing required parameters"
-            })
+            });
         }
     });
 
@@ -190,7 +190,7 @@ module.exports = function(app, urlApi, utils, config){
                 }
             }).then(function (result) {
                 if(result.code == 0){
-                    req.session.cart = []
+                    req.session.cart = [];
                     res.render("proceedCheckoutValidate.ejs", {
                         session: req.session,
                         msgError:"",
@@ -199,12 +199,12 @@ module.exports = function(app, urlApi, utils, config){
                 }else{
                     //console.log(result)
                     //si code pas = 0 c qu'on a un petit malin donc on bloque
-                    res.redirect("/")
+                    res.redirect("/");
                 }
                
             });
         }else{
             res.redirect("/");
         }
-    })
-}
+    });
+};

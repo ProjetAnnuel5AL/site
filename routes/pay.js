@@ -10,21 +10,21 @@ module.exports = function(app, urlApi,urlLocal,  utils){
             msgSuccess: ""
         });
      
-    })
+    });
 
     app.get("/validatePay", function(req, res) {
     
         console.log(req);
 
-        res.json({message:"in validate"})
-    })
+        res.json({message:"in validate"});
+    });
 
     app.get("/cancelPay", function(req, res) {
     
         console.log(req);
 
-        res.json({message:"in cancel"})
-    })
-}
+        res.json({message:"in cancel"});
+    });
+};
 
 

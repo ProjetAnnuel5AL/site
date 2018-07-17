@@ -30,7 +30,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         avatar = "../img/avatar.png";
                     }else{
                         var avatarProducer = body.result.avatarProducer.split('.');
-                        avatar = config.urlAvatarProducer +"/"+  producer.idProducer +"/img_resize/"+ avatarProducer[0]+"_small."+ avatarProducer[1]
+                        avatar = config.urlAvatarProducer +"/"+  producer.idProducer +"/img_resize/"+ avatarProducer[0]+"_small."+ avatarProducer[1];
                     }
                     producer.avatarProducer = avatar;
                 
@@ -44,7 +44,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         msgSuccess: ""
                     });
                 }else{
-                    res.redirect("/")
+                    res.redirect("/");
                 }
                
             });
@@ -67,7 +67,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                 var extension = extensionT[extensionT.length-1];
 
                 var ibanExtensionT = files.iban.name.split('.');
-                var ibanExtension = ibanExtensionT[ibanExtensionT.length-1]
+                var ibanExtension = ibanExtensionT[ibanExtensionT.length-1];
 
                 if(files.avatar.name !="" && ( files.avatar.size> 5242880  ||  (extension != "jpg" && extension != "png" && extension != "jpeg" && extension != "gif" && extension != "bmp" && extension != "tif" && extension != "tiff"))){
                     res.render("producerDashboard/producerDashboardProfil.ejs", {
@@ -301,7 +301,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                     res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
                 } else {
                     var jsonDelivery = JSON.parse(body);
-                    deliveryList = jsonDelivery.result
+                    deliveryList = jsonDelivery.result;
                     rp({
                         url: urlApi + "/units",
                         method: "GET",
@@ -313,7 +313,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                             res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
                         } else {
                         var jsonUnit = JSON.parse(body);
-                        unitsList = jsonUnit.result
+                        unitsList = jsonUnit.result;
                         rp({
                             url: urlApi + "/categories",
                             method: "GET",
@@ -325,7 +325,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                                 res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
                             } else {
                                 var jsonCategory = JSON.parse(body);
-                                categoriesList = jsonCategory.result
+                                categoriesList = jsonCategory.result;
                                 res.render('producerDashboard/producerDashboardItemNew.ejs', { msgError: "", msgSuccess:msgSuccess, deliverys: deliveryList, units: unitsList, categories: categoriesList, session : req.session });
                             }
                         }).catch(function (err) {
@@ -337,7 +337,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         res.render("producerDashboard/producerDashboardItemNew.ejs", { msgError: "Erreur inconnue. Merci de réessayer.", msgSuccess:msgSuccess, session: req.session });
                     });
                 }
-            })
+            });
            
         }else{
             res.redirect("/");
@@ -504,7 +504,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         msgSuccess: msgSuccess
                     });
                 }else{
-                    res.redirect("/")
+                    res.redirect("/");
                 }
             });
         }
@@ -537,7 +537,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                     res.render("producerDashboardItemNew.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
                 } else {
                     var jsonDelivery = JSON.parse(body);
-                    deliveryList = jsonDelivery.result
+                    deliveryList = jsonDelivery.result;
                     rp({
                         url: urlApi + "/item/getItemProducer",
                         method: "POST",
@@ -581,7 +581,7 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                                         }
                                     }).then(function (body) {
                                         var jsonUnit = JSON.parse(body);
-                                        unitsList = jsonUnit.result
+                                        unitsList = jsonUnit.result;
                                         res.render('producerDashboard/producerDashboardItem.ejs', { 
                                             msgError: msgError,
                                             msgSuccess:msgSuccess, 
@@ -1023,15 +1023,15 @@ module.exports = function(app, urlApi, urlLocal, utils, config){
                         "contestDescriptionDispute" : contestDescriptionDispute
                     }
                 }).then(function (body) {
-                    console.log(body)
+                    console.log(body);
                     if(body.code == 0){
-                        res.redirect("/producerDashboard/disputes?msgSuccess=Litige traité.")
+                        res.redirect("/producerDashboard/disputes?msgSuccess=Litige traité.");
                     }else{
-                        res.redirect("/producerDashboard/disputes?msgError=Erreur lors du traitement du litige.")
+                        res.redirect("/producerDashboard/disputes?msgError=Erreur lors du traitement du litige.");
                     }
                 });
             }
         }
     });
 
-}
+};

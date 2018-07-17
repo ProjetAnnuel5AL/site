@@ -16,7 +16,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }
               }).then(function (body) { 
 
-              })
+              });
         }
         var msgError ="";
         if(req.query.msgError && req.query.msgError!= ""){
@@ -63,7 +63,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
         if(!req.session.type || !req.params.id || req.params.id =="") {
             res.redirect("/");
         }else{
-            console.log(req.body)
+            console.log(req.body);
             var stars = req.body.stars;
             if(req.body.stars == ""){
                 stars = "0";
@@ -86,12 +86,12 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 if(body.code == 0){
                     res.redirect("/");
                 }else{
-                    res.redirect("/letComment/"+req.params.id+"?msgError=Erreur lors de l'enregistrement du commentaire. Merci de rééssayer ulterieurement.")
+                    res.redirect("/letComment/"+req.params.id+"?msgError=Erreur lors de l'enregistrement du commentaire. Merci de rééssayer ulterieurement.");
                 }
             });
        }
         
-    })
+    });
 
 
-}
+};

@@ -8,9 +8,9 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
         if(!req.session.type) {
 			res.redirect("/");
 		}else if(req.session.type =="1"){
-            res.redirect("/userDashboard/profil")
+            res.redirect("/userDashboard/profil");
         }else{
-            req.session.verifPaypalValidity = {}
+            req.session.verifPaypalValidity = {};
             res.render("becomeProducer.ejs", {
                 session: req.session,
                 producer: {},
@@ -27,7 +27,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
         if(!req.session.type) {
 			res.redirect("/");
 		}else if(req.session.type =="1"){
-            res.redirect("/producerDashboard/profil")
+            res.redirect("/producerDashboard/profil");
         }else{
             var form = new formidable.IncomingForm();
             
@@ -38,7 +38,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                 var extension = extensionT[extensionT.length-1];
 
                 var ibanExtensionT = files.iban.name.split('.');
-                var ibanExtension = ibanExtensionT[ibanExtensionT.length-1]
+                var ibanExtension = ibanExtensionT[ibanExtensionT.length-1];
 
                 if(files.avatar.name !="" && ( files.avatar.size> 5242880  ||  (extension != "jpg" && extension != "png" && extension != "jpeg" && extension != "gif" && extension != "bmp" && extension != "tif" && extension != "tiff"))){
                     res.render("becomeProducer.ejs", {
@@ -262,22 +262,22 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                             res.render("close.ejs");
                         } else { 
                             // userinfo.email userinfo.verified userinfo.account_type userinfo.email_verified userinfo.verified_account
-                            res.redirect("/saveUserInfo/" + userinfo.email)
+                            res.redirect("/saveUserInfo/" + userinfo.email);
                         }
                     });
                     
                 }
-            })
+            });
         }
        
     });
 
     app.get("/saveUserInfo/:email", function(req, res, next) {
 
-        req.session.verifPaypalValidity = {email : req.params.email}
+        req.session.verifPaypalValidity = {email : req.params.email};
 
         res.render("close.ejs");
-    })
+    });
 
     //GET ALL USER
     app.get("/becomeProducer/verifyPaypalAccount", function(req, res, next) {
@@ -287,7 +287,7 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
                 res.json({
                     code : 0,
                     email : req.session.verifPaypalValidity.email
-                })
+                });
             }else{
                 res.json({code : 1});
             }
@@ -320,4 +320,4 @@ module.exports = function(app, urlApi, utils, config, urlLocal){
         return producer;
     }
 
-}
+};

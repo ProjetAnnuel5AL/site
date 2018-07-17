@@ -48,7 +48,7 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                 msgError: "",
                 msgSuccess: "",
                 session : req.session}
-            )
+            );
         }
     });
 
@@ -61,13 +61,13 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                     msgError: "Veuillez saisir un identiifant !",
                     msgSuccess: "",
                     session : req.session}
-                )
+                );
             } else if(!req.body.mail) {
                 res.render("resend.ejs",{ 
                     msgError: "Veuillez saisir un email !",
                     msgSuccess: "",
                     session : req.session}
-                )
+                );
             }else{
                 rp({
                     url: urlApi + "/user/resend",
@@ -86,50 +86,50 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                             msgError: "",
                             msgSuccess: "Un email a été renvoyé avec succès",
                             session : req.session}
-                        )
+                        );
                     }else if(body.code == 1){
                         res.render("resend.ejs",{ 
                             msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement!",
                             msgSuccess: "",
                             session : req.session}
-                        )
+                        );
                     }else if(body.code == 2){
                         res.render("resend.ejs",{ 
                             msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement!",
                             msgSuccess: "",
                             session : req.session}
-                        )
+                        );
                     }else if(body.code == 3){
                         res.render("resend.ejs",{ 
                             msgError: "L'utilisateur saisi n'existe pas !",
                             msgSuccess: "",
                             session : req.session}
-                        )
+                        );
                     }else if(body.code == 4){
                         res.render("resend.ejs",{ 
                             msgError: "Cet email est déjà utilisé !",
                             msgSuccess: "",
                             session : req.session}
-                        )
+                        );
                     } else if(body.code == 5){
                         res.render("resend.ejs",{ 
                             msgError: "Ce compte est déjà validé !",
                             msgSuccess: "",
                             session : req.session}
-                        )
+                        );
                     }else{
                         res.render("resend.ejs",{ 
                             msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement!",
                             msgSuccess: "",
                             session : req.session}
-                        )
+                        );
                     }
                 }).catch(function (err) {
                     res.render("resend.ejs",{ 
                         msgError: "Erreur lors de la demande. Veuillez recommmencer ultérieurement!",
                         msgSuccess: "",
                         session : req.session}
-                    )
+                    );
                 });
             }
             

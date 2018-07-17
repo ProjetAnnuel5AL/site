@@ -8,7 +8,7 @@ module.exports = function(app, urlApi, utils, config){
     if(!req.session.type) {
 			res.redirect("/");
 		}else if(req.session.type !="1"){
-            res.redirect("/")
+            res.redirect("/");
         }else{
             res.render("producerDashboard/producersGroupCreate.ejs", {
                 session: req.session,
@@ -23,7 +23,7 @@ module.exports = function(app, urlApi, utils, config){
         if(!req.session.type) {
           res.redirect("/");
         }else if(req.session.type !="1"){
-            res.redirect("/")
+            res.redirect("/");
         }else{
             var form = new formidable.IncomingForm();
             
@@ -32,7 +32,7 @@ module.exports = function(app, urlApi, utils, config){
                 var newGroup = getGroup(fields);
                 var extensionT = files.avatar.name.split('.');
                 var extension = extensionT[extensionT.length-1];
-                console.log(files)
+     
                 if(files.avatar.name !="" && ( files.avatar.size> 5242880  ||  (extension != "jpg" && extension != "png" && extension != "jpeg" && extension != "gif" && extension != "bmp" && extension != "tif" && extension != "tiff"))){
                   msgError += "Le fichier utilisé pour la photo n'est pas conforme : \nExtensions acceptées :  \n\rPoid maximum : 5Mo  ";
                 }
@@ -126,7 +126,7 @@ module.exports = function(app, urlApi, utils, config){
       if (!req.session.type) {
         res.redirect("/");
       } else if (req.session.type != "1") {
-        res.redirect("/")
+        res.redirect("/");
       } else {
         rp({
           url: urlApi + "/producersGroup/member/userId/",
@@ -220,7 +220,7 @@ module.exports = function(app, urlApi, utils, config){
         }
       }).then(function (body) {
         if (body.code == 0) {
-          coopSubscribed = body.result
+          coopSubscribed = body.result;
           if(!req.query.address || !req.query.lat || !req.query.long){
             res.render("producerDashboard/producersGroupSearch.ejs", {
               session: req.session,
@@ -247,7 +247,7 @@ module.exports = function(app, urlApi, utils, config){
             }).then(function (body) {
                 if(body.code ==0){
                   console.log(body);
-                  listTab = body.result
+                  listTab = body.result;
                   if(listTab.length == 0){
                     msgError = "Aucune coopérative trouvée dans la zone";
                   }
@@ -316,7 +316,7 @@ module.exports = function(app, urlApi, utils, config){
           }
         }).then(function (body) {
             if(body.code ==0){
-              coopSubscribed = body.result
+              coopSubscribed = body.result;
               res.render("producerDashboard/producersGroupSearch.ejs", {
                 session: req.session,
                 urlApi: urlApi,
@@ -358,7 +358,7 @@ module.exports = function(app, urlApi, utils, config){
       if (!req.session.type || !req.params.id) {
         res.redirect("/");
       } else if (req.session.type != "1") {
-        res.redirect("/")
+        res.redirect("/");
       } else {
         rp({
           url: urlApi + "/producersGroupMember/idGroup/",
@@ -623,13 +623,13 @@ module.exports = function(app, urlApi, utils, config){
   });
 
   app.post('/producersGroup/delete/idGroup', function(req, res, next) {
-    console.log(req.body);
+    
 		if(req.body.idGroup && req.body.countMembers){
 			var msgError;
 			msgError="";
       
       if(req.body.countMembers!='0'){
-        console.log("bbb")
+        
         rp({
           url: urlApi + "/producersGroupMember/idGroup",
           method: "DELETE",
@@ -641,7 +641,7 @@ module.exports = function(app, urlApi, utils, config){
             "token": req.session.token
           }
         }).then(function (body) {
-          console.log(body);
+          //console.log(body);
           if (body.code == "0") {
             rp({
               url: urlApi + "/producersGroup/idGroup",
@@ -745,4 +745,4 @@ module.exports = function(app, urlApi, utils, config){
         return producer;
     }
 
-}
+};

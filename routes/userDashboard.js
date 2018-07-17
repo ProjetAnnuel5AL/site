@@ -116,7 +116,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                                 msgError:"Erreur lors de la mise a jour de l'adresse mail. Merci de réessayer ultérieurement.",
                                 msgSuccess: ""
                             });
-                        })
+                        });
                     }
                 }else{
                     res.redirect("/");
@@ -388,10 +388,10 @@ module.exports = function(app, urlApi, urlLocal, utils){
         var msgError="";
         var msgSuccess ="";
         if(req.query.msgError && req.query.msgError!=""){
-            msgError = req.query.msgError
+            msgError = req.query.msgError;
         }
         if(req.query.msgSuccess && req.query.msgSuccess!=""){
-            msgSuccess = req.query.msgSuccess
+            msgSuccess = req.query.msgSuccess;
         }
         if(!req.session.type) {
 			res.redirect("/");

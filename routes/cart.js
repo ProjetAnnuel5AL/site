@@ -7,7 +7,7 @@ module.exports = function(app, urlApi, utils, config){
     app.get("/cart/add", function(req, res, next) {      
         if(req.session.type){ 
             //On enleve le # si il a toucher au photo
-            req.query.id = req.query.id.replace("#","")
+            req.query.id = req.query.id.replace("#","");
 
             //on vérifie que on a pas déjà l'annonce dans le panier
             var exist = false;
@@ -32,7 +32,7 @@ module.exports = function(app, urlApi, utils, config){
                     else{
                         if(req.query.qteMax == 0) {
                             req.session.cart.splice(i,1);
-                            res.json("Oups ! Ce produit n'est plus disponible. Nous allons le supprimer de votre panier.")
+                            res.json("Oups ! Ce produit n'est plus disponible. Nous allons le supprimer de votre panier.");
                         }
                         else if(parseInt(req.session.cart[i].qte)> parseInt(req.query.qteMax)){
                             req.session.cart[i].qteMax = parseInt(req.query.qteMax);
@@ -74,8 +74,8 @@ module.exports = function(app, urlApi, utils, config){
                 jsonCart.shippingCost = req.query.shippingCost;
                 jsonCart.deliveryTime = req.query.deliveryTime;
                 jsonCart.idDelivery = req.query.idDelivery;
-                jsonCart.img = urlApi+'/itemPhotos/'+req.query.id+'/img_resize/0_xs.'+req.query.ext
-                req.session.cart.push(jsonCart)
+                jsonCart.img = urlApi+'/itemPhotos/'+req.query.id+'/img_resize/0_xs.'+req.query.ext;
+                req.session.cart.push(jsonCart);
                 res.json({
                     code : 0,
                     message : ""
@@ -141,7 +141,7 @@ module.exports = function(app, urlApi, utils, config){
                     if(body.code == 0){
                         var maxQuantity = body.result.infoItem.quatityMaxOrderItem;
                         if(body.result.infoItem.quantityItem < body.result.infoItem.quatityMaxOrderItem){
-                          maxQuantity = item.infoItem.quantityItem
+                          maxQuantity = item.infoItem.quantityItem;
                         }
                         if(maxQuantity >0){
                             res.json({
@@ -149,18 +149,18 @@ module.exports = function(app, urlApi, utils, config){
                                 message :"",
                                 max : maxQuantity,
                                 nameItem : body.result.infoItem.nameItem
-                            })
+                            });
                         }else{
                             res.json({
                                 code: 2,
                                 message :"Oups ! On dirait que cette annonce n'existe plus. Nous allons la supprimer de votre pannier.",
-                            })
+                            });
                         }
                     }else{
                         res.json({
                             code: 2,
                             message :"Oups ! On dirait que cette annonce n'existe plus. Nous allons la supprimer de votre pannier.",
-                        })
+                        });
                     }
                 }).catch(function (err) {
                     //console.log(err);
@@ -192,4 +192,4 @@ module.exports = function(app, urlApi, utils, config){
             res.redirect("/login");
         }   
     });
-}
+};

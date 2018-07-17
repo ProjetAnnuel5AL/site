@@ -22,7 +22,7 @@ module.exports = function(app, urlApi, utils){
           res.render("itemCreate.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
         } else {
           var jsonUnit = JSON.parse(body);
-          unitsList = jsonUnit.result
+          unitsList = jsonUnit.result;
           rp({
             url: urlApi + "/categories",
             method: "GET",
@@ -34,7 +34,7 @@ module.exports = function(app, urlApi, utils){
               res.render("itemCreate.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
             } else {
               var jsonCategory = JSON.parse(body);
-              categoriesList = jsonCategory.result
+              categoriesList = jsonCategory.result;
               res.render('itemCreate.ejs', { msgError: "", msgSuccess:msgSuccess, units: unitsList, categories: categoriesList, session : req.session });
             }
           }).catch(function (err) {
@@ -98,7 +98,7 @@ module.exports = function(app, urlApi, utils){
             res.render("itemCreate.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
           } else {
             var jsonUnit = JSON.parse(body);
-            unitsList = jsonUnit.result
+            unitsList = jsonUnit.result;
             rp({
               url: urlApi + "/categories",
               method: "GET",
@@ -110,7 +110,7 @@ module.exports = function(app, urlApi, utils){
                 res.render("itemCreate.ejs", { msgError: body.message, msgSuccess:msgSuccess, session: req.session });
               } else {
                 var jsonCategory = JSON.parse(body);
-                categoriesList = jsonCategory.result
+                categoriesList = jsonCategory.result;
                 res.render('itemCreate.ejs', { msgError: "", msgSuccess:msgSuccess, item: item, urlApi: urlApi, units: unitsList, categories: categoriesList, session : req.session });
               }
             }).catch(function (err) {

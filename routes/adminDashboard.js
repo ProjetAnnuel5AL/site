@@ -119,9 +119,9 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }).then(function (body) {
                     
                     if(body.code == 0){
-                       res.redirect("/adminDashboard/disputes?msgSuccess=Arbitrage effectué.")
+                       res.redirect("/adminDashboard/disputes?msgSuccess=Arbitrage effectué.");
                     }else{
-                        res.redirect("/adminDashboard/disputes?msgError=Erreur lors de l'arbitrage.")
+                        res.redirect("/adminDashboard/disputes?msgError=Erreur lors de l'arbitrage.");
                     }
                 });
             }else{
@@ -216,9 +216,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }).catch(function(err){
                     //console.log(err)
                     res.redirect("/adminDashboard/payementTodo");
-                })
-
-                
+                });  
             }else{
                 //console.log("in")
                 res.redirect("/adminDashboard/payementTodo");
@@ -265,9 +263,8 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     
 
                 }).catch(function(err){
-                   
                     res.redirect("/adminDashboard/payementTodo");
-                })
+                });
 
                 
             }else{
@@ -306,7 +303,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                 }).catch(function(err){
                    
                     res.redirect("/adminDashboard/payementTodo");
-                })
+                });
 
                 
             }else{
@@ -340,28 +337,28 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     if(body.result){
                         var file;
                         var http = require('http');
-                        const uuidv4 = require('uuid/v4');
-                        var namefilePdf=  uuidv4()+".pdf";;
+                        var uuidv4 = require('uuid/v4');
+                        var namefilePdf=  uuidv4()+".pdf";
                         fs.writeFile('ressources/pdf/'+namefilePdf, null, function (err) {
                             if (err) {
-                                console.log(err)
+                                console.log(err);
                             }
                             file = fs.createWriteStream("ressources/pdf/"+namefilePdf);
                             //console.log('Saved!');
                         });
 
                          
-                        var pathStr=""
+                        var pathStr="";
                         var path = body.result.split('/');
                         for (var i = 1; i<path.length; i++){
-                            pathStr += "/" + path[i]
+                            pathStr += "/" + path[i];
                         }
                        
                         var request = http.get(urlApi+pathStr, function(response) {
                             response.pipe(file);
                             response.on('end', function () {
                                     var fullpath = process.cwd() + "/ressources/pdf/"+namefilePdf;
-                                    res.sendFile(fullpath)
+                                    res.sendFile(fullpath);
                                     
                                     rp({
                                         url: urlApi + "/deleteIbanCrypt",
@@ -382,14 +379,14 @@ module.exports = function(app, urlApi, urlLocal, utils){
                                         //res.render("close.ejs");
                                     });
                                 
-                            })
-                          })          
+                            });
+                          });          
                     }else{
                         res.render("close.ejs");
                     }
                 }).catch(function(err){      
                     res.render("close.ejs");
-                })
+                });
             }else{
                 res.render("close.ejs");
             }
@@ -464,4 +461,4 @@ module.exports = function(app, urlApi, urlLocal, utils){
 
 
 
-}
+};

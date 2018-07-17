@@ -36,8 +36,8 @@ module.exports = function(app, urlApi, utils, config){
                     var ext = item.infoItem.fileExtensionsItem.split(';'); 
                     for(var i =0; i<ext.length; i++){
                         if(ext[i] !="") {
-                            photo[i]= urlApi+'/itemPhotos/'+item.infoItem.idItem+'/img_resize/'+i+'_ms.'+ext[i]
-                            photoSmall[i] = urlApi+'/itemPhotos/'+item.infoItem.idItem+'/img_resize/'+i+'_xxs.'+ext[i]
+                            photo[i]= urlApi+'/itemPhotos/'+item.infoItem.idItem+'/img_resize/'+i+'_ms.'+ext[i];
+                            photoSmall[i] = urlApi+'/itemPhotos/'+item.infoItem.idItem+'/img_resize/'+i+'_xxs.'+ext[i];
                         }
                     }
                 }

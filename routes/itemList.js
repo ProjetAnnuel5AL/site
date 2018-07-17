@@ -3,8 +3,8 @@ module.exports = function(app, urlApi, utils){
   var formidable = require("formidable");
  
   app.get('/itemList', function(req, res, next) {
-      res.redirect("/itemList/1")
-  })
+      res.redirect("/itemList/1");
+  });
 
 	app.get('/itemList/:page', function(req, res, next) {
     var msgError = "";
@@ -15,7 +15,7 @@ module.exports = function(app, urlApi, utils){
     var nbItems = 0;
     var listTab = "";
 
-    var limit = (req.params.page -1)*20
+    var limit = (req.params.page -1)*20;
 
       rp({
         uri: urlApi + "/item/filter",
@@ -30,8 +30,8 @@ module.exports = function(app, urlApi, utils){
       }).then(function (body) {
        
         if (body.code == 0) {
-          listTab = body.result.list
-          nbItems = body.result.nbTotalItem
+          listTab = body.result.list;
+          nbItems = body.result.nbTotalItem;
     
           rp({
             uri: urlApi + "/item/getPriceMinMax",
@@ -42,8 +42,8 @@ module.exports = function(app, urlApi, utils){
 
             }
           }).then(function (body) {  
-             prixMax=body.result.maxPrice
-             prixMin=body.result.minPrice
+             prixMax=body.result.maxPrice;
+             prixMin=body.result.minPrice;
           });
             rp({
               uri: urlApi + "/categories",
@@ -67,7 +67,7 @@ module.exports = function(app, urlApi, utils){
                 products = body.result;
 
                 res.render('itemList.ejs', { msgError: "", urlApi: urlApi, categories: categories, products: products, listTab: listTab, prixMin: prixMin, prixMax: prixMax, session : req.session, currentPage: req.params.page, nbItems : nbItems, saveSearch: null });
-              })
+              });
             });
                        
         } else {
@@ -77,22 +77,22 @@ module.exports = function(app, urlApi, utils){
   });
 
   app.get('/itemList/filter/:page', function(req, res, next) {
-
+    var price =[];
     if(req.query.price) {
-      var price =  req.query.price.split(',');
+      price =  req.query.price.split(',');
     }else{
-      var price = []
+      price = [];
       price[0] = null;
       price[1] = null;
     }
     
 
-    var category = req.query.category
+    var category = req.query.category;
     if(req.query.category == 0) {
       category = null;
     }
 
-    var product = req.query.product
+    var product = req.query.product;
     if(req.query.product == 0) {
       product = null;
     }
@@ -114,9 +114,9 @@ module.exports = function(app, urlApi, utils){
       address: req.query.address ,
       priceMin : price[0],
       priceMax : price[1],
-    }
+    };
 
-    var limit = (req.params.page -1)*20
+    var limit = (req.params.page -1)*20;
 
       rp({
         uri: urlApi + "/item/filter",
@@ -138,8 +138,8 @@ module.exports = function(app, urlApi, utils){
       }).then(function (body) {
         
         if (body.code == 0) {
-          listTab = body.result.list
-          nbItems = body.result.nbTotalItem
+          listTab = body.result.list;
+          nbItems = body.result.nbTotalItem;
           rp({
             uri: urlApi + "/item/getPriceMinMax",
             method: "GET",
@@ -148,8 +148,8 @@ module.exports = function(app, urlApi, utils){
               'User-Agent': 'Request-Promise'
             }
           }).then(function (body) {  
-             prixMax=body.result.maxPrice
-             prixMin=body.result.minPrice
+             prixMax=body.result.maxPrice;
+             prixMin=body.result.minPrice;
           });
             rp({
               uri: urlApi + "/categories",
@@ -171,9 +171,8 @@ module.exports = function(app, urlApi, utils){
                 }
               }).then(function (body) {  
                 products = body.result;
-
                 res.render('itemList.ejs', { msgError: "", urlApi: urlApi, categories: categories, products: products, listTab: listTab, prixMin: prixMin, prixMax: prixMax, session : req.session, currentPage: req.params.page, nbItems : nbItems, saveSearch: saveSearch });
-              })
+              });
             });
                        
         } else {

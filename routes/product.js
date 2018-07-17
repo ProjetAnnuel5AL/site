@@ -13,7 +13,7 @@ module.exports = function(app, urlApi){
 					"Content-Type": "application/json"
 				}
 			}).then(function (body) {
-				var jsonResult = JSON.parse(body)
+				var jsonResult = JSON.parse(body);
 				if (jsonResult.code == "0") {
 					res.send(jsonResult);
 				} else {
@@ -47,7 +47,7 @@ module.exports = function(app, urlApi){
 		
 		}).catch(function(err){
 			res.send(null);
-		})
+		});
 	});
     
 };

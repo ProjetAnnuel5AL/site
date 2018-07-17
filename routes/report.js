@@ -19,7 +19,7 @@ module.exports = function(app, urlApi, utils, config) {
 			}
 		}).catch(function(err){
 			res.send(null);
-		})
+		});
 
 	});
 	
@@ -29,7 +29,6 @@ module.exports = function(app, urlApi, utils, config) {
 			rp({
 				uri: urlApi + "/report/item",
 				method: "POST",
-				json: true,
 				headers: {
 					'User-Agent': 'Request-Promise'
 				},
@@ -43,7 +42,7 @@ module.exports = function(app, urlApi, utils, config) {
 					
 			}).catch(function(err){
 				res.send({"code":3});
-			})
+			});
 		}else{
 			res.send({"code":1});
 		}
@@ -67,7 +66,7 @@ module.exports = function(app, urlApi, utils, config) {
 			}
 		}).catch(function(err){
 			res.send(null);
-		})
+		});
 	});
 	
 
@@ -78,7 +77,6 @@ module.exports = function(app, urlApi, utils, config) {
 			rp({
 				uri: urlApi + "/report/producer",
 				method: "POST",
-				json: true,
 				headers: {
 					'User-Agent': 'Request-Promise'
 				},
@@ -92,7 +90,7 @@ module.exports = function(app, urlApi, utils, config) {
 					
 			}).catch(function(err){
 				res.send({"code":3});
-			})
+			});
 		}else{
 			res.send({"code":1});
 		}
@@ -117,7 +115,7 @@ module.exports = function(app, urlApi, utils, config) {
 			}
 		}).catch(function(err){
 			res.send(null);
-		})
+		});
 	});
 	
 	app.post("/report/producerGroup", function(req, res, next) {
@@ -126,7 +124,6 @@ module.exports = function(app, urlApi, utils, config) {
 			rp({
 				uri: urlApi + "/report/producerGroup",
 				method: "POST",
-				json: true,
 				headers: {
 					'User-Agent': 'Request-Promise'
 				},
@@ -135,16 +132,15 @@ module.exports = function(app, urlApi, utils, config) {
 					'idProducerGroup': req.body.idProducerGroup
 				}
 			}).then(function (body) {  
-				
 				res.send({"code": body.code});
 					
 			}).catch(function(err){
 				res.send({"code":3});
-			})
+			});
 		}else{
 			res.send({"code":1});
 		}
 		
 
     });
-}
+};

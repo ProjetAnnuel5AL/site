@@ -107,7 +107,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     msgError: "Veuillez saisir un email !",
                     msgSuccess: "",
                     session : req.session
-                })
+                });
             }else{
                 rp({
                     url: urlApi + "/user/resetPassword",
