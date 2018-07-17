@@ -89,7 +89,7 @@ module.exports = function(app, urlApi,urlLocal,  utils){
                     if(body.code == 0){
                         res.render("registration.ejs", {
                             msgError:"",
-                            msgSuccess: "Inscription validée ! Merci de consulter votre boite mail pour valider votre inscrption. Cela peut prendre plusieurs minutes",
+                            msgSuccess: "Inscription validée ! Merci de consulter votre boite mail pour valider votre inscription. Cela peut prendre plusieurs minutes",
                             session : req.session
                         });
                     }else if(body.code == 4){
