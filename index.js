@@ -8,7 +8,7 @@ var config = require("config");  // we use node-config to handle environments
 var utils = require("./utils");
 
 var urlApi = "https://api.lechampalamaison.fr:44331";
-var urlLocal = "https://lechampalamaison.fr"
+var urlLocal = "https://lechampalamaison.fr";
 
 require("./env.js");
 
