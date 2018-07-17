@@ -37,7 +37,7 @@ ServiceCrypto.prototype.encryptAES = function(input) {
 	  // most likely, entropy sources are drained
 	  console.error(ex);
 	}
-}
+};
 
 ServiceCrypto.prototype.decryptAES = function(encoded) { 	
 	var combined = new Buffer(encoded, 'hex');		
@@ -66,6 +66,6 @@ ServiceCrypto.prototype.decryptAES = function(encoded) {
 		plaintext = (decipher.update(edata, 'binary', 'utf8') + decipher.final('utf8'));
 	}
 	return plaintext;
-}
+};
 
 module.exports=ServiceCrypto;

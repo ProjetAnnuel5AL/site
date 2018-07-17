@@ -1,7 +1,7 @@
 var nodemailer = require('nodemailer');
 
 var ServiceMail=function(){
-	this.from = "azanlo2018@gmail.co"
+	this.from = "azanlo2018@gmail.com";
 	this.transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
@@ -26,7 +26,7 @@ ServiceMail.prototype.sendMail = function(to, subject, text) {
   
   this.transporter.sendMail(mailOptions, function(error, info){
 	if (error) {
-		console.log("ERREUR ENVOI MAIL")
+		console.log("ERREUR ENVOI MAIL");
 	  	console.log(error);
 	} else {
 	  console.log('Email sent: ' + info.response);
