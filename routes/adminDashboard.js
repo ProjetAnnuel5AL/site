@@ -334,6 +334,7 @@ module.exports = function(app, urlApi, urlLocal, utils){
                     }
                 }).then(function (body) { 
                     
+                    
                     if(body.result){
                         var file;
                         var http = require('http');
