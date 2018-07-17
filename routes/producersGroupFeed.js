@@ -65,6 +65,37 @@ module.exports = function(app, urlApi, utils, config){
       if (!req.session.type || !req.params.id) {
         res.redirect("/");
       } else {
+        if (req.query.idNotif) {
+          console.log("aaaaaa");
+          rp({
+            url: urlApi + "/notification/idItem",
+            method: "DELETE",
+            json: true,
+            headers: {
+              'User-Agent': 'Request-Promise'
+            },
+            json: {
+              id: req.query.idNotif,
+              token: req.session.token
+            }
+          }).then(function (body) {
+            console.log('notifdelete');
+          }).catch(function (err) {
+            console.log(err);
+            res.render("producerDashboard/producersGroupEvent.ejs", {
+              session: req.session,
+              coop: {},
+              coopEvent: coopEvent,
+              coopParticipants: coopParticipants,
+              isSubcribed: isSubcribed,
+              memberOrAdmin: memberOrAdmin,
+              coopMembers: [],
+              urlApi: urlApi,
+              msgError: "Erreur: suppression notification en erreur",
+              msgSuccess: ""
+            });
+          });
+        }
         rp({
           url: urlApi + "/producersGroupEvent/id/",
           method: "GET",
@@ -93,6 +124,7 @@ module.exports = function(app, urlApi, utils, config){
                 token: req.session.token
               }
             }).then(function (body) {
+              console.log(body);
               if (body.code == 0) {
                 coopMembers = body.result;
                 rp({
@@ -151,76 +183,18 @@ module.exports = function(app, urlApi, utils, config){
                             console.log(body);
                             if(body.code == 0){
                               coopParticipants = body.result
-                              if(req.params.idNotif){
-                                console.log("aaaaaa");
-                                rp({
-                                  url: urlApi + "/notification/idItem",
-                                  method: "DELETE",
-                                  json: true,
-                                  headers: {
-                                    'User-Agent': 'Request-Promise'
-                                  },
-                                  qs: {
-                                    id: req.params.idNotif,
-                                    token: req.session.token
-                                  }
-                                }).then(function (body) {
-                                  if(body.code=="0"){
-                                    res.render("producerDashboard/producersGroupEvent.ejs", {
-                                      session: req.session,
-                                      coop: coop,
-                                      coopEvent: coopEvent,
-                                      coopParticipants: coopParticipants,
-                                      isSubcribed: isSubcribed,
-                                      memberOrAdmin: memberOrAdmin,
-                                      coopMembers: coopMembers,
-                                      urlApi: urlApi,
-                                      msgError: "",
-                                      msgSuccess: ""
-                                    });
-                                  }else{
-                                    res.render("producerDashboard/producersGroupEvent.ejs", {
-                                      session: req.session,
-                                      coop: {},
-                                      coopEvent: coopEvent,
-                                      coopParticipants: coopParticipants,
-                                      isSubcribed: isSubcribed,
-                                      memberOrAdmin: memberOrAdmin,
-                                      coopMembers: [],
-                                      urlApi: urlApi,
-                                      msgError: "Erreur: suppression notification en erreur",
-                                      msgSuccess: ""
-                                    });
-                                  }
-                                }).catch(function (err) {
-                                  console.log(err);
-                                  res.render("producerDashboard/producersGroupEvent.ejs", {
-                                    session: req.session,
-                                    coop: {},
-                                    coopEvent: coopEvent,
-                                    coopParticipants: coopParticipants,
-                                    isSubcribed: isSubcribed,
-                                    memberOrAdmin: memberOrAdmin,
-                                    coopMembers: [],
-                                    urlApi: urlApi,
-                                    msgError: "Erreur: suppression notification en erreur",
-                                    msgSuccess: ""
-                                  });
-                                });
-                              }else{
-                                res.render("producerDashboard/producersGroupEvent.ejs", {
-                                  session: req.session,
-                                  coop: coop,
-                                  coopEvent: coopEvent,
-                                  coopParticipants: coopParticipants,
-                                  isSubcribed: isSubcribed,
-                                  memberOrAdmin: memberOrAdmin,
-                                  coopMembers: coopMembers,
-                                  urlApi: urlApi,
-                                  msgError: "",
-                                  msgSuccess: ""
-                                });
-                              }
+                              res.render("producerDashboard/producersGroupEvent.ejs", {
+                                session: req.session,
+                                coop: coop,
+                                coopEvent: coopEvent,
+                                coopParticipants: coopParticipants,
+                                isSubcribed: isSubcribed,
+                                memberOrAdmin: memberOrAdmin,
+                                coopMembers: coopMembers,
+                                urlApi: urlApi,
+                                msgError: "",
+                                msgSuccess: ""
+                              });
                             }else{
                               res.render("producerDashboard/producersGroupEvent.ejs", {
                                 msgError: "Erreur inconnue 1. Merci de réessayer ultérieurement.",
